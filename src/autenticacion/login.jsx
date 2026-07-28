@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 
-import './Login.css';
+import './login.css';
+import { usePageTitle } from '../hooks/usePageTitle';
+
+const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
+
+function isInstitutionalEmail(email) {
+  return ALLOWED_DOMAINS.some((domain) => email.toLowerCase().endsWith(domain));
+}
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -9,30 +16,22 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  usePageTitle('Iniciar sesión');
+
   const handleLogin = async (e) => {
-    e.preventDefault(); // evita que la página se recargue
+    e.preventDefault();
 
     setError('');
 
-    if (!email || !password) {
-      setError('Completá tu correo y contraseña.');
+    if (!isInstitutionalEmail(email)) {
+      setError('Usá tu correo institucional (ej: @anima.edu.uy).');
       return;
     }
 
     setLoading(true);
 
     try {
-      await new Promise((resolve, reject) =>
-        setTimeout(() => {
-          if (email.endsWith('@anima.edu.uy')) {
-            resolve();
-          } else {
-            reject(new Error('Usá tu correo institucional (@anima.edu.uy).'));
-          }
-        }, 900)
-      );
-
-      // Si llegamos acá, el login "funcionó"
+      await new Promise((resolve) => setTimeout(resolve, 900));
       alert(`¡Bienvenido/a, ${email}! (esto luego será una redirección real)`);
     } catch (err) {
       setError(err.message);
@@ -49,10 +48,10 @@ export default function Login() {
     <div className="login">
       <div className="login__brand">
         <div className="login__brand-glow" />
-        <span className="login__logo">Ánima</span>
+        <span className="login__logo">Bookly</span>
 
         <h1 className="login__headline">
-          La biblioteca del bachillerato, ordenada y a mano.
+          Una biblioteca ordenada y a mano.
         </h1>
 
         <p className="login__subtext">
@@ -74,12 +73,12 @@ export default function Login() {
 
       <div className="login__form-side">
         <div className="login__form-wrapper">
-          <h2 className="login__title">Iniciá sesión</h2>
+          <h2 className="login__title">Iniciar sesión</h2>
           <p className="login__form-subtext">
-            Usá tu correo institucional de Ánima.
+            Usá tu correo institucional.
           </p>
 
-          <form onSubmit={handleLogin} noValidate>
+          <form onSubmit={handleLogin}>
             <label className="login__label" htmlFor="email">
               Correo institucional
             </label>
@@ -91,6 +90,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete="email"
+              required
             />
 
             <label className="login__label" htmlFor="password">
@@ -100,10 +100,13 @@ export default function Login() {
               id="password"
               type="password"
               className="login__input"
-              placeholder="••••••••"
+              placeholder="••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
+              minLength={6}
+              maxLength={16}
+              required
             />
 
             <a href="#" className="login__forgot">
