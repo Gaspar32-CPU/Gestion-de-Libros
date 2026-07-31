@@ -2,9 +2,9 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
-//import './App.css'
-import Login from './autenticacion/login'
-
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Login from './features/auth/pages/login';
+import AppRoutes from './routes/AppRoutes';
 
 
 function App() {
@@ -12,7 +12,9 @@ function App() {
 
   return (
     <>
-      <Login/>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </>
   )
 }
