@@ -1,4 +1,4 @@
-function AdminLayout({ children }) {
+export default function AdminLayout({ children }) {
   return (
     <div>
       <Sidebar opciones={["Dashboard", "Libros", "Usuarios", "Reportes", "Configuración"]} />
