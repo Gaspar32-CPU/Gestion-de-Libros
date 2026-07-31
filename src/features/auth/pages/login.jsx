@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import './login.css';
-import { usePageTitle } from '../hooks/usePageTitle';
+import { usePageTitle } from '../../../hooks/usePageTitle';
 
 const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
 
