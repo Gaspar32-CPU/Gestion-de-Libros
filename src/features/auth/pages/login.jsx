@@ -45,7 +45,6 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen w-full font-sans bg-[#f4f2ee] flex-col md:flex-row">
-      {/* Brand side */}
       <div className="relative flex flex-1 flex-col items-start justify-center overflow-hidden bg-gradient-to-b from-[#14877a] to-[#0f5c53] px-6 py-10 text-white md:px-14 md:py-12">
         <div className="pointer-events-none absolute -right-[15%] -top-[20%] h-[60%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_70%)]" />
 
@@ -74,7 +73,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Form side */}
       <div className="flex flex-1 items-center justify-center px-6 py-8 text-left md:p-8">
         <div className="w-full max-w-[360px]">
           <h2 className="mb-1 text-2xl font-bold text-[#10221f]">Iniciar sesión</h2>
