@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { usePageTitle } from '../../../hooks/usePageTitle';
+import { Link } from 'react-router-dom';
 
 const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
 
@@ -140,9 +141,9 @@ export default function Login() {
 
           <p className="mt-6 text-center text-[0.85rem] text-[#6b7770]">
             ¿No tenés cuenta?{' '}
-            <a href="#" className="font-semibold text-[#14877a] no-underline hover:underline">
+            <Link to="/register" className="font-semibold text-[#14877a] no-underline hover:underline">
               Registrate
-            </a>
+            </Link>
           </p>
         </div>
       </div>
