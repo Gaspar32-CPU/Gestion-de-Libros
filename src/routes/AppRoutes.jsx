@@ -16,6 +16,11 @@ function AppRoutes() {
       </nav>
 
       <Routes>
+        <Route path="/" element={<></>}> //queda para importar MarketingLayout
+          <Route index element={<></>} /> //queda para importar LandingPage
+          <Route path="precios" element={<></>} /> //queda para importar PreciosPage
+          <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
+        </Route>
         <Route path="/" element={<></>} />
         <Route path="/login" element={<Login />} />
         <Route path="/productos" element={<></>} /> // Esta ruta es para el catalogo de productos
