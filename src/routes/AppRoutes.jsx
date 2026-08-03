@@ -5,6 +5,7 @@ import AdminLayout from "../layouts/AdminLayout";
 
 // Pages (features)
 import Login from "../features/auth/pages/login";
+import { RutaProtegida } from "../components/RutaProtegida";
 
 function AppRoutes() {
   return (
@@ -27,20 +28,19 @@ function AppRoutes() {
         {/* Rutas protegidas */}
         <Route element={<RutaProtegida />}>
           {/* Rutas solo de admin */}
-          <Route element={<RutaSoloAdmin />}>
+          <Route element={<></>}>// "Rutas solo admin" es un layout que contiene un sidebar con links a las rutas de admin
             <Route path="/usuarios" element={<></>} />// Esta ruta es para un admin vea todos los usuarios
             <Route path="/libros" element={<></>} /> // Esta ruta es para un admin vea todos los libros
             <Route path="/libros/:id" element={<></>} /> // Esta ruta es para un admin vea un libro en particular
             <Route path="/libros/:id/editar" element={<></>} /> // Esta ruta es para un admin edite un libro en particular
             <Route path="/libros/nuevo" element={<></>} />// Esta ruta es para un admin cree un nuevo libro
             <Route path="/prestamos" element={<></>} />// Esta ruta es para un admin vea todos los préstamos
-            <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un admin cree un nuevo préstamo
           </Route>
           {/* Rutas de usuario normal */}
-          <Route path="/usuarios" element={<Usuarios />} />
-          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/perfil" element={<>Perfil</>} />
+          <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
 
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<>Dashboard</>} />
         </Route>
       </Routes>
     </>
