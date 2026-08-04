@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
 import { usePageTitle } from '../../../hooks/usePageTitle';
+import { Link } from 'react-router-dom';
+import { LoginForm } from '../components/LoginForm';
 
 const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
 
@@ -9,35 +11,7 @@ function isInstitutionalEmail(email) {
 }
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
   usePageTitle('Iniciar sesión');
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    setError('');
-
-    if (!isInstitutionalEmail(email)) {
-      setError('Usá tu correo institucional (ej: @anima.edu.uy).');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 900));
-      alert(`¡Bienvenido/a, ${email}! (esto luego será una redirección real)`);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleGuest = () => {
     alert('Entrando como invitado (definir a dónde redirige)');
@@ -78,54 +52,7 @@ export default function Login() {
           <h2 className="mb-1 text-2xl font-bold text-[#10221f]">Iniciar sesión</h2>
           <p className="mb-7 text-sm text-[#6b7770]">Usá tu correo institucional.</p>
 
-          <form onSubmit={handleLogin}>
-            <label className="mb-1.5 mt-4 block text-sm font-semibold text-[#10221f]" htmlFor="email">
-              Correo institucional
-            </label>
-            <input
-              id="email"
-              type="email"
-              className="w-full rounded-[10px] border border-[#e3e0d8] bg-white px-3.5 py-2.5 text-[0.95rem] outline-none transition-colors focus:border-[#14877a] focus:shadow-[0_0_0_3px_rgba(20,135,122,0.15)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
-              placeholder="nombre@anima.edu.uy"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-
-            <label className="mb-1.5 mt-4 block text-sm font-semibold text-[#10221f]" htmlFor="password">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="w-full rounded-[10px] border border-[#e3e0d8] bg-white px-3.5 py-2.5 text-[0.95rem] outline-none transition-colors focus:border-[#14877a] focus:shadow-[0_0_0_3px_rgba(20,135,122,0.15)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
-              placeholder="••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              minLength={6}
-              maxLength={16}
-              required
-            />
-
-            <a
-              href="#"
-              className="mb-5 mt-2.5 block text-right text-[0.8rem] text-[#14877a] no-underline hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
-            >
-              ¿Olvidaste tu contraseña?
-            </a>
-
-            {error && <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">{error}</p>}
-
-            <button
-              type="submit"
-              className="w-full cursor-pointer rounded-[10px] border-none bg-[#14877a] py-3.5 text-[0.95rem] font-semibold text-white transition-colors hover:bg-[#0f5c53] disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
-              disabled={loading}
-            >
-              {loading ? 'Entrando...' : 'Entrar'}
-            </button>
-          </form>
+          <LoginForm/>
 
           <div className="my-5 flex items-center text-center text-[0.8rem] text-[#6b7770] before:mr-3 before:h-px before:flex-1 before:border-b before:border-[#e3e0d8] before:content-[''] after:ml-3 after:h-px after:flex-1 after:border-b after:border-[#e3e0d8] after:content-['']">
             <span>o</span>
@@ -140,9 +67,9 @@ export default function Login() {
 
           <p className="mt-6 text-center text-[0.85rem] text-[#6b7770]">
             ¿No tenés cuenta?{' '}
-            <a href="#" className="font-semibold text-[#14877a] no-underline hover:underline">
+            <Link to="/register" className="font-semibold text-[#14877a] no-underline hover:underline">
               Registrate
-            </a>
+            </Link>
           </p>
         </div>
       </div>
