@@ -22,9 +22,9 @@ export default function Login() {
       <div className="relative flex flex-1 flex-col items-start justify-center overflow-hidden bg-gradient-to-b from-[#14877a] to-[#0f5c53] px-6 py-10 text-white md:px-14 md:py-12">
         <div className="pointer-events-none absolute -right-[15%] -top-[20%] h-[60%] w-[60%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_70%)]" />
 
-        <span className="absolute left-6 top-6 ml-2 text-2xl font-semibold tracking-wide md:left-8 md:top-8">
+        <Link to="/" className="absolute left-6 top-6 ml-2 text-2xl font-semibold tracking-wide hover:text-gray-100 md:left-8 md:top-8">
           Bookly
-        </span>
+        </Link>
 
         <h1 className="mb-5 max-w-[480px] text-left text-4xl font-bold leading-tight md:text-[3.2rem]">
           Una biblioteca ordenada y a mano.
