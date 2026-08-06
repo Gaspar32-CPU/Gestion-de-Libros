@@ -6,19 +6,14 @@ import AdminLayout from "../layouts/AdminLayout";
 // Pages (features)
 import Login from "../features/auth/pages/login";
 import { RutaProtegida } from "../components/RutaProtegida";
+import LandingPage from "../features/landing/pages/LandingPage";
 
 function AppRoutes() {
   return (
     <>
-      <nav>
-        <Link to="/">Landing</Link>
-        <Link to="/login">Iniciar sesión</Link>
-        <Link to="/productos">Catálogo</Link>
-      </nav>
-
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/" element={<>Landing</>}> //queda para importar MarketingLayout
+        <Route path="/" element={<LandingPage/>}> //queda para importar MarketingLayout
           <Route index element={<></>} /> //queda para importar LandingPage
           <Route path="precios" element={<></>} /> //queda para importar PreciosPage
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
