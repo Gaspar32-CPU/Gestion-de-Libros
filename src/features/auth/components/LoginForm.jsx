@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { loginSchema } from "../../../../schemas/auth.schema";
 
 const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
 
@@ -21,8 +22,10 @@ export function LoginForm() {
         e.preventDefault();
         setError('');
 
-        if (!isInstitutionalEmail(email)) {
-            setError('Usá tu correo institucional (ej: @anima.edu.uy).');
+        const result = loginSchema.safeParse({ email, password });
+
+        if (!result.success) {
+            setError(result.error.issues[0].message);
             return;
         }
 
@@ -32,11 +35,11 @@ export function LoginForm() {
             const res = await fetch("http://localhost:3001/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify(result.data),
             });
 
             if (!res.ok) {
-                throw new Error('Credenciales incorrectas.');
+                throw new Error('Credenciales incorrectas.'); 
             }
 
             const { token } = await res.json();
@@ -62,7 +65,6 @@ export function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="email"
-                required
             />
 
             <label className="mb-1.5 mt-4 block text-sm font-semibold text-[#10221f]" htmlFor="password">
@@ -76,9 +78,6 @@ export function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
-                minLength={6}
-                maxLength={16}
-                required
             />
 
             <a
