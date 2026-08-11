@@ -5,6 +5,7 @@ import AdminLayout from "../layouts/AdminLayout";
 
 // Pages (features)
 import Login from "../features/auth/pages/login";
+import Register from "../features/auth/pages/register";
 import { RutaProtegida } from "../components/RutaProtegida";
 import LandingPage from "../features/landing/pages/LandingPage";
 
