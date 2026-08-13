@@ -24,12 +24,10 @@ function isValidPassword(value) {
   return value.length >= 6 && value.length <= 16;
 }
 
-  const [loading, setLoading] = useState(false);
-
-
 export function RegisterForm () {
-  const [error, setError] = useState("");
-  const [form, setForm] = useState({
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [form, setForm] = useState({
     nombre: "",
     apellido: "",
     cedula: "",
