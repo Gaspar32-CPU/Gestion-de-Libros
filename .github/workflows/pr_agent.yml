@@ -3,7 +3,6 @@ on:
     types: [opened, reopened, ready_for_review, synchronize]
   issue_comment:
     types: [created]
-
 jobs:
   pr_agent_job:
     if: ${{ github.event.sender.type != 'Bot' }}
