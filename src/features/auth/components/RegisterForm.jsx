@@ -15,7 +15,7 @@ export function RegisterForm () {
     confirmarContrasena: "",
   });
   const [loading, setLoading] = useState(false);
-  const { register } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,11 +27,6 @@ export function RegisterForm () {
     setError("");
 
     const result = registerSchema.safeParse(form);
-
-    if (form.contrasena !== form.confirmarContrasena) {
-      setError("Las contraseñas no coinciden.");
-      return;
-    }
 
     if (!result.success) {
       setError(result.error.issues[0].message);
@@ -53,7 +48,7 @@ export function RegisterForm () {
       }
 
       const { token } = await res.json();
-      register(token);
+      login(token);
       navigate("/");
     } catch (err) {
       setError(err.message);
@@ -99,12 +94,12 @@ export function RegisterForm () {
                 </label>
                 <input
                   id="cedula"
-                  type="number"
-                  name="cedula"
+                  type="text"
+                  inputMode="numeric"
                   pattern="[0-9]*"
+                  name="cedula"
                   value={form.cedula}
                   onChange={handleChange}
-                  autoComplete="national-identity"
                   className="w-full rounded-[10px] border border-stone-300 bg-white px-3.5 py-2.5 text-[0.95rem] text-stone-900 placeholder-stone-400 outline-none transition-colors focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
                   placeholder="51234567"
                 />
@@ -182,13 +177,6 @@ export function RegisterForm () {
             >
                 {loading ? 'Creando cuenta...' : 'Crear cuenta'}
             </button>
-
-            <p className="mt-6 text-center text-[0.85rem] text-[#6b7770]">
-              ¿Ya tenés cuenta?{' '}
-              <a href="./login" className="font-semibold text-[#14877a] no-underline hover:underline">
-                Iniciar Sesión
-              </a>
-            </p>
           </form>
 
   )

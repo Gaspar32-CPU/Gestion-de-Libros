@@ -16,6 +16,13 @@ export default function Register() {
           <p className="mb-7 text-sm text-[#6b7770]">Todos los campos son obligatorios.</p>
 
           <RegisterForm />
+
+          <p className="mt-6 text-center text-[0.85rem] text-[#6b7770]">
+            ¿Ya tenés cuenta?{' '}
+            <Link to="/login" className="font-semibold text-[#14877a] no-underline hover:underline">
+              Iniciar sesión
+            </Link>
+          </p>
         </div>
       </div>
     </div>
