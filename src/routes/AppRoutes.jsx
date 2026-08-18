@@ -6,21 +6,19 @@ import AdminLayout from "../layouts/AdminLayout";
 // Pages (features)
 import Login from "../features/auth/pages/login";
 import Register from "../features/auth/pages/register";
-
+import { RutaProtegida } from "../components/RutaProtegida";
+import LandingPage from "../features/landing/pages/LandingPage";
 
 function AppRoutes() {
   return (
     <>
-      <nav>
-        <Link to="/">Landing | </Link>
-        <Link to="/login">Iniciar sesión | </Link>
-        <Link to="/register">Registrarse | </Link>
-        <Link to="/productos">Catálogo </Link>
-      </nav>
-
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/" element={<></>} />
+        <Route path="/" element={<LandingPage/>}> //queda para importar MarketingLayout
+          <Route index element={<></>} /> //queda para importar LandingPage
+          <Route path="precios" element={<></>} /> //queda para importar PreciosPage
+          <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
+        </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} /> // Esta ruta es para el catalogo de productos
         <Route path="/productos/:id" element={<></>} />
