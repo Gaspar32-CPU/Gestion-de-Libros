@@ -7,7 +7,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import Login from "../features/auth/pages/login";
 import { RutaProtegida } from "../components/RutaProtegida";
 import LandingPage from "../features/landing/pages/LandingPage";
-
+import { Isbn } from "../features/catalogo/components/ISBN";
 function AppRoutes() {
   return (
     <>
@@ -18,6 +18,7 @@ function AppRoutes() {
           <Route path="precios" element={<></>} /> //queda para importar PreciosPage
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
         </Route>
+        <Route path="/isbn" element={<Isbn />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Login />} />
         <Route path="/catalogo" element={<></>} /> // Esta ruta es para el catalogo de productos
@@ -38,7 +39,6 @@ function AppRoutes() {
           {/* Rutas de usuario normal */}
           <Route path="/perfil" element={<>Perfil</>} />
           <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
-
           <Route path="/dashboard" element={<>Dashboard</>} />
         </Route>
       </Routes>
