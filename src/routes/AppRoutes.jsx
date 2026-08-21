@@ -7,6 +7,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import Login from "../features/auth/pages/login";
 import { RutaProtegida } from "../components/RutaProtegida";
 import LandingPage from "../features/landing/pages/LandingPage";
+import { LibroDetalle } from "../features/libro/LibroDetalle";
 
 function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ function AppRoutes() {
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/libro" element={<LibroDetalle />} />
         <Route path="/register" element={<Login />} />
         <Route path="/catalogo" element={<></>} /> // Esta ruta es para el catalogo de productos
         <Route path="/catalogo/:id" element={<></>} />// Esta ruta es para un libro en particular

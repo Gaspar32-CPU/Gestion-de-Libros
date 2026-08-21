@@ -1,0 +1,15 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #f9f8f4; 
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding: 40px;
+  }
+}
