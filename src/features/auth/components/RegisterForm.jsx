@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { registerSchema } from "../../../../schemas/auth.schema";
 
@@ -15,7 +14,6 @@ export function RegisterForm () {
     contrasena: "",
     confirmarContrasena: "",
   });
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,6 +23,13 @@ export function RegisterForm () {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+
+    const { nombre, apellido, cedula, correo, telefono, contrasena, confirmarContrasena } = form;
+
+    if (!nombre || !apellido || !cedula || !correo || !telefono || !contrasena || !confirmarContrasena) {
+        setError('Todos los campos son obligatorios');
+        return;
+    }
 
     const result = registerSchema.safeParse(form);
 
@@ -44,12 +49,15 @@ export function RegisterForm () {
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || 'Error al registrar el usuario.');
+        const mensajesPersonalizados = {
+            CREDENCIALES_INVALIDAS: 'El correo o la contraseña son incorrectos.',
+            CUENTA_BLOQUEADA: 'Tu cuenta está bloqueada, contactá al administrador.',
+        };
+
+        throw new Error(mensajesPersonalizados[data.code] || data.message || 'Error al iniciar sesión.');
       }
 
-      const { token } = await res.json();
-      login(token);
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {

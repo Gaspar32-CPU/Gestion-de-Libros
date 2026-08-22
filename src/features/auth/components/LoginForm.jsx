@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
 import { loginSchema } from "../../../../schemas/auth.schema";
-
-const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
+import { useAuth } from "../../../context/useAuth";
 
 export function LoginForm() {
     const [email, setEmail] = useState('');
@@ -18,6 +16,10 @@ export function LoginForm() {
         e.preventDefault();
         setError('');
 
+        if (!email || !password) {
+            setError('Todos los campos son obligatorios');
+            return;
+        }
         const result = loginSchema.safeParse({ email, password });
 
         if (!result.success) {
@@ -36,12 +38,17 @@ export function LoginForm() {
 
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
-                throw new Error(data.message || 'Error al iniciar sesión.');
+                const mensajesPersonalizados = {
+                    CREDENCIALES_INVALIDAS: 'El correo o la contraseña son incorrectos.',
+                    CUENTA_BLOQUEADA: 'Tu cuenta está bloqueada, contactá al administrador.',
+                };
+
+                throw new Error(mensajesPersonalizados[data.code] || data.message || 'Error al iniciar sesión.');
             }
 
             const { token } = await res.json();
             login(token);
-            navigate("/");
+            navigate("/", { replace: true });
         } catch (err) {
             setError(err.message);
         } finally {
@@ -71,7 +78,7 @@ export function LoginForm() {
                 id="password"
                 type="password"
                 className="w-full rounded-[10px] border border-[#e3e0d8] bg-white px-3.5 py-2.5 text-[0.95rem] outline-none transition-colors focus:border-[#14877a] focus:shadow-[0_0_0_3px_rgba(20,135,122,0.15)] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
-                placeholder="••••••"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
