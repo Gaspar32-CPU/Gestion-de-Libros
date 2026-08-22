@@ -1,10 +1,8 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import AppRoutes from './routes/AppRoutes';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from "./context/AuthProvider";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
