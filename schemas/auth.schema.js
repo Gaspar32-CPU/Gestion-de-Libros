@@ -1,12 +1,30 @@
 import { z } from "zod";
 
+const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
+
+function isInstitutionalEmail(email) {
+  return ALLOWED_DOMAINS.some((domain) => email.toLowerCase().endsWith(domain));
+}
+
+function isValidCedulaUY(cedula) {
+  if (!/^\d{7,8}$/.test(cedula)) return false;
+  const nums = cedula.split('').map(Number);
+  const verificador = nums.pop();
+  
+  while (nums.length < 7) nums.unshift(0);
+  const factores = [2, 9, 8, 7, 6, 3, 4];
+  const suma = nums.reduce((acc, n, i) => acc + n * factores[i], 0);
+  const resto = suma % 10;
+  const digitoEsperado = resto === 0 ? 0 : 10 - resto;
+  return digitoEsperado === verificador;
+}
 // ---- LOGIN ----
 export const loginSchema = z.object({
   email: z
     .string()
     .min(1, "El correo es obligatorio")
     .email("Ingresá un correo válido")
-    .refine((val) => val.endsWith("@anima.edu.uy"), {
+    .refine((val) => isInstitutionalEmail(val), {
       message: "Usa tu correo institucional (ej: @anima.edu.uy)",
     }),
   password: z
@@ -16,22 +34,27 @@ export const loginSchema = z.object({
 
 // ---- REGISTRO ----
 export const registerSchema = z.object({
-  firstName: z.string().min(1, "El nombre es obligatorio").trim(),
-  lastName: z.string().min(1, "El apellido es obligatorio").trim(),
-  ci: z
+  nombre: z.string().min(1, "El nombre es obligatorio").trim(),
+  apellido: z.string().min(1, "El apellido es obligatorio").trim(),
+  cedula: z
     .string()
-    .regex(/^\d{1,2}\.\d{3}\.\d{3}-\d$/, "Formato de cédula inválido (ej: 5.123.456-7)"),
-  email: z
+    .regex(/^\d{7,8}$/, "La cédula debe tener 7 u 8 dígitos, sin puntos ni guión (ej: 51234567)")
+    .refine(isValidCedulaUY, "El dígito verificador de la cédula no es correcto"),
+  correo: z
     .string()
     .min(1, "El correo es obligatorio")
     .email("Ingresá un correo válido")
-    .refine((val) => val.endsWith("@anima.edu.uy"), {
-      message: "Debe ser tu correo institucional (@anima.edu.uy)",
+    .refine((val) => isInstitutionalEmail(val), {
+      message: "Usa tu correo institucional (ej: @anima.edu.uy)",
     }),
-  phone: z
+  telefono: z
     .string()
     .regex(/^0\d{2}\s?\d{3}\s?\d{3}$/, "Formato de teléfono inválido (ej: 099 123 456)"),
-  password: z
+  contrasena: z
     .string()
     .min(6, "La contraseña debe tener al menos 6 caracteres"),
+  confirmarContrasena: z.string().min(1, "Confirmá tu contraseña"),
+}).refine((data) => data.contrasena === data.confirmarContrasena, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmarContrasena"],
 });
