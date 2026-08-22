@@ -14,11 +14,11 @@ export default function LibroCard({ book, currentRole, onSelect }) {
       onClick={() => onSelect(id)}
       className="flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer group h-full"
     >
-      <div className="relative aspect-3/4 w-full bg-slate-100 overflow-hidden">
         <img 
           src={imgSrc} 
           alt={title} 
-          className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-200" 
+          onError={() => setImgSrc(PLACEHOLDER_IMAGE)} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" 
           loading="lazy" 
         />
         <span className={`absolute top-3 right-3 px-2.5 py-1 text-xs font-semibold rounded-full shadow-sm ${
