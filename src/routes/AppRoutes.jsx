@@ -1,10 +1,11 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // Layouts
 import AdminLayout from "../layouts/AdminLayout";
 
 // Pages (features)
 import Login from "../features/auth/pages/login";
+import Register from "../features/auth/pages/register";
 import { RutaProtegida } from "../components/RutaProtegida";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
@@ -14,16 +15,18 @@ function AppRoutes() {
     <>
       <Routes>
         {/* Rutas públicas */}
-        <Route path="/" element={<LandingPage/>}> //queda para importar MarketingLayout
-          <Route index element={<></>} /> //queda para importar LandingPage
+        <Route path="/" element={<LandingPage/>}> 
+          <Route path="MarketinLayout" element={<></>} /> //queda para importar MarketingLayout
           <Route path="precios" element={<></>} /> //queda para importar PreciosPage
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/libro" element={<LibroDetalle />} />
-        <Route path="/register" element={<Login />} />
-        <Route path="/catalogo" element={<></>} /> // Esta ruta es para el catalogo de productos
-        <Route path="/catalogo/:id" element={<></>} />// Esta ruta es para un libro en particular
+        <Route path="/register" element={<Register/>} /> // Esta ruta es para el catalogo de productos
+
+        <Route path="/admin" element={<AdminLayout />}> //Esta ruta es para el panel de administración, el contenido actual es solo un ejemplo
+          <Route path="usuarios" element={<></>} /> // Esta ruta es para los usuarios normales 
+        </Route>
+
         <Route path="*" element={<h1>404 Not Found</h1>} />
 
         {/* Rutas protegidas */}
