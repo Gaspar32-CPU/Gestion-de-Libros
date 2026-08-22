@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import CalificacionPromedio from './CalificacionPromedio';
-
-const PLACEHOLDER_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='100' height='150' viewBox='0 0 100 150'><rect width='100%' height='100%' fill='%23E2E8F0'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='10' fill='%2394A3B8'>Sin Portada</text></svg>";
+import { useState } from 'react';
+// import CalificacionPromedio from './CalificacionPromedio';
 
 export default function LibroCard({ book, currentRole, onSelect }) {
   const { id, title, author, coverUrl, availableCount, averageRating, reviewsCount } = book;
-  const [imgSrc, setImgSrc] = useState(coverUrl || PLACEHOLDER_IMAGE);
+  const [imgSrc, setImgSrc] = useState(coverUrl);
 
   const isAvailable = availableCount > 0;
   const canRequestLoan = currentRole === 'admin' || currentRole === 'reader';
@@ -16,11 +14,10 @@ export default function LibroCard({ book, currentRole, onSelect }) {
       onClick={() => onSelect(id)}
       className="flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer group h-full"
     >
-      <div className="relative aspect-[3/4] w-full bg-slate-100 overflow-hidden">
+      <div className="relative aspect-3/4 w-full bg-slate-100 overflow-hidden">
         <img 
           src={imgSrc} 
           alt={title} 
-          onError={() => setImgSrc(PLACEHOLDER_IMAGE)} 
           className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-200" 
           loading="lazy" 
         />
@@ -31,15 +28,15 @@ export default function LibroCard({ book, currentRole, onSelect }) {
         </span>
       </div>
       
-      <div className="p-4 flex flex-col flex-grow">
+      <div className="p-4 flex flex-col grow">
         <h3 className="font-bold text-slate-800 text-base line-clamp-2 leading-snug mb-1 group-hover:text-blue-600 transition-colors">
           {title}
         </h3>
         <p className="text-sm text-slate-500 line-clamp-1 mb-3">{author}</p>
         
-        <div className="mt-auto pt-3 border-t border-slate-100">
+        {/* <div className="mt-auto pt-3 border-t border-slate-100">
           <CalificacionPromedio rating={averageRating} reviewsCount={reviewsCount} />
-        </div>
+        </div> */}
         
         {showLoanAction && (
           <div className="mt-3 pt-1">

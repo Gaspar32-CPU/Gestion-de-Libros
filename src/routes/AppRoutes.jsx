@@ -21,7 +21,8 @@ function AppRoutes() {
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register/>} /> // Esta ruta es para el catalogo de productos
+        <Route path="/register" element={<Register/>} />
+        <Route path="/libro" element={<LibroDetalle/>} />
 
         <Route path="/admin" element={<AdminLayout />}> //Esta ruta es para el panel de administración, el contenido actual es solo un ejemplo
           <Route path="usuarios" element={<></>} /> // Esta ruta es para los usuarios normales 
