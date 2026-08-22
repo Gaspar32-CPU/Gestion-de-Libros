@@ -7,17 +7,15 @@ function isInstitutionalEmail(email) {
 }
 
 function isValidCedulaUY(cedula) {
+  if (!/^\d{7,8}$/.test(cedula)) return false;
   const nums = cedula.split('').map(Number);
-  const verificador = nums.pop(); // último dígito
-
-  // rellenar con cero a la izquierda si tiene 7 dígitos (sin contar verificador)
+  const verificador = nums.pop();
+  
   while (nums.length < 7) nums.unshift(0);
-
   const factores = [2, 9, 8, 7, 6, 3, 4];
   const suma = nums.reduce((acc, n, i) => acc + n * factores[i], 0);
   const resto = suma % 10;
   const digitoEsperado = resto === 0 ? 0 : 10 - resto;
-
   return digitoEsperado === verificador;
 }
 // ---- LOGIN ----
