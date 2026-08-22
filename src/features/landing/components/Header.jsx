@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../context/useAuth';
 
 export function Header() {
+    // eslint-disable-next-line no-unused-vars
     const { usuario, logout, cargando } = useAuth();
 
   return (
@@ -30,7 +31,7 @@ export function Header() {
               Cerrar sesión
             </button>
           )}
-          <a className="bg-brand py-2 px-4 rounded-xl border border-line text-white shadow-[0_6px_16px_-8px_var(--color-brand)] text-bold transition-all duration-300 active:translate-y-1 active:scale-100" href="#planes">Contratar</a>
+          <Link className="bg-brand py-2 px-4 rounded-xl border border-line text-white shadow-[0_6px_16px_-8px_var(--color-brand)] text-bold transition-all duration-300 active:translate-y-1 active:scale-100" to="/register">Registrarse</Link>
         </nav>
       </div>
     </header>
