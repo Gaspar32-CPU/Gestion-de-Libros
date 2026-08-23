@@ -1,6 +1,7 @@
 // src/features/libro/LibroDetalle.jsx
 import { useState } from 'react';
 import { libros } from "./libro"; // Importa los datos desde libro.js
+import { Link } from 'react-router-dom';
 
 export const LibroDetalle = () => {
   // Tomamos el primer libro de la lista como base
@@ -40,9 +41,9 @@ export const LibroDetalle = () => {
 
   return (
     <div className="max-w-250 mx-auto font-sans antialiased text-slate-950 p-4">
-      <a href="#" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6 hover:underline">
+      <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6 hover:underline">
         ← Volver al catálogo
-      </a>
+      </Link>
 
       <div className="flex flex-col md:flex-row gap-7.5 md:gap-10">
         {/* Columna Izquierda */}
