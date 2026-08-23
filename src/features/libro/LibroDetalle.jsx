@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { libros } from "./libro"; // Importa los datos desde libro.js
 import { Link } from 'react-router-dom';
+import { ArrowBack } from '@mui/icons-material';
 
 export const LibroDetalle = () => {
   // Tomamos el primer libro de la lista como base
@@ -40,9 +41,12 @@ export const LibroDetalle = () => {
   const esDisponible = libro.ejemplaresLibres > 0;
 
   return (
-    <div className="max-w-250 mx-auto font-sans antialiased text-slate-950 p-4">
-      <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6 hover:underline">
-        ← Volver al catálogo
+    <div className="mx-auto font-sans antialiased text-slate-950 p-4">
+      <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6">
+        <div className='flex items-center gap-1'>
+          <ArrowBack sx={{ fontSize: 16 }} />
+          Volver al catálogo
+        </div>
       </Link>
 
       <div className="flex flex-col md:flex-row gap-7.5 md:gap-10">

@@ -48,7 +48,7 @@ export function LoginForm() {
 
             const { token } = await res.json();
             login(token);
-            navigate("/", { replace: true });
+            navigate("/catalogo", { replace: true });
         } catch (err) {
             setError(err.message);
         } finally {

@@ -13,7 +13,7 @@ import Catalogo from "../features/catalogo/pages/Catalogo";
 
 function AppRoutes() {
   return (
-    <>
+    <div className="bg-bg">
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={<LandingPage/>}> 
@@ -23,7 +23,6 @@ function AppRoutes() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
-        <Route path="/catalogo" element={<Catalogo/>} />
         <Route path="/libro" element={<LibroDetalle/>} />
 
         <Route path="/admin" element={<AdminLayout />}> //Esta ruta es para el panel de administración, el contenido actual es solo un ejemplo
@@ -44,13 +43,14 @@ function AppRoutes() {
             <Route path="/prestamos" element={<></>} />// Esta ruta es para un admin vea todos los préstamos
           </Route>
           {/* Rutas de usuario normal */}
+          <Route path="/catalogo" element={<Catalogo/>} />
           <Route path="/perfil" element={<>Perfil</>} />
           <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
 
           <Route path="/dashboard" element={<>Dashboard</>} />
         </Route>
       </Routes>
-    </>
+    </div>
   );
 }
 
