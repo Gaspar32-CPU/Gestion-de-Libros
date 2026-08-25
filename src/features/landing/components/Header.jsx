@@ -8,8 +8,9 @@ export function Header() {
   return (
     <header className="bg-bg border-b border-line px-30">
       <div className="flex items-center justify-between py-4">
-        <div>
-          <div>
+        <div className='flex items-center gap-1'>
+          <img src="/Bookly-png.png" alt="" className='w-12'/>
+          <div className='pt-1'>
             <p className="text-xl font-extrabold text-ink leading-none">Bookly</p>
             <p className="text-xs text-gray-600 font-bold">Gestión de biblioteca</p>
           </div>
@@ -23,15 +24,18 @@ export function Header() {
           <a href="#comparativa" className="hover:text-gray-800">Comparativa</a>
           <a href="#faq" className="hover:text-gray-800">Preguntas</a>
           {!usuario ? (
-            <Link className="bg-white py-2 px-4 rounded-xl border border-line text-ink hover:bg-gray-100 transition-all duration-300 active:translate-y-1 active:scale-100" to="/login">            
-              Iniciar sesión
-            </Link>
+            <>
+              <Link className="bg-white py-2 px-4 rounded-xl border border-line text-ink hover:bg-gray-100 transition-all duration-300 active:translate-y-1 active:scale-100" to="/login">            
+                Iniciar sesión
+              </Link>
+              <Link className="bg-brand py-2 px-4 rounded-xl border border-line text-white shadow-[0_6px_16px_-8px_var(--color-brand)] text-bold transition-all duration-300 active:translate-y-1 active:scale-100" to="/register">Registrarse</Link>
+            </>
+
           ) : (
-            <button className="bg-white py-2 px-4 rounded-xl border border-line text-ink hover:bg-gray-100 transition-all duration-300 active:translate-y-1 active:scale-100" onClick={logout}>
+            <button className="bg-red-500 py-2 px-4 cursor-pointer rounded-xl border border-line text-white hover:bg-red-600 transition-all duration-300 active:translate-y-1 active:scale-100" onClick={logout}>
               Cerrar sesión
             </button>
           )}
-          <Link className="bg-brand py-2 px-4 rounded-xl border border-line text-white shadow-[0_6px_16px_-8px_var(--color-brand)] text-bold transition-all duration-300 active:translate-y-1 active:scale-100" to="/register">Registrarse</Link>
         </nav>
       </div>
     </header>
