@@ -1,8 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 
-// Layouts
-import AdminLayout from "../layouts/AdminLayout";
-
 // Pages (features)
 import Login from "../features/auth/pages/login";
 import Register from "../features/auth/pages/register";
@@ -36,6 +33,7 @@ function AppRoutes() {
           {/* Compartida por todos los roles, sidebar según corresponda */}
           <Route element={<LayoutSegunRol />}>
             <Route path="/catalogo" element={<Catalogo/>} />
+            <Route path="/perfil" element={<></>} />
           </Route>
 
           <Route element={<RutaPorRol rolesPermitidos={["super-admin"]} />}>
@@ -66,7 +64,6 @@ function AppRoutes() {
               <Route path="/prestamos" element={<></>} />// Esta ruta es para que un usuario vea sus prestamos
               <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
               <Route path="/reportar" element={<></>} /> // Esta ruta es para que un usuario vea reporte un problema
-              <Route path="/perfil" element={<></>} /> // Esta ruta es para que un usuario vea su perfil
             </Route>
           </Route>
         </Route>
