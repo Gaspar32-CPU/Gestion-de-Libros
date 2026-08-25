@@ -41,7 +41,7 @@ const Contenedor = () => {
         <ArrowBackIosRoundedIcon />
       </IconButton>
 
-      <div ref={scrollRef} className="flex overflow-x-auto scrollbar-hide scroll-smooth py-2">
+      <div ref={scrollRef} className="flex flex-1 min-w-0 overflow-x-auto scrollbar-hide scroll-smooth py-2">
         {libros.map((libro) => (
           <div key={libro.id} className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 shrink-0 px-2">
             <LibroSugerencia portadaUrl={libro.portadaUrl} titulo={libro.titulo} genero={libro.genero} autor={libro.autor} />

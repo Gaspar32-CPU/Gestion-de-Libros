@@ -13,7 +13,7 @@ export const libros = [
     descripcion: "La historia de la familia Buendía a lo largo de siete generaciones en el pueblo ficticio de Macondo.",
     puntuacion: 4.7,
     totalResenas: 2,
-    ejemplaresLibres: 3,
+    ejemplaresLibres: 0,
     ejemplaresTotales: 6,
     condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
     resenas: [
@@ -122,7 +122,7 @@ export const libros = [
     descripcion: "Un recorrido por la historia de la humanidad, desde la evolución hasta la era digital.",
     puntuacion: 4.6,
     totalResenas: 2,
-    ejemplaresLibres: 5,
+    ejemplaresLibres: 0,
     ejemplaresTotales: 5,
     condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
     resenas: [

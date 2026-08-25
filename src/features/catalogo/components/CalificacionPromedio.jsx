@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function CalificacionPromedio({ rating, reviewsCount }) {
-  if (reviewsCount === 0 || rating === null) {
+  if (reviewsCount === 0 || rating == null) {
     return <span className="text-xs italic text-slate-400">Sin reseñas</span>;
   }
 

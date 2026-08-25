@@ -1,11 +1,13 @@
-export default function LibroCardVisual({ book }) {
-  const { titulo, autor, anio, categoria, categoriaColor, descripcion, color, disponible, puntuacion } = book;
+import { LibroSugerencia } from "../../carrusel/LibroSugerencia";
 
-  return (
+export default function LibroCard({ libro }) {
+  const { titulo, autor, anio, categoria, categoriaColor, descripcion, ejemplaresLibres, puntuacion} = libro;
+
+const disponible = ejemplaresLibres > 0;
+
+return (
     <div className="flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
-      <div className={`h-32 w-full bg-linear-to-br ${color} flex items-end p-4`}>
-        <span className="text-white font-bold text-lg leading-tight drop-shadow-sm">{titulo}</span>
-      </div>
+      <LibroSugerencia className="rounded-none" key={libro.id} portadaUrl={libro.portadaUrl} genero={libro.genero} />
 
       <div className="p-4 flex flex-col grow">
         <span className={`text-xs font-bold tracking-wide ${categoriaColor} mb-1`}>{categoria}</span>
