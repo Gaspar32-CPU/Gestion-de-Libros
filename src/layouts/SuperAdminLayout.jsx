@@ -4,16 +4,15 @@ import { useAuth } from "../context/useAuth";
 import { Outlet } from "react-router-dom";
 
 const OPCIONES = [
-  { label: "Panel", icon: LibraryBooks, path: "/panel" },
-  { label: "Catálogo", icon: LibraryBooks, path: "/catalogo" },
-  { label: "Gestión catálogo", icon: LibraryBooks, path: "/gestion-catalogo" },
-  { label: "Préstamos", icon: MenuBook, path: "/allprestamos" },
+  { label: "Plataforma", icon: LibraryBooks, path: "/plataforma" },
+  { label: "Organizaciones", icon: LibraryBooks, path: "/organizaciones" },
   { label: "Usuarios", icon: LibraryBooks, path: "/usuarios" },
-  { label: "Reportes", icon: ReportProblem, path: "/reportes" },
-  { label: "Configuración", icon: LibraryBooks, path: "/configuracion" },
+  { label: "Planes", icon: MenuBook, path: "/planes" },
+  { label: "Soporte", icon: ReportProblem, path: "/reportes" },
+  { label: "Auditoría", icon: LibraryBooks, path: "/auditoria " },
 ];
 
-export default function AdminLayout() {
+export default function SuperAdminLayout() {
   const { usuario } = useAuth();
   return (
     <div className="flex">

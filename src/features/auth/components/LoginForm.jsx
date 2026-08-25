@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import { loginSchema } from "../../../../schemas/auth.schema";
 import { useAuth } from "../../../context/useAuth";
 
@@ -48,7 +49,9 @@ export function LoginForm() {
 
             const { token } = await res.json();
             login(token);
-            navigate("/catalogo", { replace: true });
+
+            const { rol } = jwtDecode(token);
+            navigate(rol === "lector" ? "/catalogo" : "/panel", { replace: true });
         } catch (err) {
             setError(err.message);
         } finally {
