@@ -9,7 +9,7 @@ const OPCIONES = [
   { label: "Usuarios", icon: LibraryBooks, path: "/usuarios" },
   { label: "Planes", icon: MenuBook, path: "/planes" },
   { label: "Soporte", icon: ReportProblem, path: "/reportes" },
-  { label: "Auditoría", icon: LibraryBooks, path: "/auditoria " },
+  { label: "Auditoría", icon: LibraryBooks, path: "/auditoria" },
 ];
 
 export default function SuperAdminLayout() {
