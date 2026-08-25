@@ -1,6 +1,7 @@
 import { LibroSugerencia } from '../../carrusel/LibroSugerencia';
 import Contenedor from '../../carrusel/Contenedor';
 import { libros } from '../../libro/libro';
+import Select from '../../../components/Select';
 
 export default function Catalogo() {
   const total = libros.length;
@@ -22,18 +23,18 @@ export default function Catalogo() {
 
       <div className="mb-8 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center gap-3">
         <span className="text-sm text-slate-500 font-medium">Filtrar:</span>
-        <select className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700">
+        <Select>
           <option>Todos</option>
-        </select>
-        <select className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700">
+        </Select>
+        <Select>
           <option>Todos</option>
-        </select>
-        <select className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700">
+        </Select>
+        <Select>
           <option>Ordenar por...</option>
-        </select>
+        </Select>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {libros.map((libro) => (
           <LibroSugerencia key={libro.id} portadaUrl={libro.portadaUrl} titulo={libro.titulo} genero={libro.genero} autor={libro.autor} />
         ))}
