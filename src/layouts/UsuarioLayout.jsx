@@ -1,15 +1,13 @@
 import { Outlet } from "react-router-dom";
-import { LibraryBooks, MenuBook, ReportProblem } from "@mui/icons-material";
+import { Inventory2, MenuBook, ReportProblem } from "@mui/icons-material";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/useAuth";
 
 const OPCIONES = [
-  { label: "Catálogo", icon: LibraryBooks, path: "/catalogo" },
-  { label: "Mis Préstamos", icon: MenuBook, path: "/prestamos" },
+  { label: "Catálogo", icon: MenuBook, path: "/catalogo" },
+  { label: "Mis Préstamos", icon: Inventory2, path: "/prestamos" },
   { label: "Reportar problema", icon: ReportProblem, path: "/reportar" },
 ];
-
-
 
 export default function UsuarioLayout() {
     const { usuario } = useAuth();

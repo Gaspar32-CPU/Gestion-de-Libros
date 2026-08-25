@@ -1,15 +1,15 @@
 import Sidebar from "../components/Sidebar";
-import { LibraryBooks, MenuBook, ReportProblem } from "@mui/icons-material";
+import { Assignment, DashboardOutlined, HistoryOutlined, PeopleAlt, PersonOutlined, ReportProblem } from "@mui/icons-material";
 import { useAuth } from "../context/useAuth";
 import { Outlet } from "react-router-dom";
 
 const OPCIONES = [
-  { label: "Plataforma", icon: LibraryBooks, path: "/plataforma" },
-  { label: "Organizaciones", icon: LibraryBooks, path: "/organizaciones" },
-  { label: "Usuarios", icon: LibraryBooks, path: "/usuarios" },
-  { label: "Planes", icon: MenuBook, path: "/planes" },
+  { label: "Plataforma", icon: DashboardOutlined, path: "/plataforma" },
+  { label: "Organizaciones", icon: PeopleAlt, path: "/organizaciones" },
+  { label: "Usuarios", icon: PersonOutlined, path: "/usuarios" },
+  { label: "Planes", icon: Assignment, path: "/planes" },
   { label: "Soporte", icon: ReportProblem, path: "/reportes" },
-  { label: "Auditoría", icon: LibraryBooks, path: "/auditoria" },
+  { label: "Auditoría", icon: HistoryOutlined, path: "/auditoria" },
 ];
 
 export default function SuperAdminLayout() {

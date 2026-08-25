@@ -1,16 +1,16 @@
 import Sidebar from "../components/Sidebar";
-import { LibraryBooks, MenuBook, ReportProblem } from "@mui/icons-material";
+import { DashboardOutlined, Equalizer, Inventory2, MenuBook, PersonOutlined, Settings } from "@mui/icons-material";
 import { useAuth } from "../context/useAuth";
 import { Outlet } from "react-router-dom";
 
 const OPCIONES = [
-  { label: "Panel", icon: LibraryBooks, path: "/panel" },
-  { label: "Catálogo", icon: LibraryBooks, path: "/catalogo" },
-  { label: "Gestión catálogo", icon: LibraryBooks, path: "/gestion-catalogo" },
-  { label: "Préstamos", icon: MenuBook, path: "/allprestamos" },
-  { label: "Usuarios", icon: LibraryBooks, path: "/usuarios" },
-  { label: "Reportes", icon: ReportProblem, path: "/reportes" },
-  { label: "Configuración", icon: LibraryBooks, path: "/configuracion" },
+  { label: "Panel", icon: DashboardOutlined, path: "/panel" },
+  { label: "Catálogo", icon: MenuBook, path: "/catalogo" },
+  { label: "Gestión catálogo", icon: MenuBook, path: "/gestion-catalogo" },
+  { label: "Préstamos", icon: Inventory2, path: "/allprestamos" },
+  { label: "Usuarios", icon: PersonOutlined, path: "/usuarios" },
+  { label: "Reportes", icon: Equalizer, path: "/reportes" },
+  { label: "Configuración", icon: Settings, path: "/configuracion" },
 ];
 
 export default function AdminLayout() {
