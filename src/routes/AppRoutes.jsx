@@ -8,10 +8,12 @@ import Login from "../features/auth/pages/login";
 import Register from "../features/auth/pages/register";
 import { RutaProtegida } from "../components/RutaProtegida";
 import LandingPage from "../features/landing/pages/LandingPage";
+import { LibroDetalle } from "../features/libro/LibroDetalle";
+import Catalogo from "../features/catalogo/pages/Catalogo";
 
 function AppRoutes() {
   return (
-    <>
+    <div className="bg-bg">
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={<LandingPage/>}> 
@@ -20,7 +22,8 @@ function AppRoutes() {
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register/>} /> // Esta ruta es para el catalogo de productos
+        <Route path="/register" element={<Register/>} />
+        <Route path="/libro" element={<LibroDetalle/>} />
 
         <Route path="/admin" element={<AdminLayout />}> //Esta ruta es para el panel de administración, el contenido actual es solo un ejemplo
           <Route path="usuarios" element={<></>} /> // Esta ruta es para los usuarios normales 
@@ -40,13 +43,14 @@ function AppRoutes() {
             <Route path="/prestamos" element={<></>} />// Esta ruta es para un admin vea todos los préstamos
           </Route>
           {/* Rutas de usuario normal */}
+          <Route path="/catalogo" element={<Catalogo/>} />
           <Route path="/perfil" element={<>Perfil</>} />
           <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
 
           <Route path="/dashboard" element={<>Dashboard</>} />
         </Route>
       </Routes>
-    </>
+    </div>
   );
 }
 
