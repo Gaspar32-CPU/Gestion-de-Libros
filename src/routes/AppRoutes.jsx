@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "../features/auth/pages/login";
 import Register from "../features/auth/pages/register";
 import { RutaProtegida } from "../components/RutaProtegida";
+import { RutaPublica } from "../components/RutaPublica";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
 import Catalogo from "../features/catalogo/pages/Catalogo";
@@ -22,8 +23,10 @@ function AppRoutes() {
           <Route path="precios" element={<></>} /> //queda para importar PreciosPage
           <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
         </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register/>} />
+        <Route element={<RutaPublica />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register/>} />
+        </Route>
         <Route path="/libro" element={<LibroDetalle/>} />
 
         <Route path="*" element={<h1>404 Not Found</h1>} />

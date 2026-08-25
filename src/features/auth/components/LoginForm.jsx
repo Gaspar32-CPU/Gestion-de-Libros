@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { loginSchema } from "../../../../schemas/auth.schema";
 import { useAuth } from "../../../context/useAuth";
@@ -12,6 +12,7 @@ export function LoginForm() {
     const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -51,7 +52,9 @@ export function LoginForm() {
             login(token);
 
             const { rol } = jwtDecode(token);
-            navigate(rol === "lector" ? "/catalogo" : "/panel", { replace: true });
+            const destinoPorDefecto = rol === "lector" ? "/catalogo" : "/panel";
+            const destino = location.state?.from?.pathname ?? destinoPorDefecto;
+            navigate(destino, { replace: true });
         } catch (err) {
             setError(err.message);
         } finally {
