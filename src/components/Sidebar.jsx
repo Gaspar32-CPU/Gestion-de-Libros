@@ -2,14 +2,14 @@ import { NavLink } from "react-router-dom";
 import UsuarioAvatar from "./UsuarioAvatar";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 
-export default function Sidebar ({opciones, usuario}) {
+export default function Sidebar ({opciones, usuario, organizacion}) {
     return(
         <div className="sticky top-0 flex flex-col h-screen w-60 bg-ink text-white/55">
             <div className="border-b border-b-ink-2">
-                <div className="flex gap-1.5 items-center px-2 py-3">
-                    <img src="/Bookly-png.png" alt="Imagen Institucion" className="w-14"/>
-                    <div className="flex flex-col flex-nowrap truncate">
-                        <p className="font-extrabold text-white">{usuario?.institucionNombre}</p>
+                <div className="flex gap-1.5 items-center px-4 py-4">
+                    <img src={organizacion?.logoUrl} alt="Imagen organizacion" className="w-10 shrink-0"/>
+                    <div className="flex flex-col min-w-0">
+                        <p className="font-extrabold text-white leading-tight">{organizacion?.nombre}</p>
                         <p className="text-xs font-semibold">Biblioteca</p>
                     </div>
                 </div>
@@ -20,7 +20,7 @@ export default function Sidebar ({opciones, usuario}) {
                         key={path}
                         to={path}
                         className={({ isActive }) =>
-                            `flex gap-2 items-center rounded-xl py-2 px-3 ${isActive ? "bg-ink-2" : "hover:bg-ink-2"}`
+                            `flex gap-2 items-center rounded-xl py-2 px-3 ${isActive ? "text-white bg-ink-2" : "text-white/60 hover:bg-ink-2"}`
                         }
                     >
                         <Icon color="inherit"/>
