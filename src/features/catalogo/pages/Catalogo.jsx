@@ -1,7 +1,7 @@
-import { LibroSugerencia } from '../../carrusel/LibroSugerencia';
 import Contenedor from '../../carrusel/Contenedor';
 import { libros } from '../../libro/libro';
 import Select from '../../../components/Select';
+import LibroCard from '../components/LibroCard';
 
 export default function Catalogo() {
   const total = libros.length;
@@ -36,7 +36,7 @@ export default function Catalogo() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {libros.map((libro) => (
-          <LibroSugerencia key={libro.id} portadaUrl={libro.portadaUrl} titulo={libro.titulo} genero={libro.genero} autor={libro.autor} />
+          <LibroCard key={libro.id} libro={libro}/>
         ))}
       </div>
     </div>
