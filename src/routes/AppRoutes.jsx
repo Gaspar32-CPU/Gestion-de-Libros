@@ -1,51 +1,49 @@
-import { Routes, Route, Link } from "react-router-dom";
-
-// Layouts
-import AdminLayout from "../layouts/AdminLayout";
+// src/routes/AppRoutes.jsx
+import React from 'react';
+import { Routes, Route } from "react-router-dom";
 
 // Pages (features)
 import Login from "../features/auth/pages/login";
 import { RutaProtegida } from "../components/RutaProtegida";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
+import  MisPrestamos  from "../features/prestamos/MisPrestamos";
 
-function AppRoutes() {
+export default function AppRoutes() {
   return (
-    <>
-      <Routes>
-        {/* Rutas públicas */}
-        <Route path="/" element={<LandingPage/>}> //queda para importar MarketingLayout
-          <Route index element={<></>} /> //queda para importar LandingPage
-          <Route path="precios" element={<></>} /> //queda para importar PreciosPage
-          <Route path="contacto" element={<></>} /> //queda para importar ContactoPage
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/libro" element={<LibroDetalle />} />
-        <Route path="/register" element={<Login />} />
-        <Route path="/catalogo" element={<></>} /> // Esta ruta es para el catalogo de productos
-        <Route path="/catalogo/:id" element={<></>} />// Esta ruta es para un libro en particular
-        <Route path="*" element={<h1>404 Not Found</h1>} />
+    <Routes>
+      {/* Rutas públicas */}
+      <Route path="/" element={<LandingPage />}>
+        <Route index element={<></>} />
+        <Route path="precios" element={<></>} />
+        <Route path="contacto" element={<></>} />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="/libro" element={<LibroDetalle />} />
+      <Route path="/register" element={<Login />} />
+      <Route path="/catalogo" element={<></>} />
+      <Route path="/catalogo/:id" element={<></>} />
+      <Route path="*" element={<h1>404 Not Found</h1>} />
 
-        {/* Rutas protegidas */}
-        <Route element={<RutaProtegida />}>
-          {/* Rutas solo de admin */}
-          <Route element={<></>}>// "Rutas solo admin" es un layout que contiene un sidebar con links a las rutas de admin
-            <Route path="/usuarios" element={<></>} />// Esta ruta es para un admin vea todos los usuarios
-            <Route path="/libros" element={<></>} /> // Esta ruta es para un admin vea todos los libros
-            <Route path="/libros/:id" element={<></>} /> // Esta ruta es para un admin vea un libro en particular
-            <Route path="/libros/:id/editar" element={<></>} /> // Esta ruta es para un admin edite un libro en particular
-            <Route path="/libros/nuevo" element={<></>} />// Esta ruta es para un admin cree un nuevo libro
-            <Route path="/prestamos" element={<></>} />// Esta ruta es para un admin vea todos los préstamos
-          </Route>
-          {/* Rutas de usuario normal */}
-          <Route path="/perfil" element={<>Perfil</>} />
-          <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
-
-          <Route path="/dashboard" element={<>Dashboard</>} />
+      {/* Rutas protegidas */}
+      <Route element={<RutaProtegida />}>
+        {/* Rutas solo de admin */}
+        <Route element={<></>}>
+          <Route path="/usuarios" element={<></>} />
+          <Route path="/libros" element={<></>} />
+          <Route path="/libros/:id" element={<></>} />
+          <Route path="/libros/:id/editar" element={<></>} />
+          <Route path="/libros/nuevo" element={<></>} />
+          <Route path="/prestamos" element={<></>} />
         </Route>
-      </Routes>
-    </>
+        
+        {/* Rutas de usuario normal */}
+        <Route path="/perfil" element={<>Perfil</>} />
+        <Route path="/prestamos/nuevo" element={<></>} />
+        <Route path="/mis-prestamos" element={<MisPrestamos />} />
+
+        <Route path="/dashboard" element={<>Dashboard</>} />
+      </Route>
+    </Routes>
   );
 }
-
-export default AppRoutes;
