@@ -51,11 +51,11 @@ export default function BusquedaIsbn({ onEncontrado }) {
   };
 
   return (
-    <div className="mb-2">
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
       <div className="flex items-end gap-3">
         <div className="flex-1">
           <label htmlFor="busqueda-isbn" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
-            SNI / ISBN
+            ISBN del libro
           </label>
           <input
             id="busqueda-isbn"
@@ -63,7 +63,7 @@ export default function BusquedaIsbn({ onEncontrado }) {
             value={isbn}
             onChange={(e) => setIsbn(e.target.value)}
             placeholder="978-84-376-0494-7"
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
           />
         </div>
         <button
@@ -76,10 +76,14 @@ export default function BusquedaIsbn({ onEncontrado }) {
         </button>
       </div>
 
+      <p className="mt-2 text-xs text-slate-500">
+        Consultamos la base bibliográfica y traemos título, autor, editorial, año y resumen. El stock y el código interno los completás vos.
+      </p>
+
       {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
 
       {libroEncontrado && (
-        <div className="mt-3 flex gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+        <div className="mt-3 flex gap-3 rounded-lg border border-slate-200 bg-white p-3">
           {libroEncontrado.portada && (
             <img
               src={libroEncontrado.portada}

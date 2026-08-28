@@ -3,14 +3,25 @@ import { esColorPortada } from '../../../utils/portada';
 
 const COLOR_POR_DEFECTO = '#1fa48a';
 
-const OPCIONES = [
-  { valor: 'url', label: 'Pegar URL' },
-  { valor: 'archivo', label: 'Subir imagen' },
-  { valor: 'color', label: 'Color' },
+const COLORES_PRESET = [
+  '#1fa48a',
+  '#b45309',
+  '#ea580c',
+  '#2563eb',
+  '#7c3aed',
+  '#059669',
+  '#be123c',
+  '#0f766e',
 ];
 
-export default function PortadaInput({ value, onChange }) {
-  const [modo, setModo] = useState(() => (esColorPortada(value) ? 'color' : 'url'));
+const OPCIONES = [
+  { valor: 'color', label: 'Color' },
+  { valor: 'url', label: 'Desde URL' },
+  { valor: 'archivo', label: 'Subir imagen' },
+];
+
+export default function PortadaInput({ value, onChange, titulo }) {
+  const [modo, setModo] = useState(() => (esColorPortada(value) || !value ? 'color' : 'url'));
 
   const handleArchivo = (e) => {
     const archivo = e.target.files?.[0];
@@ -36,69 +47,83 @@ export default function PortadaInput({ value, onChange }) {
         Portada
       </label>
 
-      <div className="flex gap-1 mb-2 bg-slate-100 rounded-lg p-1 w-fit">
-        {OPCIONES.map((opcion) => (
-          <button
-            key={opcion.valor}
-            type="button"
-            onClick={() => handleModoChange(opcion.valor)}
-            className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
-              modo === opcion.valor
-                ? 'bg-white text-slate-900 shadow-sm'
-                : 'text-slate-500 hover:text-slate-700'
-            }`}
-          >
-            {opcion.label}
-          </button>
-        ))}
-      </div>
-
-      {modo === 'url' && (
-        <input
-          type="text"
-          value={esColorPortada(value) ? '' : (value ?? '')}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="https://..."
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
-        />
-      )}
-
-      {modo === 'archivo' && (
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleArchivo}
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:cursor-pointer cursor-pointer"
-        />
-      )}
-
-      {modo === 'color' && (
-        <div className="flex items-center gap-3">
-          <input
-            type="color"
-            value={esColorPortada(value) ? value : COLOR_POR_DEFECTO}
-            onChange={(e) => onChange(e.target.value)}
-            className="h-10 w-14 rounded-lg border border-slate-200 cursor-pointer"
-          />
-          <span className="text-sm text-slate-500">
-            Se usa como portada lisa cuando no hay una imagen real.
-          </span>
-        </div>
-      )}
-
-      {value && (
-        <div className="mt-2 flex items-center gap-2">
-          <div
-            className="w-10 h-14 rounded shrink-0 bg-slate-100 bg-cover bg-center"
-            style={
-              esColorPortada(value)
+      <div className="flex items-start gap-4">
+        <div
+          className="relative w-24 h-32 shrink-0 rounded-xl overflow-hidden shadow-sm bg-cover bg-center"
+          style={
+            value
+              ? esColorPortada(value)
                 ? { backgroundColor: value }
                 : { backgroundImage: `url(${value})` }
-            }
-          />
-          <span className="text-xs text-slate-400">Vista previa</span>
+              : { backgroundColor: COLOR_POR_DEFECTO }
+          }
+        >
+          <div className="absolute inset-0 bg-black/10" />
+          <p className="absolute bottom-2 left-2 right-2 text-xs font-semibold text-white leading-tight">
+            {titulo?.trim() || 'Título del libro'}
+          </p>
         </div>
-      )}
+
+        <div className="flex-1 min-w-0">
+          <div className="flex gap-1 mb-2 bg-slate-100 rounded-lg p-1 w-fit">
+            {OPCIONES.map((opcion) => (
+              <button
+                key={opcion.valor}
+                type="button"
+                onClick={() => handleModoChange(opcion.valor)}
+                className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
+                  modo === opcion.valor
+                    ? 'bg-white text-slate-900 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                {opcion.label}
+              </button>
+            ))}
+          </div>
+
+          {modo === 'url' && (
+            <input
+              type="text"
+              value={esColorPortada(value) ? '' : (value ?? '')}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="https://..."
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+            />
+          )}
+
+          {modo === 'archivo' && (
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleArchivo}
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:cursor-pointer cursor-pointer"
+            />
+          )}
+
+          {modo === 'color' && (
+            <div>
+              <div className="flex gap-2">
+                {COLORES_PRESET.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => onChange(color)}
+                    aria-label={`Color ${color}`}
+                    className={`w-8 h-8 rounded-md border-2 cursor-pointer transition-transform ${
+                      value === color ? 'border-slate-900 scale-105' : 'border-transparent'
+                    }`}
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-slate-400 mt-2">
+                Se asigna un color identificatorio en lugar de una portada.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
