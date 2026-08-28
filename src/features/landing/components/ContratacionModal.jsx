@@ -7,7 +7,7 @@ const PASOS = ["Cuenta", "Organización", "Pago", "Identidad", "Listo"];
 const esquemaCuenta = z.object({
   nombre: z.string().trim().min(1, "Completá nombre y apellido."),
   apellido: z.string().trim().min(1, "Completá nombre y apellido."),
-  correo: z.email("Ingresá un correo institucional válido."),
+  correo: z.string().email("Ingresá un correo institucional válido."),
   contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres."),
 });
 
