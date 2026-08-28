@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { libros } from "./libro"; // Importa los datos desde libro.js
 import { Link, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import { esColorPortada } from '../../utils/portada';
 
 export const LibroDetalle = () => {
   const { id } = useParams();
@@ -52,11 +53,18 @@ export const LibroDetalle = () => {
       <div className="flex flex-col md:flex-row gap-7.5 md:gap-10">
         {/* Columna Izquierda */}
         <div className="w-full md:w-65 shrink-0">
-          <img
-            src={libro.portadaUrl}
-            alt={`Portada de ${libro.titulo}`}
-            className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
-          />
+          {esColorPortada(libro.portadaUrl) ? (
+            <div
+              className="w-full h-60 md:h-95 rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+              style={{ backgroundColor: libro.portadaUrl }}
+            />
+          ) : (
+            <img
+              src={libro.portadaUrl}
+              alt={`Portada de ${libro.titulo}`}
+              className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+            />
+          )}
           <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
             <span className="bg-[#d1fae5] text-[#065f46] text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3">
               Disponible

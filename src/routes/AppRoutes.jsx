@@ -8,6 +8,7 @@ import { RutaPublica } from "../components/RutaPublica";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
 import Catalogo from "../features/catalogo/pages/Catalogo";
+import GestionCatalogo from "../features/catalogo/pages/GestionCatalogo";
 import UsuarioLayout from "../layouts/UsuarioLayout";
 import { RutaPorRol } from "../components/RutaPorRol";
 import { LayoutSegunRol } from "./LayoutSegunRol";
@@ -53,7 +54,7 @@ function AppRoutes() {
           <Route element={<RutaPorRol rolesPermitidos={["super-admin", "admin"]} />}>
             <Route element={<LayoutSegunRol />}>// "Rutas solo admin" es un layout que contiene un sidebar con links a las rutas de admin
               <Route path="/panel" element={<></>} />
-              <Route path="/gestion-catalogo" element={<></>} />
+              <Route path="/gestion-catalogo" element={<GestionCatalogo/>} />
               <Route path="/allprestamos" element={<></>} />
               <Route path="/usuarios" element={<></>} />
               <Route path="/reportes" element={<></>} />
