@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-// src/routes/AppRoutes.jsx
-import React from 'react';
-=======
->>>>>>> develop
 import { Routes, Route } from "react-router-dom";
 
 // Pages (features)
@@ -12,54 +7,15 @@ import { RutaProtegida } from "../components/RutaProtegida";
 import { RutaPublica } from "../components/RutaPublica";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
-<<<<<<< HEAD
 import  MisPrestamos  from "../features/prestamos/MisPrestamos";
-=======
 import Catalogo from "../features/catalogo/pages/Catalogo";
 import UsuarioLayout from "../layouts/UsuarioLayout";
 import { RutaPorRol } from "../components/RutaPorRol";
 import { LayoutSegunRol } from "./LayoutSegunRol";
 import SuperAdminLayout from "../layouts/SuperAdminLayout";
->>>>>>> develop
 
 export default function AppRoutes() {
   return (
-<<<<<<< HEAD
-    <Routes>
-      {/* Rutas públicas */}
-      <Route path="/" element={<LandingPage />}>
-        <Route index element={<></>} />
-        <Route path="precios" element={<></>} />
-        <Route path="contacto" element={<></>} />
-      </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="/libro" element={<LibroDetalle />} />
-      <Route path="/register" element={<Login />} />
-      <Route path="/catalogo" element={<></>} />
-      <Route path="/catalogo/:id" element={<></>} />
-      <Route path="*" element={<h1>404 Not Found</h1>} />
-
-      {/* Rutas protegidas */}
-      <Route element={<RutaProtegida />}>
-        {/* Rutas solo de admin */}
-        <Route element={<></>}>
-          <Route path="/usuarios" element={<></>} />
-          <Route path="/libros" element={<></>} />
-          <Route path="/libros/:id" element={<></>} />
-          <Route path="/libros/:id/editar" element={<></>} />
-          <Route path="/libros/nuevo" element={<></>} />
-          <Route path="/prestamos" element={<></>} />
-        </Route>
-        
-        {/* Rutas de usuario normal */}
-        <Route path="/perfil" element={<>Perfil</>} />
-        <Route path="/prestamos/nuevo" element={<></>} />
-        <Route path="/mis-prestamos" element={<MisPrestamos />} />
-
-        <Route path="/dashboard" element={<>Dashboard</>} />
-      </Route>
-    </Routes>
-=======
     <div className="bg-bg w-">
       <Routes>
         {/* Rutas públicas */}
@@ -109,6 +65,7 @@ export default function AppRoutes() {
           {/* Rutas de usuario normal (lector) */}
           <Route element={<RutaPorRol rolesPermitidos={["lector"]} />}>
             <Route element={<UsuarioLayout/>}>
+              <Route path="/mis-prestamos" element={<MisPrestamos />} />
               <Route path="/prestamos" element={<></>} />// Esta ruta es para que un usuario vea sus prestamos
               <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
               <Route path="/reportar" element={<></>} /> // Esta ruta es para que un usuario vea reporte un problema
@@ -117,6 +74,5 @@ export default function AppRoutes() {
         </Route>
       </Routes>
     </div>
->>>>>>> develop
   );
 }
