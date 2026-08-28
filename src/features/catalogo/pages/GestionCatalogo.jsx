@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { AddRounded, EditOutlined, DeleteOutlineOutlined } from '@mui/icons-material';
 import LibroFormModal from '../components/LibroFormModal';
 import { esColorPortada } from '../../../utils/portada';
-import { obtenerLibros, crearLibro } from '../catalogoService';
+import { obtenerLibros, crearLibro, actualizarLibro, eliminarLibro } from '../catalogoService';
+
+// El back manda un mensaje legible en la mayoría de los errores (400, 404, 409);
+// si no vino nada usable, mostramos algo genérico en vez de romper.
+function mensajeDeError(err, fallback) {
+  return err.response?.data?.mensaje || fallback;
+}
 
 export default function GestionCatalogo() {
   const [libros, setLibros] = useState([]);
   const [libroEnEdicion, setLibroEnEdicion] = useState(null); // null = cerrado, {} = crear, libro = editar
   const [libroAEliminar, setLibroAEliminar] = useState(null);
   const [errorGuardado, setErrorGuardado] = useState('');
+  const [errorEliminar, setErrorEliminar] = useState('');
 
   useEffect(() => {
     obtenerLibros()
@@ -17,28 +24,34 @@ export default function GestionCatalogo() {
   }, []);
 
   const handleGuardar = async (datos) => {
-    if (datos.id) {
-      // La edición todavía no persiste: PUT /api/libros/:id no está implementado en el back.
-      setLibros((prev) => prev.map((libro) => (libro.id === datos.id ? { ...libro, ...datos } : libro)));
-      setLibroEnEdicion(null);
-      return;
-    }
-
     setErrorGuardado('');
     try {
-      const libroCreado = await crearLibro(datos);
-      setLibros((prev) => [...prev, libroCreado]);
+      if (datos.id) {
+        const libroActualizado = await actualizarLibro(datos.id, datos);
+        setLibros((prev) =>
+          prev.map((libro) => (libro.id === datos.id ? libroActualizado : libro))
+        );
+      } else {
+        const libroCreado = await crearLibro(datos);
+        setLibros((prev) => [...prev, libroCreado]);
+      }
       setLibroEnEdicion(null);
     } catch (err) {
-      console.error('Error al crear el libro', err);
-      setErrorGuardado('No se pudo guardar el libro. Intentá de nuevo.');
+      console.error('Error al guardar el libro', err);
+      setErrorGuardado(mensajeDeError(err, 'No se pudo guardar el libro. Intentá de nuevo.'));
     }
   };
 
-  const handleEliminar = () => {
-    // Solo borra en el estado local: DELETE /api/libros/:id todavía no está implementado en el back.
-    setLibros((prev) => prev.filter((libro) => libro.id !== libroAEliminar.id));
-    setLibroAEliminar(null);
+  const handleEliminar = async () => {
+    setErrorEliminar('');
+    try {
+      await eliminarLibro(libroAEliminar.id);
+      setLibros((prev) => prev.filter((libro) => libro.id !== libroAEliminar.id));
+      setLibroAEliminar(null);
+    } catch (err) {
+      console.error('Error al eliminar el libro', err);
+      setErrorEliminar(mensajeDeError(err, 'No se pudo eliminar el libro. Intentá de nuevo.'));
+    }
   };
 
   return (
@@ -111,7 +124,10 @@ export default function GestionCatalogo() {
                         <EditOutlined fontSize="small" />
                       </button>
                       <button
-                        onClick={() => setLibroAEliminar(libro)}
+                        onClick={() => {
+                          setErrorEliminar('');
+                          setLibroAEliminar(libro);
+                        }}
                         aria-label={`Eliminar ${libro.titulo}`}
                         className="p-2 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 cursor-pointer"
                       >
@@ -148,6 +164,7 @@ export default function GestionCatalogo() {
             <p className="text-sm text-slate-600 mb-6">
               ¿Seguro que querés eliminar <strong>{libroAEliminar.titulo}</strong> del catálogo? Esta acción no se puede deshacer.
             </p>
+            {errorEliminar && <p className="text-sm text-rose-600 mb-4 -mt-2">{errorEliminar}</p>}
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => setLibroAEliminar(null)}

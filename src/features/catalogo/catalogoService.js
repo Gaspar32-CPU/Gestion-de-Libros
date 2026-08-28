@@ -29,8 +29,8 @@ export async function obtenerLibroPorId(id) {
   return normalizarLibro(data);
 }
 
-export async function crearLibro(datos) {
-  const { data } = await api.post('/libros', {
+function aCuerpoLibro(datos) {
+  return {
     titulo: datos.titulo,
     autor: datos.autor,
     genero: datos.genero,
@@ -39,9 +39,22 @@ export async function crearLibro(datos) {
     fecha_pub: datos.anio ? `${datos.anio}-01-01` : null,
     resumen: datos.descripcion || null,
     portada: datos.portadaUrl || null,
-    stock: datos.ejemplaresTotales,
-  });
+    stock: datos.stock,
+  };
+}
+
+export async function crearLibro(datos) {
+  const { data } = await api.post('/libros', aCuerpoLibro(datos));
   return normalizarLibro(data);
+}
+
+export async function actualizarLibro(id, datos) {
+  const { data } = await api.put(`/libros/${id}`, aCuerpoLibro(datos));
+  return normalizarLibro(data);
+}
+
+export async function eliminarLibro(id) {
+  await api.delete(`/libros/${id}`);
 }
 
 export function obtenerLibrosPaginados({ page = 1, limit = 4, simulateError = false } = {}) {

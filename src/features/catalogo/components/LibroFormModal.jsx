@@ -16,15 +16,21 @@ const LIBRO_VACIO = {
   codigoInterno: '',
   isbn: '',
   descripcion: '',
-  ejemplaresTotales: '',
-  ejemplaresLibres: '',
+  stock: '',
 };
 
 export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExterno }) {
   const esEdicion = Boolean(libro?.id);
   const [modo, setModo] = useState('manual'); // 'manual' | 'isbn' — solo aplica al crear
   const [isbnListo, setIsbnListo] = useState(false);
-  const [form, setForm] = useState({ ...LIBRO_VACIO, ...libro });
+  // El stock editable es el total de ejemplares (columna `stock` en la base).
+  // Los "disponibles" no se guardan aparte: el back los calcula restando los
+  // préstamos activos, así que no tiene sentido pedírselo al admin.
+  const [form, setForm] = useState({
+    ...LIBRO_VACIO,
+    ...libro,
+    stock: libro?.ejemplaresTotales ?? '',
+  });
   const [error, setError] = useState('');
 
   // En modo ISBN, el resto del formulario se muestra recién cuando la
@@ -59,39 +65,17 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
       return;
     }
 
-    let ejemplaresTotales;
-    let ejemplaresLibres;
-
-    if (esEdicion) {
-      ejemplaresTotales = Number(form.ejemplaresTotales);
-      ejemplaresLibres = Number(form.ejemplaresLibres);
-
-      if (!Number.isInteger(ejemplaresTotales) || ejemplaresTotales < 0) {
-        setError('Los ejemplares totales deben ser un número entero mayor o igual a 0.');
-        return;
-      }
-      if (!Number.isInteger(ejemplaresLibres) || ejemplaresLibres < 0 || ejemplaresLibres > ejemplaresTotales) {
-        setError('Los ejemplares libres no pueden ser mayores a los ejemplares totales.');
-        return;
-      }
-    } else {
-      const stock = Number(form.stock);
-      if (!Number.isInteger(stock) || stock < 0) {
-        setError('El stock debe ser un número entero mayor o igual a 0.');
-        return;
-      }
-      ejemplaresTotales = stock;
-      ejemplaresLibres = stock;
+    const stock = Number(form.stock);
+    if (!Number.isInteger(stock) || stock < 0) {
+      setError('El stock debe ser un número entero mayor o igual a 0.');
+      return;
     }
 
-    // eslint-disable-next-line no-unused-vars
-    const { stock, ...datosLibro } = form;
-
     onGuardar({
-      ...datosLibro,
+      ...form,
+      id: libro?.id,
       anio: form.anio ? Number(form.anio) : undefined,
-      ejemplaresTotales,
-      ejemplaresLibres,
+      stock,
     });
   };
 
@@ -186,15 +170,13 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <Campo label="Código interno" name="codigoInterno" value={form.codigoInterno} onChange={handleChange} placeholder="Ej. NOV-014" />
                 <Campo label="SNI / ISBN" name="isbn" value={form.isbn} onChange={handleChange} placeholder="Ej. 978-84-376-0494-7" />
-                {esEdicion ? (
-                  <>
-                    <Campo label="Ejemplares totales" name="ejemplaresTotales" type="number" value={form.ejemplaresTotales} onChange={handleChange} required />
-                    <Campo label="Ejemplares libres" name="ejemplaresLibres" type="number" value={form.ejemplaresLibres} onChange={handleChange} required />
-                  </>
-                ) : (
-                  <Campo label="Stock (ejemplares)" name="stock" type="number" value={form.stock} onChange={handleChange} placeholder="Ej. 6" required />
-                )}
+                <Campo label="Stock (ejemplares)" name="stock" type="number" value={form.stock} onChange={handleChange} placeholder="Ej. 6" required />
               </div>
+              {esEdicion && (
+                <p className="text-xs text-slate-400 -mt-2">
+                  Los ejemplares disponibles se calculan solos según los préstamos activos.
+                </p>
+              )}
 
               <div>
                 <label htmlFor="descripcion" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
