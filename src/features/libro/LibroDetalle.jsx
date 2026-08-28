@@ -1,6 +1,8 @@
 // src/features/libro/LibroDetalle.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { libros } from "./libro"; // Importa los datos desde libro.js
+import { Link } from 'react-router-dom';
+import { ArrowBack } from '@mui/icons-material';
 
 export const LibroDetalle = () => {
   // Tomamos el primer libro de la lista como base
@@ -39,20 +41,23 @@ export const LibroDetalle = () => {
   const esDisponible = libro.ejemplaresLibres > 0;
 
   return (
-    <div className="max-w-[1000px] mx-auto font-sans antialiased text-slate-950 p-4">
-      <a href="#" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6 hover:underline">
-        ← Volver al catálogo
-      </a>
+    <div className="mx-auto font-sans antialiased text-slate-950 p-4">
+      <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6">
+        <div className='flex items-center gap-1'>
+          <ArrowBack sx={{ fontSize: 16 }} />
+          Volver al catálogo
+        </div>
+      </Link>
 
-      <div className="flex flex-col md:flex-row gap-[30px] md:gap-10">
+      <div className="flex flex-col md:flex-row gap-7.5 md:gap-10">
         {/* Columna Izquierda */}
-        <div className="w-full md:w-[260px] flex-shrink-0">
+        <div className="w-full md:w-65 shrink-0">
           <img 
             src={libro.portadaUrl} 
             alt={`Portada de ${libro.titulo}`} 
-            className="w-full h-auto max-h-[380px] md:h-[380px] object-cover rounded-lg mb-[15px] shadow-[0_4px_6px_rgba(0,0,0,0.1)]" 
+            className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]" 
           />
-          <div className="bg-white p-[15px] rounded-lg border border-[#e2e8f0]">
+          <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
             <span className="bg-[#d1fae5] text-[#065f46] text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3">
               Disponible
             </span>
@@ -60,7 +65,7 @@ export const LibroDetalle = () => {
               {Array.from({ length: libro.ejemplaresTotales || 0 }).map((_, idx) => (
                 <div 
                   key={idx} 
-                  className={`w-4 h-5 rounded-[2px] ${
+                  className={`w-4 h-5 rounded-xs ${
                     idx < libro.ejemplaresLibres ? 'bg-[#1fa48a]' : 'bg-[#e2e8f0]'
                   }`} 
                 />
@@ -73,26 +78,26 @@ export const LibroDetalle = () => {
         </div>
 
         {/* Columna Derecha */}
-        <div className="flex-grow">
+        <div className="grow">
           <span className="text-[#1fa48a] text-[11px] font-bold tracking-[1px] uppercase">
             {libro.genero}
           </span>
-          <h1 className="text-[#092e40] text-3xl font-bold mt-1 mb-[5px] tracking-tight">
+          <h1 className="text-[#092e40] text-3xl font-bold mt-1 mb-1.25 tracking-tight">
             {libro.titulo}
           </h1>
-          <p className="text-[#64748b] text-sm mb-[15px]">
+          <p className="text-[#64748b] text-sm mb-3.75">
             {libro.autor} · {libro.anio} · {libro.editorial}
           </p>
-          <div className="flex items-center gap-2 text-sm mb-[25px]">
+          <div className="flex items-center gap-2 text-sm mb-6.25">
             <span className="text-[#f59e0b] tracking-[2px]">{renderEstrellas(libro.puntuacion)}</span>
             <span className="font-bold text-[#092e40]">{libro.puntuacion}</span>
             <span className="text-[#64748b]">({listaResenas.length} reseñas)</span>
           </div>
-          <p className="text-[#64748b] leading-relaxed text-[15px] max-w-[600px] mb-[25px]">
+          <p className="text-[#64748b] leading-relaxed text-[15px] max-w-150 mb-6.25">
             {libro.descripcion}
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 border border-[#e7e5d8] rounded-xl p-5 mb-[25px]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 border border-[#e7e5d8] rounded-xl p-5 mb-6.25">
             <div className="flex flex-col gap-1">
               <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">IDIOMA</span>
               <span className="text-sm font-semibold text-[#092e40]">{libro.idioma}</span>
@@ -117,8 +122,8 @@ export const LibroDetalle = () => {
           >
             Solicitar préstamo →
           </button>
-          <p className="text-xs text-[#64748b] mb-[30px]">{libro.condicionesPrestamo}</p>
-          <hr className="border-0 border-t border-[#e7e5d8] mb-[30px]" />
+          <p className="text-xs text-[#64748b] mb-7.5">{libro.condicionesPrestamo}</p>
+          <hr className="border-0 border-t border-[#e7e5d8] mb-7.5" />
 
           {/* Sección de entrada: Tu reseña (Colores idénticos a tu mockup) */}
           <div className="bg-[#f5f4ef] rounded-xl p-5 mb-8 border border-[#e8e7e1]">
@@ -146,7 +151,7 @@ export const LibroDetalle = () => {
                 value={nuevoComentario}
                 onChange={(e) => setNuevoComentario(e.target.value)}
                 placeholder="Escribe tu opinión sobre el libro aquí..."
-                className="w-full p-3 border border-[#e2e8f0] rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1fa48a] bg-white min-h-[90px] resize-none"
+                className="w-full p-3 border border-[#e2e8f0] rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1fa48a] bg-white min-h-22.5 resize-none"
               />
               <button
                 type="submit"
@@ -162,18 +167,18 @@ export const LibroDetalle = () => {
           <h3 className="text-[#092e40] text-lg font-bold mb-5">Reseñas</h3>
           <div className="space-y-5">
             {listaResenas.map((resena, idx) => (
-              <div key={idx} className="flex gap-[15px]">
-                <div className="w-[35px] h-[35px] bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">
+              <div key={idx} className="flex gap-3.75">
+                <div className="w-8.75 h-8.75 bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                   {resena.iniciales}
                 </div>
-                <div className="flex-grow">
+                <div className="grow">
                   <p className="text-sm font-semibold text-[#092e40] flex items-center gap-1.5">
                     {resena.nombre}
                     <span className="text-[#f59e0b] text-[10px] ml-1 tracking-[1px]">
                       {renderEstrellas(resena.estrellas)}
                     </span>
                   </p>
-                  <p className="text-sm text-[#64748b] mt-[3px]">{resena.comentario}</p>
+                  <p className="text-sm text-[#64748b] mt-0.75">{resena.comentario}</p>
                 </div>
               </div>
             ))}

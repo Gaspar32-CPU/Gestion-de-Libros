@@ -1,25 +1,175 @@
-// src/features/libro/libro.js
-
-export const libros = [ 
-  { 
-    id: 1, 
-    portadaUrl: "data:image/webp;base64,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", 
-    titulo: "El principito", 
-    autor: "Antoine de Saint-Exupéry", 
-    anio: 1943, 
-    genero: "INFANTIL", 
-    editorial: "Salamandra", 
-    edicion: "1943 · 1ª edición", 
-    idioma: "Español", 
-    isbn: "No registrado", 
-    descripcion: "Un aviador y un pequeño príncipe de otro planeta reflexionan sobre la vida, el amor y la amistad.", 
-    puntuacion: 4.8, 
-    totalResenas: 1, 
-    ejemplaresLibres: 5, 
-    ejemplaresTotales: 8, 
-    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores", 
-    resenas: [ 
-      { iniciales: "MS", nombre: "Martín Suárez", estrellas: 5, comentario: "Un clásico imprescindible para todas las edades." } 
-    ] 
-  } 
+export const libros = [
+  {
+    id: 1,
+    portadaUrl: "https://covers.openlibrary.org/b/isbn/9780307474728-L.jpg",
+    titulo: "Cien años de soledad",
+    autor: "Gabriel García Márquez",
+    anio: 1967,
+    genero: "REALISMO MÁGICO",
+    editorial: "Sudamericana",
+    edicion: "1967 · 1ª edición",
+    idioma: "Español",
+    isbn: "9780307474728",
+    descripcion: "La historia de la familia Buendía a lo largo de siete generaciones en el pueblo ficticio de Macondo.",
+    puntuacion: 4.7,
+    totalResenas: 2,
+    ejemplaresLibres: 0,
+    ejemplaresTotales: 6,
+    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
+    resenas: [
+      { iniciales: "MS", nombre: "Martín Suárez", estrellas: 5, comentario: "Una obra maestra de la literatura latinoamericana." },
+      { iniciales: "LP", nombre: "Lucía Pérez", estrellas: 4, comentario: "Denso pero fascinante, hay que leerlo con calma." }
+    ]
+  },
+  {
+    id: 2,
+    portadaUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzjYq03OVu4USuH8x1oMlLnA55rfpj6HxdfJeGmD7vdw&s=10",
+    titulo: "Don Quijote de la Mancha",
+    autor: "Miguel de Cervantes",
+    anio: 1605,
+    genero: "CLÁSICO",
+    editorial: "Cátedra",
+    edicion: "1605 · edición conmemorativa",
+    idioma: "Español",
+    isbn: "9788420412146",
+    descripcion: "Las aventuras de un hidalgo que enloquece leyendo libros de caballería y sale a recorrer España.",
+    puntuacion: 4.5,
+    totalResenas: 1,
+    ejemplaresLibres: 2,
+    ejemplaresTotales: 4,
+    condicionesPrestamo: "Requiere aprobación del tutor · retiro en Biblioteca central",
+    resenas: [
+      { iniciales: "JR", nombre: "Javier Rodríguez", estrellas: 5, comentario: "El origen de la novela moderna, imprescindible." }
+    ]
+  },
+  {
+    id: 3,
+    portadaUrl: "https://covers.openlibrary.org/b/isbn/9780451524935-L.jpg",
+    titulo: "1984",
+    autor: "George Orwell",
+    anio: 1949,
+    genero: "DISTOPÍA",
+    editorial: "Debolsillo",
+    edicion: "1949 · 1ª edición",
+    idioma: "Español",
+    isbn: "9780451524935",
+    descripcion: "Un futuro totalitario donde el Gran Hermano vigila cada pensamiento y acción de los ciudadanos.",
+    puntuacion: 4.9,
+    totalResenas: 3,
+    ejemplaresLibres: 4,
+    ejemplaresTotales: 7,
+    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
+    resenas: [
+      { iniciales: "CA", nombre: "Camila Alonso", estrellas: 5, comentario: "Más vigente que nunca, inquietante y brillante." },
+      { iniciales: "DF", nombre: "Diego Fernández", estrellas: 5, comentario: "Un libro que te cambia la forma de ver el mundo." },
+      { iniciales: "NP", nombre: "Natalia Pintos", estrellas: 4, comentario: "Duro pero necesario." }
+    ]
+  },
+  {
+    id: 4,
+    portadaUrl: "https://covers.openlibrary.org/b/isbn/9788478884452-L.jpg",
+    titulo: "Harry Potter y la piedra filosofal",
+    autor: "J. K. Rowling",
+    anio: 1997,
+    genero: "FANTASÍA",
+    editorial: "Salamandra",
+    edicion: "1997 · 1ª edición",
+    idioma: "Español",
+    isbn: "9788478884452",
+    descripcion: "Un niño descubre que es un mago y comienza su vida en el Colegio Hogwarts de Magia.",
+    puntuacion: 4.8,
+    totalResenas: 2,
+    ejemplaresLibres: 6,
+    ejemplaresTotales: 10,
+    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
+    resenas: [
+      { iniciales: "TB", nombre: "Tomás Blanco", estrellas: 5, comentario: "El libro que me hizo amar la lectura." },
+      { iniciales: "VG", nombre: "Valentina Gómez", estrellas: 5, comentario: "Mágico de principio a fin." }
+    ]
+  },
+  {
+    id: 5,
+    portadaUrl: "https://covers.openlibrary.org/b/isbn/9788437604572-L.jpg",
+    titulo: "Rayuela",
+    autor: "Julio Cortázar",
+    anio: 1963,
+    genero: "NOVELA EXPERIMENTAL",
+    editorial: "Cátedra",
+    edicion: "1963 · 1ª edición",
+    idioma: "Español",
+    isbn: "9788437604572",
+    descripcion: "La historia de Horacio Oliveira, narrada en un formato no lineal que se puede leer de varias maneras.",
+    puntuacion: 4.3,
+    totalResenas: 1,
+    ejemplaresLibres: 1,
+    ejemplaresTotales: 3,
+    condicionesPrestamo: "Requiere aprobación del tutor · retiro en Biblioteca central",
+    resenas: [
+      { iniciales: "SP", nombre: "Sofía Prieto", estrellas: 4, comentario: "Complejo, pero una experiencia de lectura única." }
+    ]
+  },
+  {
+    id: 6,
+    portadaUrl: "https://covers.openlibrary.org/b/isbn/9780062316097-L.jpg",
+    titulo: "Sapiens: De animales a dioses",
+    autor: "Yuval Noah Harari",
+    anio: 2011,
+    genero: "ENSAYO / HISTORIA",
+    editorial: "Debate",
+    edicion: "2011 · 1ª edición",
+    idioma: "Español",
+    isbn: "9780062316097",
+    descripcion: "Un recorrido por la historia de la humanidad, desde la evolución hasta la era digital.",
+    puntuacion: 4.6,
+    totalResenas: 2,
+    ejemplaresLibres: 0,
+    ejemplaresTotales: 5,
+    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
+    resenas: [
+      { iniciales: "AM", nombre: "Andrés Machado", estrellas: 5, comentario: "Cambia por completo la manera de pensar la historia humana." },
+      { iniciales: "RD", nombre: "Rocío Díaz", estrellas: 4, comentario: "Muy ameno para ser un libro de divulgación." }
+    ]
+  },
+  {
+    id: 7,
+    portadaUrl: "https://covers.openlibrary.org/b/isbn/9780307389732-L.jpg",
+    titulo: "El amor en los tiempos del cólera",
+    autor: "Gabriel García Márquez",
+    anio: 1985,
+    genero: "ROMANCE",
+    editorial: "Oveja Negra",
+    edicion: "1985 · 1ª edición",
+    idioma: "Español",
+    isbn: "9780307389732",
+    descripcion: "Una historia de amor que perdura más de cincuenta años entre Florentino Ariza y Fermina Daza.",
+    puntuacion: 4.4,
+    totalResenas: 1,
+    ejemplaresLibres: 2,
+    ejemplaresTotales: 4,
+    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
+    resenas: [
+      { iniciales: "IC", nombre: "Inés Castro", estrellas: 4, comentario: "Una prosa preciosa sobre la paciencia y el amor." }
+    ]
+  },
+  {
+    id: 8,
+    portadaUrl: "https://image.cdn0.buscalibre.com/5b59db9e8863b545518b4567.RS500x500.jpg",
+    titulo: "Crónica de una muerte anunciada",
+    autor: "Gabriel García Márquez",
+    anio: 1981,
+    genero: "NOVELA CORTA",
+    editorial: "Plaza & Janés",
+    edicion: "1981 · 1ª edición",
+    idioma: "Español",
+    isbn: "9788497592077",
+    descripcion: "La reconstrucción del asesinato de Santiago Nasar, anunciado y sin embargo inevitable.",
+    puntuacion: 4.5,
+    totalResenas: 1,
+    ejemplaresLibres: 3,
+    ejemplaresTotales: 5,
+    condicionesPrestamo: "Aprobación automática · retiro en Sala de tutores",
+    resenas: [
+      { iniciales: "PG", nombre: "Pablo Gómez", estrellas: 5, comentario: "Corto, contundente y perfectamente construido." }
+    ]
+  }
 ];
