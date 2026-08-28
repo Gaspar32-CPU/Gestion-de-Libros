@@ -3,11 +3,10 @@ import { IconButton } from "@mui/material";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
 import { Link } from "react-router-dom";
 import { LibroSugerencia } from "./LibroSugerencia";
-import { libros } from "../libro/libro";
 
 const INTERVALO_AUTOSCROLL_MS = 3000;
 
-const Contenedor = () => {
+const Contenedor = ({ libros = [] }) => {
   const scrollRef = useRef(null);
 
   const desplazar = useCallback((direccion) => {

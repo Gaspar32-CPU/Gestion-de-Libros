@@ -1,28 +1,42 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AddRounded, EditOutlined, DeleteOutlineOutlined } from '@mui/icons-material';
-import { libros as librosIniciales } from '../../libro/libro';
 import LibroFormModal from '../components/LibroFormModal';
 import { esColorPortada } from '../../../utils/portada';
+import { obtenerLibros, crearLibro } from '../catalogoService';
 
 export default function GestionCatalogo() {
-  const [libros, setLibros] = useState(librosIniciales);
+  const [libros, setLibros] = useState([]);
   const [libroEnEdicion, setLibroEnEdicion] = useState(null); // null = cerrado, {} = crear, libro = editar
   const [libroAEliminar, setLibroAEliminar] = useState(null);
+  const [errorGuardado, setErrorGuardado] = useState('');
 
-  const handleGuardar = (datos) => {
+  useEffect(() => {
+    obtenerLibros()
+      .then(setLibros)
+      .catch((err) => console.error('Error al traer el catálogo', err));
+  }, []);
+
+  const handleGuardar = async (datos) => {
     if (datos.id) {
+      // La edición todavía no persiste: PUT /api/libros/:id no está implementado en el back.
       setLibros((prev) => prev.map((libro) => (libro.id === datos.id ? { ...libro, ...datos } : libro)));
-    } else {
-      const siguienteId = libros.reduce((max, libro) => Math.max(max, libro.id), 0) + 1;
-      setLibros((prev) => [
-        ...prev,
-        { ...datos, id: siguienteId, puntuacion: 0, totalResenas: 0, resenas: [] },
-      ]);
+      setLibroEnEdicion(null);
+      return;
     }
-    setLibroEnEdicion(null);
+
+    setErrorGuardado('');
+    try {
+      const libroCreado = await crearLibro(datos);
+      setLibros((prev) => [...prev, libroCreado]);
+      setLibroEnEdicion(null);
+    } catch (err) {
+      console.error('Error al crear el libro', err);
+      setErrorGuardado('No se pudo guardar el libro. Intentá de nuevo.');
+    }
   };
 
   const handleEliminar = () => {
+    // Solo borra en el estado local: DELETE /api/libros/:id todavía no está implementado en el back.
     setLibros((prev) => prev.filter((libro) => libro.id !== libroAEliminar.id));
     setLibroAEliminar(null);
   };
@@ -60,10 +74,14 @@ export default function GestionCatalogo() {
                 <tr key={libro.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      {esColorPortada(libro.portadaUrl) ? (
+                      {esColorPortada(libro.portadaUrl) || !libro.portadaUrl ? (
                         <div
                           className="w-10 h-14 rounded shrink-0"
-                          style={{ backgroundColor: libro.portadaUrl }}
+                          style={{
+                            backgroundColor: esColorPortada(libro.portadaUrl)
+                              ? libro.portadaUrl
+                              : '#1fa48a',
+                          }}
                         />
                       ) : (
                         <img
@@ -113,6 +131,7 @@ export default function GestionCatalogo() {
           libro={libroEnEdicion}
           onGuardar={handleGuardar}
           onCerrar={() => setLibroEnEdicion(null)}
+          errorExterno={errorGuardado}
         />
       )}
 

@@ -1,3 +1,49 @@
+import api from '../../services/api';
+
+// Traduce las columnas de la tabla `libros` (MySQL) a los nombres que ya
+// usan los componentes del catálogo, para no tener que tocarlos a todos.
+function normalizarLibro(libro) {
+  return {
+    id: libro.id,
+    portadaUrl: libro.portada || '',
+    titulo: libro.titulo,
+    autor: libro.autor,
+    genero: libro.genero,
+    editorial: libro.editorial,
+    isbn: libro.isbn,
+    anio: libro.fecha_pub ? new Date(libro.fecha_pub).getFullYear() : undefined,
+    descripcion: libro.resumen || '',
+    puntuacion: Number(libro.promedio_estrellas) || 0,
+    ejemplaresLibres: libro.disponibles,
+    ejemplaresTotales: libro.stock,
+  };
+}
+
+export async function obtenerLibros() {
+  const { data } = await api.get('/libros');
+  return data.map(normalizarLibro);
+}
+
+export async function obtenerLibroPorId(id) {
+  const { data } = await api.get(`/libros/${id}`);
+  return normalizarLibro(data);
+}
+
+export async function crearLibro(datos) {
+  const { data } = await api.post('/libros', {
+    titulo: datos.titulo,
+    autor: datos.autor,
+    genero: datos.genero,
+    editorial: datos.editorial || null,
+    isbn: datos.isbn || null,
+    fecha_pub: datos.anio ? `${datos.anio}-01-01` : null,
+    resumen: datos.descripcion || null,
+    portada: datos.portadaUrl || null,
+    stock: datos.ejemplaresTotales,
+  });
+  return normalizarLibro(data);
+}
+
 export function obtenerLibrosPaginados({ page = 1, limit = 4, simulateError = false } = {}) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {

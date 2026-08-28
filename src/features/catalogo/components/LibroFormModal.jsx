@@ -20,7 +20,7 @@ const LIBRO_VACIO = {
   ejemplaresLibres: '',
 };
 
-export default function LibroFormModal({ libro, onGuardar, onCerrar }) {
+export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExterno }) {
   const esEdicion = Boolean(libro?.id);
   const [modo, setModo] = useState('manual'); // 'manual' | 'isbn' — solo aplica al crear
   const [isbnListo, setIsbnListo] = useState(false);
@@ -211,7 +211,9 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar }) {
                 />
               </div>
 
-              {error && <p className="text-sm text-rose-600">{error}</p>}
+              {(error || errorExterno) && (
+                <p className="text-sm text-rose-600">{error || errorExterno}</p>
+              )}
             </>
           )}
 

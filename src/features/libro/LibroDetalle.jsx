@@ -1,18 +1,34 @@
 // src/features/libro/LibroDetalle.jsx
-import { useState } from 'react';
-import { libros } from "./libro"; // Importa los datos desde libro.js
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
 import { esColorPortada } from '../../utils/portada';
+import { obtenerLibroPorId } from '../catalogo/catalogoService';
 
 export const LibroDetalle = () => {
   const { id } = useParams();
-  const libro = libros.find((l) => String(l.id) === id);
+  const [libro, setLibro] = useState(null);
+  const [cargando, setCargando] = useState(true);
 
   // Estados para controlar dinámicamente las reseñas
-  const [listaResenas, setListaResenas] = useState(libro?.resenas || []);
+  const [listaResenas, setListaResenas] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [estrellasSeleccionadas, setEstrellasSeleccionadas] = useState(0);
+
+  useEffect(() => {
+    setCargando(true);
+    obtenerLibroPorId(id)
+      .then(setLibro)
+      .catch((err) => {
+        console.error('Error al traer el libro', err);
+        setLibro(null);
+      })
+      .finally(() => setCargando(false));
+  }, [id]);
+
+  if (cargando) {
+    return <div className="p-8 text-center text-slate-500">Cargando...</div>;
+  }
 
   if (!libro) {
     return <div className="p-8 text-center text-slate-500">No se encontró la información del libro.</div>;

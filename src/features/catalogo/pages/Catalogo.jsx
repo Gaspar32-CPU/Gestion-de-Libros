@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Contenedor from '../../carrusel/Contenedor';
-import { libros } from '../../libro/libro';
 import LibroCard from '../components/LibroCard';
 import FiltrosBusqueda from '../components/FiltrosBusqueda';
+import { obtenerLibros } from '../catalogoService';
 
 const COMPARADORES = {
   titulo: (a, b) => a.titulo.localeCompare(b.titulo),
@@ -12,13 +12,20 @@ const COMPARADORES = {
 };
 
 export default function Catalogo() {
+  const [libros, setLibros] = useState([]);
   const [generoFilter, setGeneroFilter] = useState('Todos');
   const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos');
   const [ordenarPor, setOrdenarPor] = useState('relevancia');
 
+  useEffect(() => {
+    obtenerLibros()
+      .then(setLibros)
+      .catch((err) => console.error('Error al traer el catálogo', err));
+  }, []);
+
   const generos = useMemo(
     () => ['Todos', ...new Set(libros.map((libro) => libro.genero))],
-    []
+    [libros]
   );
 
   const total = libros.length;
@@ -39,7 +46,7 @@ export default function Catalogo() {
 
     const comparador = COMPARADORES[ordenarPor];
     return comparador ? [...resultado].sort(comparador) : resultado;
-  }, [generoFilter, disponibilidadFilter, ordenarPor]);
+  }, [libros, generoFilter, disponibilidadFilter, ordenarPor]);
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-screen text-slate-800">
@@ -52,7 +59,7 @@ export default function Catalogo() {
 
       <div className="mb-8">
         <h2 className="text-base font-bold text-slate-900 mb-3">Nuevos ingresos y más leídos</h2>
-        <Contenedor/>
+        <Contenedor libros={libros}/>
       </div>
 
       <FiltrosBusqueda

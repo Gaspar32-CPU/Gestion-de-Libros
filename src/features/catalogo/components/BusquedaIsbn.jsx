@@ -21,7 +21,7 @@ export default function BusquedaIsbn({ onEncontrado }) {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/libros/isbn/${result.data.isbn}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/libros/isbn/${result.data.isbn}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
