@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { misPrestamosMock } from './prestamosData';
 
-export  default function MisPrestamos  ()  {
+export default function MisPrestamos() {
   const [prestamos] = useState(misPrestamosMock);
   const [filtroEstado, setFiltroEstado] = useState('TODOS');
 
