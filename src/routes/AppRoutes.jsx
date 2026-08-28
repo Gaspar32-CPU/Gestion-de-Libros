@@ -27,7 +27,7 @@ function AppRoutes() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register/>} />
         </Route>
-        <Route path="/libro" element={<LibroDetalle/>} />
+        <Route path="/libro/:id" element={<LibroDetalle/>} />
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
 
