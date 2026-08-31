@@ -1,26 +1,64 @@
+import { useEffect, useMemo, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Contenedor from '../../carrusel/Contenedor';
-import { libros } from '../../libro/libro';
-import Select from '../../../components/Select';
 import LibroCard from '../components/LibroCard';
+import FiltrosBusqueda from '../components/FiltrosBusqueda';
+import { obtenerLibros } from '../catalogoService';
 import { normalizarTexto } from '../../../utils/normalizarTexto';
+
+const COMPARADORES = {
+  titulo: (a, b) => a.titulo.localeCompare(b.titulo),
+  autor: (a, b) => a.autor.localeCompare(b.autor),
+  puntuacion: (a, b) => b.puntuacion - a.puntuacion,
+  anio: (a, b) => b.anio - a.anio,
+};
 
 export default function Catalogo() {
   // Término de búsqueda controlado desde la barra de búsqueda del header
   const { busqueda = '' } = useOutletContext() ?? {};
 
-  // LÓGICA DE FILTRADO: Filtra los libros por título o autor, ignorando tildes y mayúsculas
-  const librosFiltrados = libros.filter((libro) => {
+  const [libros, setLibros] = useState([]);
+  const [generoFilter, setGeneroFilter] = useState('Todos');
+  const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos');
+  const [ordenarPor, setOrdenarPor] = useState('relevancia');
+
+  useEffect(() => {
+    obtenerLibros()
+      .then(setLibros)
+      .catch((err) => console.error('Error al traer el catálogo', err));
+  }, []);
+
+  const generos = useMemo(
+    () => ['Todos', ...new Set(libros.map((libro) => libro.genero))],
+    [libros]
+  );
+
+  const librosFiltrados = useMemo(() => {
     const termino = normalizarTexto(busqueda);
-    return (
-      normalizarTexto(libro.titulo).includes(termino) ||
-      normalizarTexto(libro.autor).includes(termino)
-    );
-  });
+
+    const resultado = libros.filter((libro) => {
+      const coincideTexto =
+        !termino ||
+        normalizarTexto(libro.titulo).includes(termino) ||
+        normalizarTexto(libro.autor).includes(termino);
+
+      const coincideGenero = generoFilter === 'Todos' || libro.genero === generoFilter;
+
+      const disponible = libro.ejemplaresLibres > 0;
+      const coincideDisponibilidad =
+        disponibilidadFilter === 'Todos' ||
+        (disponibilidadFilter === 'Disponible' && disponible) ||
+        (disponibilidadFilter === 'No disponible' && !disponible);
+
+      return coincideTexto && coincideGenero && coincideDisponibilidad;
+    });
+
+    const comparador = COMPARADORES[ordenarPor];
+    return comparador ? [...resultado].sort(comparador) : resultado;
+  }, [libros, busqueda, generoFilter, disponibilidadFilter, ordenarPor]);
 
   const total = librosFiltrados.length;
-  // Ajustado para que cuente los disponibles dentro de los libros filtrados
-  const disponibles = librosFiltrados.filter((libro) => libro.ejemplaresLibres > 0 || libro.disponible).length;
+  const disponibles = librosFiltrados.filter((libro) => libro.ejemplaresLibres > 0).length;
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-screen text-slate-800">
@@ -33,32 +71,27 @@ export default function Catalogo() {
 
       <div className="mb-8">
         <h2 className="text-base font-bold text-slate-900 mb-3">Nuevos ingresos y más leídos</h2>
-        <Contenedor />
+        <Contenedor libros={libros}/>
       </div>
 
-      {/* Caja de Herramientas: Filtros */}
-      <div className="mb-8 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center gap-3">
-        <span className="text-sm text-slate-500 font-medium">Filtrar:</span>
-        <Select>
-          <option>Todos</option>
-        </Select>
-        <Select>
-          <option>Todos</option>
-        </Select>
-        <Select>
-          <option>Ordenar por...</option>
-        </Select>
-      </div>
+      <FiltrosBusqueda
+        generos={generos}
+        generoFilter={generoFilter}
+        onGeneroChange={setGeneroFilter}
+        disponibilidadFilter={disponibilidadFilter}
+        onDisponibilidadChange={setDisponibilidadFilter}
+        ordenarPor={ordenarPor}
+        onOrdenarChange={setOrdenarPor}
+      />
 
-      {/* Grilla de resultados: Ahora itera sobre 'librosFiltrados' */}
       {librosFiltrados.length === 0 ? (
-        <div className="text-center p-12 bg-white border border-slate-200 rounded-xl text-slate-400 text-sm">
-          No se encontraron libros que coincidan con "{busqueda}".
-        </div>
+        <p className="text-sm text-slate-500 text-center py-12">
+          No se encontraron libros con esos filtros.
+        </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {librosFiltrados.map((libro) => (
-            <LibroCard key={libro.id} libro={libro} />
+            <LibroCard key={libro.id} libro={libro}/>
           ))}
         </div>
       )}

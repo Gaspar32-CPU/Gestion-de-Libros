@@ -1,3 +1,10 @@
+const LIBROS_PREVIEW = [
+    { titulo: "Cien años de soledad", autor: "García Márquez", disponible: false, color: "bg-amber-700" },
+    { titulo: "Fahrenheit 451", autor: "Ray Bradbury", disponible: true, color: "bg-orange-700" },
+    { titulo: "El principito", autor: "Saint-Exupéry", disponible: true, color: "bg-blue-600" },
+    { titulo: "Ficciones", autor: "J. L. Borges", disponible: true, color: "bg-purple-700" },
+];
+
 export function Hero() {
     return (
         <section className="flex w-full px-30 bg-bg">
@@ -28,7 +35,41 @@ export function Hero() {
                     </div>
                 </div>
             </div>
-            <div className="w-1/2"></div>
+            <div className="w-1/2 flex items-center">
+                <div className="w-full rounded-2xl border border-line bg-white shadow-xl overflow-hidden">
+                    <div className="flex items-center gap-2 bg-ink px-4 py-3">
+                        <span className="w-2.5 h-2.5 rounded-full bg-white/30"></span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-white/30"></span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-white/30"></span>
+                        <span className="ml-2 text-sm font-bold text-white">Bookly · Biblioteca Ánima</span>
+                    </div>
+                    <div className="p-5">
+                        <div className="rounded-xl border border-line bg-bg px-4 py-2 text-sm text-ink-3">
+                            ⌕ Buscar por título, autor o género…
+                        </div>
+                        <div className="mt-4 grid grid-cols-2 gap-3">
+                            {LIBROS_PREVIEW.map((libro) => (
+                                <div key={libro.titulo} className="flex items-start gap-3 rounded-xl border border-line p-3">
+                                    <div className={`w-9 h-12 rounded ${libro.color} shrink-0`}></div>
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-bold text-ink truncate">{libro.titulo}</p>
+                                        <p className="text-xs text-ink-3 truncate">{libro.autor}</p>
+                                        <span
+                                            className={`mt-1 inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                                                libro.disponible
+                                                    ? "bg-brand-2/20 text-brand-d"
+                                                    : "bg-red-100 text-red-600"
+                                            }`}
+                                        >
+                                            {libro.disponible ? "Disponible" : "No disponible"}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     )
 }

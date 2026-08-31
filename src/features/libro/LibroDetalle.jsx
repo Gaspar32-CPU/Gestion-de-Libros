@@ -1,17 +1,34 @@
 // src/features/libro/LibroDetalle.jsx
-import { useState } from 'react';
-import { libros } from "./libro"; // Importa los datos desde libro.js
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { ArrowBack } from '@mui/icons-material';
+import { esColorPortada } from '../../utils/portada';
+import { obtenerLibroPorId } from '../catalogo/catalogoService';
 
 export const LibroDetalle = () => {
-  // Tomamos el primer libro de la lista como base
-  const libro = Array.isArray(libros) ? libros[0] : libros;
+  const { id } = useParams();
+  const [libro, setLibro] = useState(null);
+  const [cargando, setCargando] = useState(true);
 
   // Estados para controlar dinámicamente las reseñas
-  const [listaResenas, setListaResenas] = useState(libro?.resenas || []);
+  const [listaResenas, setListaResenas] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [estrellasSeleccionadas, setEstrellasSeleccionadas] = useState(0);
+
+  useEffect(() => {
+    setCargando(true);
+    obtenerLibroPorId(id)
+      .then(setLibro)
+      .catch((err) => {
+        console.error('Error al traer el libro', err);
+        setLibro(null);
+      })
+      .finally(() => setCargando(false));
+  }, [id]);
+
+  if (cargando) {
+    return <div className="p-8 text-center text-slate-500">Cargando...</div>;
+  }
 
   if (!libro) {
     return <div className="p-8 text-center text-slate-500">No se encontró la información del libro.</div>;
@@ -52,11 +69,18 @@ export const LibroDetalle = () => {
       <div className="flex flex-col md:flex-row gap-7.5 md:gap-10">
         {/* Columna Izquierda */}
         <div className="w-full md:w-65 shrink-0">
-          <img 
-            src={libro.portadaUrl} 
-            alt={`Portada de ${libro.titulo}`} 
-            className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]" 
-          />
+          {esColorPortada(libro.portadaUrl) ? (
+            <div
+              className="w-full h-60 md:h-95 rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+              style={{ backgroundColor: libro.portadaUrl }}
+            />
+          ) : (
+            <img
+              src={libro.portadaUrl}
+              alt={`Portada de ${libro.titulo}`}
+              className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+            />
+          )}
           <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
             <span className="bg-[#d1fae5] text-[#065f46] text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3">
               Disponible
