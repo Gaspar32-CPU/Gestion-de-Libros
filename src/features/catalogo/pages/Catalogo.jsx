@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import Contenedor from '../../carrusel/Contenedor';
 import LibroCard from '../components/LibroCard';
 import FiltrosBusqueda from '../components/FiltrosBusqueda';
 import { obtenerLibros } from '../catalogoService';
+import { normalizarTexto } from '../../../utils/normalizarTexto';
 
 const COMPARADORES = {
   titulo: (a, b) => a.titulo.localeCompare(b.titulo),
@@ -12,6 +14,9 @@ const COMPARADORES = {
 };
 
 export default function Catalogo() {
+  // Término de búsqueda controlado desde la barra de búsqueda del header
+  const { busqueda = '' } = useOutletContext() ?? {};
+
   const [libros, setLibros] = useState([]);
   const [generoFilter, setGeneroFilter] = useState('Todos');
   const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos');
@@ -28,11 +33,15 @@ export default function Catalogo() {
     [libros]
   );
 
-  const total = libros.length;
-  const disponibles = libros.filter((libro) => libro.ejemplaresLibres > 0).length;
-
   const librosFiltrados = useMemo(() => {
+    const termino = normalizarTexto(busqueda);
+
     const resultado = libros.filter((libro) => {
+      const coincideTexto =
+        !termino ||
+        normalizarTexto(libro.titulo).includes(termino) ||
+        normalizarTexto(libro.autor).includes(termino);
+
       const coincideGenero = generoFilter === 'Todos' || libro.genero === generoFilter;
 
       const disponible = libro.ejemplaresLibres > 0;
@@ -41,19 +50,22 @@ export default function Catalogo() {
         (disponibilidadFilter === 'Disponible' && disponible) ||
         (disponibilidadFilter === 'No disponible' && !disponible);
 
-      return coincideGenero && coincideDisponibilidad;
+      return coincideTexto && coincideGenero && coincideDisponibilidad;
     });
 
     const comparador = COMPARADORES[ordenarPor];
     return comparador ? [...resultado].sort(comparador) : resultado;
-  }, [libros, generoFilter, disponibilidadFilter, ordenarPor]);
+  }, [libros, busqueda, generoFilter, disponibilidadFilter, ordenarPor]);
+
+  const total = librosFiltrados.length;
+  const disponibles = librosFiltrados.filter((libro) => libro.ejemplaresLibres > 0).length;
 
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto min-h-screen text-slate-800">
       <div className="mb-6">
         <h1 className="text-3xl md:text-4xl font-bold text-slate-900">Catálogo</h1>
         <p className="text-sm text-slate-500 mt-1">
-          {total} libros · {disponibles} disponibles ahora
+          {total} libros encontrados · {disponibles} disponibles ahora
         </p>
       </div>
 
