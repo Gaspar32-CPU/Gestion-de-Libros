@@ -1,22 +1,38 @@
-import React from 'react';
+import Select from '../../../components/Select';
 
-export default function FiltrosBusqueda({ textFilter, onTextChange }) {
+export default function FiltrosBusqueda({
+  generos,
+  generoFilter,
+  onGeneroChange,
+  disponibilidadFilter,
+  onDisponibilidadChange,
+  ordenarPor,
+  onOrdenarChange,
+}) {
   return (
-    <div className="mb-6 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-      <div className="max-w-md">
-        <label htmlFor="search" className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-          Buscar en el catalogo
-        </label>
-        <div className="relative">
-          <input
-            id="search"
-            type="text"
-            value={textFilter}
-            onChange={(e) => onTextChange(e.target.value)}
-            placeholder="Buscar por titulo o autor..."
-            className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-          />
-        </div>
+    <div className="mb-8 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-sm text-slate-500 font-medium">Filtrar:</span>
+
+        <Select value={generoFilter} onChange={(e) => onGeneroChange(e.target.value)}>
+          {generos.map((genero) => (
+            <option key={genero} value={genero}>{genero}</option>
+          ))}
+        </Select>
+
+        <Select value={disponibilidadFilter} onChange={(e) => onDisponibilidadChange(e.target.value)}>
+          <option value="Todos">Todos</option>
+          <option value="Disponible">Disponible</option>
+          <option value="No disponible">No disponible</option>
+        </Select>
+
+        <Select value={ordenarPor} onChange={(e) => onOrdenarChange(e.target.value)}>
+          <option value="relevancia">Ordenar por...</option>
+          <option value="titulo">Título (A-Z)</option>
+          <option value="autor">Autor (A-Z)</option>
+          <option value="puntuacion">Mejor puntuados</option>
+          <option value="anio">Más recientes</option>
+        </Select>
       </div>
     </div>
   );

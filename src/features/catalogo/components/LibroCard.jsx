@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { LibroSugerencia } from "../../carrusel/LibroSugerencia";
 
 export default function LibroCard({ libro }) {
@@ -6,7 +7,10 @@ export default function LibroCard({ libro }) {
 const disponible = ejemplaresLibres > 0;
 
 return (
-    <div className="flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+    <Link
+      to={`/libro/${libro.id}`}
+      className="flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 no-underline text-inherit"
+    >
       <LibroSugerencia className="rounded-none" key={libro.id} portadaUrl={libro.portadaUrl} genero={libro.genero} />
 
       <div className="p-4 flex flex-col grow">
@@ -33,6 +37,6 @@ return (
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
