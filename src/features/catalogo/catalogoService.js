@@ -11,11 +11,17 @@ function normalizarLibro(libro) {
     genero: libro.genero,
     editorial: libro.editorial,
     isbn: libro.isbn,
-    anio: libro.fecha_pub ? new Date(libro.fecha_pub).getFullYear() : undefined,
+    // Se saca el año del string en vez de usar Date().getFullYear(): fecha_pub
+    // llega como "YYYY-MM-DD" y Date lo interpreta como medianoche UTC, así que
+    // en husos horarios negativos (Uruguay/Argentina) getFullYear() devolvía el
+    // año local, un año menos que el guardado.
+    anio: libro.fecha_pub ? Number(String(libro.fecha_pub).slice(0, 4)) : undefined,
     descripcion: libro.resumen || '',
     puntuacion: Number(libro.promedio_estrellas) || 0,
     ejemplaresLibres: libro.disponibles,
     ejemplaresTotales: libro.stock,
+    idioma: libro.idioma || '',
+    codigoInterno: libro.codigo_interno || '',
   };
 }
 
@@ -40,6 +46,8 @@ function aCuerpoLibro(datos) {
     resumen: datos.descripcion || null,
     portada: datos.portadaUrl || null,
     stock: datos.stock,
+    idioma: datos.idioma || null,
+    codigo_interno: datos.codigoInterno || null,
   };
 }
 

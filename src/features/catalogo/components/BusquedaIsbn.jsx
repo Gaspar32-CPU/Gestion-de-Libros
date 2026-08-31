@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { isbnSchema } from '../../../../schemas/book.schema';
+import api from '../../../services/api';
 
 export default function BusquedaIsbn({ onEncontrado }) {
   const [isbn, setIsbn] = useState('');
@@ -21,17 +22,9 @@ export default function BusquedaIsbn({ onEncontrado }) {
     setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/libros/isbn/${result.data.isbn}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || 'No se encontró ningún libro con ese ISBN.');
-      }
-
-      const data = await res.json();
+      // Usamos la instancia `api` (no fetch) para que viaje el token de admin
+      // igual que en el resto de las llamadas del catálogo.
+      const { data } = await api.get(`/libros/isbn/${result.data.isbn}`);
       setLibroEncontrado(data.libro);
       onEncontrado({
         titulo: data.libro.titulo ?? '',
@@ -44,7 +37,7 @@ export default function BusquedaIsbn({ onEncontrado }) {
         isbn: result.data.isbn,
       });
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.mensaje || 'No se encontró ningún libro con ese ISBN.');
     } finally {
       setLoading(false);
     }

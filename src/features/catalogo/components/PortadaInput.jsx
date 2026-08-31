@@ -20,13 +20,25 @@ const OPCIONES = [
   { valor: 'archivo', label: 'Subir imagen' },
 ];
 
+// Sin tope, un archivo de varios MB se convierte a base64 (~33% más pesado
+// todavía) y viaja entero como campo de texto en el alta/edición del libro.
+const TAMANIO_MAXIMO_MB = 2;
+
 export default function PortadaInput({ value, onChange, titulo }) {
   const [modo, setModo] = useState(() => (esColorPortada(value) || !value ? 'color' : 'url'));
+  const [errorArchivo, setErrorArchivo] = useState('');
 
   const handleArchivo = (e) => {
     const archivo = e.target.files?.[0];
     if (!archivo) return;
 
+    if (archivo.size > TAMANIO_MAXIMO_MB * 1024 * 1024) {
+      setErrorArchivo(`La imagen no puede pesar más de ${TAMANIO_MAXIMO_MB}MB.`);
+      e.target.value = '';
+      return;
+    }
+
+    setErrorArchivo('');
     const lector = new FileReader();
     lector.onload = () => onChange(lector.result);
     lector.readAsDataURL(archivo);
@@ -93,12 +105,15 @@ export default function PortadaInput({ value, onChange, titulo }) {
           )}
 
           {modo === 'archivo' && (
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleArchivo}
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:cursor-pointer cursor-pointer"
-            />
+            <div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleArchivo}
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:cursor-pointer cursor-pointer"
+              />
+              {errorArchivo && <p className="text-xs text-rose-600 mt-2">{errorArchivo}</p>}
+            </div>
           )}
 
           {modo === 'color' && (
