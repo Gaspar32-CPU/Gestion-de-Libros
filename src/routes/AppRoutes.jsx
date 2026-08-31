@@ -36,7 +36,10 @@ function AppRoutes() {
         <Route element={<RutaProtegida />}>
           {/* Compartida por todos los roles, sidebar según corresponda */}
           <Route element={<LayoutSegunRol />}>
-            <Route path="/catalogo" element={<Catalogo/>} />
+            {/* El catálogo es por organización: el super-admin no pertenece a ninguna */}
+            <Route element={<RutaPorRol rolesPermitidos={["admin", "lector"]} redirectTo="/plataforma" />}>
+              <Route path="/catalogo" element={<Catalogo/>} />
+            </Route>
             <Route path="/perfil" element={<></>} />
           </Route>
 
