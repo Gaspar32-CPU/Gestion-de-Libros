@@ -7,6 +7,8 @@ import { RutaProtegida } from "../components/RutaProtegida";
 import { RutaPublica } from "../components/RutaPublica";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
+import  MisPrestamos  from "../features/prestamos/MisPrestamos";
+import TodosLosPrestamos from "../features/prestamos/TodosLosPrestamos";
 import Catalogo from "../features/catalogo/pages/Catalogo";
 import GestionCatalogo from "../features/catalogo/pages/GestionCatalogo";
 import UsuarioLayout from "../layouts/UsuarioLayout";
@@ -14,7 +16,7 @@ import { RutaPorRol } from "../components/RutaPorRol";
 import { LayoutSegunRol } from "./LayoutSegunRol";
 import SuperAdminLayout from "../layouts/SuperAdminLayout";
 
-function AppRoutes() {
+export default function AppRoutes() {
   return (
     <div className="bg-bg w-">
       <Routes>
@@ -57,8 +59,8 @@ function AppRoutes() {
           <Route element={<RutaPorRol rolesPermitidos={["super-admin", "admin"]} />}>
             <Route element={<LayoutSegunRol />}>// "Rutas solo admin" es un layout que contiene un sidebar con links a las rutas de admin
               <Route path="/panel" element={<></>} />
+              <Route path="/allprestamos" element={<TodosLosPrestamos />} />
               <Route path="/gestion-catalogo" element={<GestionCatalogo/>} />
-              <Route path="/allprestamos" element={<></>} />
               <Route path="/usuarios" element={<></>} />
               <Route path="/reportes" element={<></>} />
               <Route path="/configuracion" element={<></>} />
@@ -68,7 +70,7 @@ function AppRoutes() {
           {/* Rutas de usuario normal (lector) */}
           <Route element={<RutaPorRol rolesPermitidos={["lector"]} />}>
             <Route element={<UsuarioLayout/>}>
-              <Route path="/prestamos" element={<></>} />// Esta ruta es para que un usuario vea sus prestamos
+              <Route path="/prestamos" element={<MisPrestamos />} />
               <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
               <Route path="/reportar" element={<></>} /> // Esta ruta es para que un usuario vea reporte un problema
             </Route>
@@ -78,5 +80,3 @@ function AppRoutes() {
     </div>
   );
 }
-
-export default AppRoutes;
