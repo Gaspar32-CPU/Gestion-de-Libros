@@ -8,6 +8,7 @@ import { RutaPublica } from "../components/RutaPublica";
 import LandingPage from "../features/landing/pages/LandingPage";
 import { LibroDetalle } from "../features/libro/LibroDetalle";
 import  MisPrestamos  from "../features/prestamos/MisPrestamos";
+import TodosLosPrestamos from "../features/prestamos/TodosLosPrestamos";
 import Catalogo from "../features/catalogo/pages/Catalogo";
 import UsuarioLayout from "../layouts/UsuarioLayout";
 import { RutaPorRol } from "../components/RutaPorRol";
@@ -55,7 +56,7 @@ export default function AppRoutes() {
             <Route element={<LayoutSegunRol />}>// "Rutas solo admin" es un layout que contiene un sidebar con links a las rutas de admin
               <Route path="/panel" element={<></>} />
               <Route path="/gestion-catalogo" element={<></>} />
-              <Route path="/allprestamos" element={<></>} />
+              <Route path="/allprestamos" element={<TodosLosPrestamos />} />
               <Route path="/usuarios" element={<></>} />
               <Route path="/reportes" element={<></>} />
               <Route path="/configuracion" element={<></>} />
@@ -65,8 +66,7 @@ export default function AppRoutes() {
           {/* Rutas de usuario normal (lector) */}
           <Route element={<RutaPorRol rolesPermitidos={["lector"]} />}>
             <Route element={<UsuarioLayout/>}>
-              <Route path="/mis-prestamos" element={<MisPrestamos />} />
-              <Route path="/prestamos" element={<></>} />// Esta ruta es para que un usuario vea sus prestamos
+              <Route path="/prestamos" element={<MisPrestamos />} />
               <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
               <Route path="/reportar" element={<></>} /> // Esta ruta es para que un usuario vea reporte un problema
             </Route>
