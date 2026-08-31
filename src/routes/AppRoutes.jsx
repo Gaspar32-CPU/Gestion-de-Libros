@@ -10,6 +10,7 @@ import { LibroDetalle } from "../features/libro/LibroDetalle";
 import  MisPrestamos  from "../features/prestamos/MisPrestamos";
 import TodosLosPrestamos from "../features/prestamos/TodosLosPrestamos";
 import Catalogo from "../features/catalogo/pages/Catalogo";
+import GestionCatalogo from "../features/catalogo/pages/GestionCatalogo";
 import UsuarioLayout from "../layouts/UsuarioLayout";
 import { RutaPorRol } from "../components/RutaPorRol";
 import { LayoutSegunRol } from "./LayoutSegunRol";
@@ -29,7 +30,7 @@ export default function AppRoutes() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register/>} />
         </Route>
-        <Route path="/libro" element={<LibroDetalle/>} />
+        <Route path="/libro/:id" element={<LibroDetalle/>} />
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
 
@@ -37,7 +38,10 @@ export default function AppRoutes() {
         <Route element={<RutaProtegida />}>
           {/* Compartida por todos los roles, sidebar según corresponda */}
           <Route element={<LayoutSegunRol />}>
-            <Route path="/catalogo" element={<Catalogo/>} />
+            {/* El catálogo es por organización: el super-admin no pertenece a ninguna */}
+            <Route element={<RutaPorRol rolesPermitidos={["admin", "lector"]} redirectTo="/plataforma" />}>
+              <Route path="/catalogo" element={<Catalogo/>} />
+            </Route>
             <Route path="/perfil" element={<></>} />
           </Route>
 
@@ -55,8 +59,8 @@ export default function AppRoutes() {
           <Route element={<RutaPorRol rolesPermitidos={["super-admin", "admin"]} />}>
             <Route element={<LayoutSegunRol />}>// "Rutas solo admin" es un layout que contiene un sidebar con links a las rutas de admin
               <Route path="/panel" element={<></>} />
-              <Route path="/gestion-catalogo" element={<></>} />
               <Route path="/allprestamos" element={<TodosLosPrestamos />} />
+              <Route path="/gestion-catalogo" element={<GestionCatalogo/>} />
               <Route path="/usuarios" element={<></>} />
               <Route path="/reportes" element={<></>} />
               <Route path="/configuracion" element={<></>} />
