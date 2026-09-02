@@ -25,8 +25,8 @@ return (
           <span
             className={`px-3 py-1 text-xs font-semibold rounded-full ${
               disponible
-                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                : 'bg-rose-50 text-rose-700 border border-rose-200'
+                ? 'bg-success-bg text-success'
+                : 'bg-danger-bg text-danger'
             }`}
           >
             {disponible ? 'Disponible' : 'No disponible'}
