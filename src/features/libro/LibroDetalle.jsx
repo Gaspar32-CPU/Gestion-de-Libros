@@ -1,14 +1,24 @@
 // src/features/libro/LibroDetalle.jsx
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowBack } from '@mui/icons-material';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { ArrowBack, Block } from '@mui/icons-material';
 import { esColorPortada } from '../../utils/portada';
 import { obtenerLibroPorId } from '../catalogo/catalogoService';
+import { useAuth } from '../../context/useAuth';
+import api from '../../services/api';
+
+const FechaActual = () => {
+  const fecha = new Date();
+  return fecha.toLocaleDateString();
+}
 
 export const LibroDetalle = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [libro, setLibro] = useState(null);
   const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
+  const { usuario } = useAuth();
 
   // Estados para controlar dinámicamente las reseñas
   const [listaResenas, setListaResenas] = useState([]);
@@ -57,6 +67,26 @@ export const LibroDetalle = () => {
 
   const esDisponible = libro.ejemplaresLibres > 0;
 
+  const handlePrestamo = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!esDisponible) {
+      alert("No hay ejemplares disponibles para préstamo.");
+      return;
+    }
+
+    try {
+      const res = await api.post('/prestamos', { libroId: libro.id, usuarioId: usuario.id });
+      navigate("/prestamo-exitoso", { replace: true, state: { prestamo: res.data, libro } });
+    } catch (err) {
+      setError(err.response?.data?.mensaje || 'Error al generar el préstamo.');
+    } finally {
+      setCargando(false);
+    }
+  };
+
+
   return (
     <div className="mx-auto font-sans antialiased text-slate-950 p-4">
       <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6">
@@ -82,8 +112,8 @@ export const LibroDetalle = () => {
             />
           )}
           <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
-            <span className="bg-[#d1fae5] text-[#065f46] text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3">
-              Disponible
+            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3 ${esDisponible ? "bg-success-bg text-success" : "bg-danger-bg text-danger"}`}>
+              {esDisponible ? "Disponible" : "No disponible"}
             </span>
             <div className="flex flex-wrap gap-1 mb-2">
               {Array.from({ length: libro.ejemplaresTotales || 0 }).map((_, idx) => (
@@ -141,11 +171,24 @@ export const LibroDetalle = () => {
           </div>
 
           <button 
-            disabled={!esDisponible} 
-            className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771]"
+            disabled={!esDisponible}
+            onClick={handlePrestamo}
+            className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
           >
-            Solicitar préstamo →
+            {esDisponible ? (
+              <>
+                Solicitar Préstamo
+                <ArrowBack sx={{ fontSize: 16, transform: 'rotate(180deg)', marginLeft: '0.5rem' }} />
+              </>
+            ) : (
+              <>
+                No disponible
+                <Block sx={{ fontSize: 18, marginLeft: '0.5rem' }} />
+              </>
+            )}
+            
           </button>
+          {error && <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">{error}</p>}
           <p className="text-xs text-[#64748b] mb-7.5">{libro.condicionesPrestamo}</p>
           <hr className="border-0 border-t border-[#e7e5d8] mb-7.5" />
 

@@ -13,6 +13,14 @@
     --color-ink-3: #8595A6;
     --color-bg: #F6F4EE;
     --color-line: #E7E2D7;
+
+    /* estados de error */
+    --color-danger-bg: #FBE7E6;
+    --color-danger: #C0453F;
+
+    /* estados de éxito */
+    --color-success-bg: #D1FAE5;
+    --color-success: #065F46;
 }
 
 body {
