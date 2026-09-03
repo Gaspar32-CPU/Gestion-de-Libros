@@ -1,12 +1,12 @@
 import { useEffect, useRef, useCallback } from "react";
 import { IconButton } from "@mui/material";
 import ArrowBackIosRoundedIcon from "@mui/icons-material/ArrowBackIosRounded";
+import { Link } from "react-router-dom";
 import { LibroSugerencia } from "./LibroSugerencia";
-import { libros } from "../libro/libro";
 
 const INTERVALO_AUTOSCROLL_MS = 3000;
 
-const Contenedor = () => {
+const Contenedor = ({ libros = [] }) => {
   const scrollRef = useRef(null);
 
   const desplazar = useCallback((direccion) => {
@@ -43,9 +43,13 @@ const Contenedor = () => {
 
       <div ref={scrollRef} className="flex flex-1 min-w-0 overflow-x-auto scrollbar-hide scroll-smooth py-2">
         {libros.map((libro) => (
-          <div key={libro.id} className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 shrink-0 px-2">
+          <Link
+            key={libro.id}
+            to={`/libro/${libro.id}`}
+            className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 shrink-0 px-2 block no-underline"
+          >
             <LibroSugerencia portadaUrl={libro.portadaUrl} titulo={libro.titulo} genero={libro.genero} autor={libro.autor} />
-          </div>
+          </Link>
         ))}
       </div>
 
