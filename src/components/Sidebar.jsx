@@ -1,8 +1,11 @@
 import { NavLink } from "react-router-dom";
 import UsuarioAvatar from "./UsuarioAvatar";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
+import { useAuth } from "../context/useAuth";
 
 export default function Sidebar ({opciones, usuario, organizacion}) {
+    const { logout } = useAuth  ();
+
     return(
         <div className="sticky top-0 flex flex-col h-screen w-60 bg-ink text-white/55">
             <div className="border-b border-b-ink-2">
@@ -29,12 +32,12 @@ export default function Sidebar ({opciones, usuario, organizacion}) {
                 ))}
             </div>
             <div className="mt-auto border-t border-t-ink-2">
-                <NavLink
-                    to="/perfil"
-                    className="flex gap-2 items-center rounded-xl py-2 px-3"
+                <button
+                    onClick={logout}
+                    className="flex gap-2 items-center rounded-xl py-2 cursor-pointer px-3"
                 >
                     <UsuarioAvatar iniciales={obtenerIniciales(usuario.nombre)} nombre={usuario.nombre} rol={usuario.rol}/>
-                </NavLink>
+                </button>
             </div>
         </div>
     )
