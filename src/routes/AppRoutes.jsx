@@ -11,6 +11,7 @@ import  MisPrestamos  from "../features/prestamos/MisPrestamos";
 import TodosLosPrestamos from "../features/prestamos/TodosLosPrestamos";
 import Catalogo from "../features/catalogo/pages/Catalogo";
 import GestionCatalogo from "../features/catalogo/pages/GestionCatalogo";
+import { Usuario } from "../features/usuarios/pages/Usuario";
 import UsuarioLayout from "../layouts/UsuarioLayout";
 import { RutaPorRol } from "../components/RutaPorRol";
 import { LayoutSegunRol } from "./LayoutSegunRol";
@@ -62,7 +63,7 @@ export default function AppRoutes() {
               <Route path="/panel" element={<></>} />
               <Route path="/allprestamos" element={<TodosLosPrestamos />} />
               <Route path="/gestion-catalogo" element={<GestionCatalogo/>} />
-              <Route path="/usuarios" element={<></>} />
+              <Route path="/usuarios" element={<Usuario />} />
               <Route path="/reportes" element={<></>} />
               <Route path="/configuracion" element={<></>} />
             </Route>
