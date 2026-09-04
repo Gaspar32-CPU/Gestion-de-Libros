@@ -1,29 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { z } from "zod";
+import api from "../../../services/api";
+import { cuentaSchema, organizacionSchema, pagoSchema } from "../../../../schemas/contratacion.schema";
 
 const PASOS = ["Cuenta", "Organización", "Pago", "Identidad", "Listo"];
 
-const esquemaCuenta = z.object({
-  nombre: z.string().trim().min(1, "Completá nombre y apellido."),
-  apellido: z.string().trim().min(1, "Completá nombre y apellido."),
-  correo: z.string().email("Ingresá un correo institucional válido."),
-  contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres."),
-});
-
-const esquemaOrganizacion = z.object({
-  organizacion: z.string().trim().min(1, "Ingresá el nombre de la organización."),
-  dominio: z.string().trim().min(1, "Ingresá el dominio de correo de tu institución."),
-});
-
-const esquemaPago = z.object({
-  nombreTarjeta: z.string().trim().min(1, "Completá los datos de la tarjeta."),
-  numeroTarjeta: z.string().trim().min(1, "Completá los datos de la tarjeta."),
-  vencimiento: z.string().trim().min(1, "Completá los datos de la tarjeta."),
-  cvv: z.string().trim().min(1, "Completá los datos de la tarjeta."),
-});
-
-const ESQUEMAS_POR_PASO = { 1: esquemaCuenta, 2: esquemaOrganizacion, 3: esquemaPago };
+const ESQUEMAS_POR_PASO = { 1: cuentaSchema, 2: organizacionSchema, 3: pagoSchema };
 
 const INICIAL = {
   nombre: "",
@@ -58,6 +40,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
   const [paso, setPaso] = useState(1);
   const [datos, setDatos] = useState(INICIAL);
   const [error, setError] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const precio = ciclo === "anual" ? plan.precioAnual : plan.precioMensual;
   const periodo = ciclo === "anual" ? "año" : "mes";
@@ -71,13 +54,47 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
     return resultado.success ? "" : resultado.error.issues[0].message;
   }
 
-  function siguiente() {
+  async function crearCuentaAdministradora() {
+    setCargando(true);
+    try {
+      // El registro crea de una sola vez la cuenta y su organización: al
+      // mandar "organizacion" y "dominio" (paso 2), el backend entiende que
+      // no es un lector sumándose a una org existente, sino el alta de una
+      // organización nueva, y crea a quien se registra como su admin.
+      await api.post("/auth/register", {
+        nombre: datos.nombre,
+        apellido: datos.apellido,
+        cedula: datos.cedula,
+        correo: datos.correo,
+        telefono: datos.telefono,
+        contrasena: datos.contrasena,
+        confirmarContrasena: datos.contrasena,
+        organizacion: datos.organizacion,
+        dominio: datos.dominio,
+        planId: plan.id,
+        ciclo,
+      });
+      setPaso((p) => p + 1);
+    } catch (err) {
+      setError(err.response?.data?.message || err.response?.data?.error || "No se pudo crear tu biblioteca. Intentá de nuevo.");
+    } finally {
+      setCargando(false);
+    }
+  }
+
+  async function siguiente() {
     const mensaje = validarPaso();
     if (mensaje) {
       setError(mensaje);
       return;
     }
     setError("");
+
+    if (paso === 3) {
+      await crearCuentaAdministradora();
+      return;
+    }
+
     if (paso === 4) {
       setDatos((d) => ({ ...d, nombreApp: d.nombreApp || datos.organizacion }));
     }
@@ -353,7 +370,12 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
         <div className="sticky bottom-0 bg-white border-t border-line px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             {paso > 1 && paso < 5 && (
-              <button type="button" onClick={atras} className="text-sm font-bold text-ink-2 hover:text-ink">
+              <button
+                type="button"
+                onClick={atras}
+                disabled={cargando}
+                className="text-sm font-bold text-ink-2 hover:text-ink disabled:opacity-50"
+              >
                 Atrás
               </button>
             )}
@@ -366,9 +388,10 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
             <button
               type="button"
               onClick={siguiente}
-              className="bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors"
+              disabled={cargando}
+              className="bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {paso === 3 ? "Pagar y crear mi biblioteca" : "Continuar"}
+              {paso === 3 ? (cargando ? "Creando tu biblioteca..." : "Pagar y crear mi biblioteca") : "Continuar"}
             </button>
           ) : (
             <button
