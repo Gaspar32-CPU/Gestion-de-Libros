@@ -1,8 +1,34 @@
 import { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
+import { z } from "zod";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import api from "../../../services/api";
 import { normalizarTexto } from "../../../utils/normalizarTexto";
+
+const USUARIO_INICIAL = {
+  nombre: "",
+  apellido: "",
+  cedula: "",
+  correo: "",
+  telefono: "",
+  contrasena: "",
+  confirmarContrasena: ""
+};
+
+const esquemaNuevoUsuario = z
+  .object({
+    nombre: z.string().trim().min(1, "El nombre es obligatorio."),
+    apellido: z.string().trim().min(1, "El apellido es obligatorio."),
+    cedula: z.string().trim().min(1, "La cédula es obligatoria."),
+    correo: z.string().trim().min(1, "El correo es obligatorio.").email("Ingresá un correo electrónico válido."),
+    telefono: z.string().trim().min(1, "El teléfono es obligatorio."),
+    contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres."),
+    confirmarContrasena: z.string()
+  })
+  .refine((datos) => datos.contrasena === datos.confirmarContrasena, {
+    message: "Las contraseñas no coinciden.",
+    path: ["confirmarContrasena"]
+  });
 
 export function Usuario() {
   // Término de búsqueda controlado desde la barra de búsqueda del header
@@ -13,16 +39,9 @@ export function Usuario() {
   const [error, setError] = useState("");
 
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [errorModal, setErrorModal] = useState("");
 
-  const [nuevoUsuario, setNuevoUsuario] = useState({
-    nombre: "",
-    apellido: "",
-    cedula: "",
-    correo: "",
-    telefono: "",
-    contrasena: "",
-    confirmarContrasena: ""
-  });
+  const [nuevoUsuario, setNuevoUsuario] = useState(USUARIO_INICIAL);
 
   const obtenerUsuarios = async () => {
     try {
@@ -59,41 +78,50 @@ export function Usuario() {
     });
   };
 
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    setErrorModal("");
+  };
+
+  const limpiarContrasenas = () => {
+    setNuevoUsuario((prev) => ({
+      ...prev,
+      contrasena: "",
+      confirmarContrasena: ""
+    }));
+  };
+
   const agregarUsuario = async (e) => {
     e.preventDefault();
 
-    if (nuevoUsuario.contrasena !== nuevoUsuario.confirmarContrasena) {
-      setError("Las contraseñas no coinciden.");
+    const resultado = esquemaNuevoUsuario.safeParse(nuevoUsuario);
+
+    if (!resultado.success) {
+      setErrorModal(resultado.error.issues[0].message);
+      limpiarContrasenas();
       return;
     }
 
     try {
-      setError("");
+      setErrorModal("");
 
-      await api.post("/auth/register", nuevoUsuario);
+      await api.post("/auth/register", resultado.data);
 
       await obtenerUsuarios();
 
-      setNuevoUsuario({
-        nombre: "",
-        apellido: "",
-        cedula: "",
-        correo: "",
-        telefono: "",
-        contrasena: "",
-        confirmarContrasena: ""
-      });
-
+      setNuevoUsuario(USUARIO_INICIAL);
       setModalAbierto(false);
 
     } catch (error) {
       console.error("Error al agregar usuario:", error);
 
       if (error.response?.data?.mensaje) {
-        setError(error.response.data.mensaje);
+        setErrorModal(error.response.data.mensaje);
       } else {
-        setError("No se pudo agregar el usuario.");
+        setErrorModal("No se pudo agregar el usuario.");
       }
+
+      limpiarContrasenas();
     }
   };
 
@@ -159,10 +187,10 @@ export function Usuario() {
         <button
           type="button"
           onClick={() => {
-            setError("");
+            setErrorModal("");
             setModalAbierto(true);
           }}
-          className="rounded-xl bg-[#00A78E] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#008F7A]"
+          className="cursor-pointer rounded-xl bg-[#00A78E] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#008F7A]"
         >
           + Nuevo usuario
         </button>
@@ -276,7 +304,7 @@ export function Usuario() {
 
                 <button
                   type="button"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:bg-gray-50 hover:text-gray-900"
+                  className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:bg-gray-50 hover:text-gray-900"
                 >
                   <EditOutlinedIcon sx={{ fontSize: 14 }} />
                 </button>
@@ -294,9 +322,15 @@ export function Usuario() {
       {/* MODAL NUEVO USUARIO */}
       {modalAbierto && (
 
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={cerrarModal}
+        >
 
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl">
+          <div
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
 
             {/* Título */}
             <div className="mb-6">
@@ -310,6 +344,15 @@ export function Usuario() {
               </p>
 
             </div>
+
+            {/* Error del formulario */}
+            {errorModal && (
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4">
+                <p className="text-sm text-red-600">
+                  {errorModal}
+                </p>
+              </div>
+            )}
 
             {/* Formulario */}
             <form
@@ -458,18 +501,15 @@ export function Usuario() {
 
                 <button
                   type="button"
-                  onClick={() => {
-                    setModalAbierto(false);
-                    setError("");
-                  }}
-                  className="rounded-xl border border-[#EAEAEA] px-5 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
+                  onClick={cerrarModal}
+                  className="cursor-pointer rounded-xl border border-[#EAEAEA] px-5 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
                 >
                   Cancelar
                 </button>
 
                 <button
                   type="submit"
-                  className="rounded-xl bg-[#00A78E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#008F7A]"
+                  className="cursor-pointer rounded-xl bg-[#00A78E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#008F7A]"
                 >
                   Guardar usuario
                 </button>

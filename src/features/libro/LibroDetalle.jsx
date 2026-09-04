@@ -66,6 +66,9 @@ export const LibroDetalle = () => {
   };
 
   const esDisponible = libro.ejemplaresLibres > 0;
+  // Solicitar un préstamo es una acción de lector: un admin/invitado puede
+  // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
+  const esLector = usuario?.rol === "lector";
 
   const handlePrestamo = async (e) => {
     e.preventDefault();
@@ -170,25 +173,28 @@ export const LibroDetalle = () => {
             </div>
           </div>
 
-          <button 
-            disabled={!esDisponible}
-            onClick={handlePrestamo}
-            className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            {esDisponible ? (
-              <>
-                Solicitar Préstamo
-                <ArrowBack sx={{ fontSize: 16, transform: 'rotate(180deg)', marginLeft: '0.5rem' }} />
-              </>
-            ) : (
-              <>
-                No disponible
-                <Block sx={{ fontSize: 18, marginLeft: '0.5rem' }} />
-              </>
-            )}
-            
-          </button>
-          {error && <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">{error}</p>}
+          {esLector && (
+            <>
+              <button
+                disabled={!esDisponible}
+                onClick={handlePrestamo}
+                className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
+              >
+                {esDisponible ? (
+                  <>
+                    Solicitar Préstamo
+                    <ArrowBack sx={{ fontSize: 16, transform: 'rotate(180deg)', marginLeft: '0.5rem' }} />
+                  </>
+                ) : (
+                  <>
+                    No disponible
+                    <Block sx={{ fontSize: 18, marginLeft: '0.5rem' }} />
+                  </>
+                )}
+              </button>
+              {error && <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">{error}</p>}
+            </>
+          )}
           <p className="text-xs text-[#64748b] mb-7.5">{libro.condicionesPrestamo}</p>
           <hr className="border-0 border-t border-[#e7e5d8] mb-7.5" />
 
