@@ -57,10 +57,10 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
   async function crearCuentaAdministradora() {
     setCargando(true);
     try {
-      // El registro crea de una sola vez la cuenta y su organización: por
-      // eso viaja el rol fijo "admin" (esta persona va a administrar la
-      // organización que se está dando de alta) junto con los datos de
-      // "Organización" del paso 2.
+      // El registro crea de una sola vez la cuenta y su organización: al
+      // mandar "organizacion" y "dominio" (paso 2), el backend entiende que
+      // no es un lector sumándose a una org existente, sino el alta de una
+      // organización nueva, y crea a quien se registra como su admin.
       await api.post("/auth/register", {
         nombre: datos.nombre,
         apellido: datos.apellido,
@@ -69,13 +69,14 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
         telefono: datos.telefono,
         contrasena: datos.contrasena,
         confirmarContrasena: datos.contrasena,
-        rol: "admin",
         organizacion: datos.organizacion,
         dominio: datos.dominio,
+        planId: plan.id,
+        ciclo,
       });
       setPaso((p) => p + 1);
     } catch (err) {
-      setError(err.response?.data?.mensaje || "No se pudo crear tu biblioteca. Intentá de nuevo.");
+      setError(err.response?.data?.message || err.response?.data?.error || "No se pudo crear tu biblioteca. Intentá de nuevo.");
     } finally {
       setCargando(false);
     }
