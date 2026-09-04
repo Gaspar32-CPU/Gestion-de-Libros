@@ -1,9 +1,36 @@
 import { z } from "zod";
 
-const ALLOWED_DOMAINS = ['@anima.edu.uy', '@estudiantes.anima.edu.uy'];
+// Bookly es multi-organización: cada institución registra su propio
+// dominio (@anima.edu.uy, @providencia.edu.uy, el que sea), así que no
+// podemos validar contra una lista fija de dominios permitidos como antes
+// (eso bloqueaba el login de cualquier organización que no fuera Ánima).
+// En su lugar, rechazamos los proveedores de correo personal/gratuito más
+// comunes: alcanza para el objetivo real de este chequeo (evitar que se
+// use un correo personal) sin depender de conocer de antemano el dominio
+// de cada institución.
+const DOMINIOS_PERSONALES = [
+  'gmail.com',
+  'googlemail.com',
+  'hotmail.com',
+  'hotmail.es',
+  'hotmail.com.ar',
+  'outlook.com',
+  'outlook.es',
+  'outlook.com.ar',
+  'live.com',
+  'yahoo.com',
+  'yahoo.es',
+  'yahoo.com.ar',
+  'icloud.com',
+  'me.com',
+  'aol.com',
+  'protonmail.com',
+  'proton.me',
+];
 
 function isInstitutionalEmail(email) {
-  return ALLOWED_DOMAINS.some((domain) => email.toLowerCase().endsWith(domain));
+  const dominio = email.toLowerCase().split('@')[1];
+  return Boolean(dominio) && !DOMINIOS_PERSONALES.includes(dominio);
 }
 
 function isValidCedulaUY(cedula) {
@@ -25,7 +52,7 @@ export const loginSchema = z.object({
     .min(1, "El correo es obligatorio")
     .email("Ingresá un correo válido")
     .refine((val) => isInstitutionalEmail(val), {
-      message: "Usa tu correo institucional (ej: @anima.edu.uy)",
+      message: "Usa el correo de tu institución, no uno personal (Gmail, Outlook, Yahoo, etc.)",
     }),
   password: z
     .string()
@@ -45,7 +72,7 @@ export const registerSchema = z.object({
     .min(1, "El correo es obligatorio")
     .email("Ingresá un correo válido")
     .refine((val) => isInstitutionalEmail(val), {
-      message: "Usa tu correo institucional (ej: @anima.edu.uy)",
+      message: "Usa el correo de tu institución, no uno personal (Gmail, Outlook, Yahoo, etc.)",
     }),
   telefono: z
     .string()
