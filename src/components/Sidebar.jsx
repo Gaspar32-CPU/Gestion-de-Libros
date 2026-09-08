@@ -3,14 +3,13 @@ import UsuarioAvatar from "./UsuarioAvatar";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 import { useAuth } from "../context/useAuth";
 
-export default function Sidebar ({opciones, usuario, organizacion}) {
+export default function Sidebar ({opciones, usuario, organizacion, configuracion}) {
     const { logout } = useAuth  ();
-
     return(
         <div className="sticky top-0 flex flex-col h-screen w-60 bg-ink text-white/55">
             <div className="border-b border-b-ink-2">
                 <div className="flex gap-1.5 items-center px-4 py-4">
-                    <img src={organizacion?.logoUrl} alt="Imagen organizacion" className="w-10 shrink-0"/>
+                    <img src={configuracion?.logo} alt="Imagen organizacion" className="w-10 shrink-0"/>
                     <div className="flex flex-col min-w-0">
                         <p className="font-extrabold text-white leading-tight">{organizacion?.nombre}</p>
                         <p className="text-xs font-semibold">Biblioteca</p>
