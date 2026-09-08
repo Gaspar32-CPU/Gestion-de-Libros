@@ -10,25 +10,19 @@ const USUARIO_INICIAL = {
   apellido: "",
   cedula: "",
   correo: "",
-  telefono: "",
-  contrasena: "",
-  confirmarContrasena: ""
+  telefono: ""
 };
 
-const esquemaNuevoUsuario = z
-  .object({
-    nombre: z.string().trim().min(1, "El nombre es obligatorio."),
-    apellido: z.string().trim().min(1, "El apellido es obligatorio."),
-    cedula: z.string().trim().min(1, "La cédula es obligatoria."),
-    correo: z.string().trim().min(1, "El correo es obligatorio.").email("Ingresá un correo electrónico válido."),
-    telefono: z.string().trim().min(1, "El teléfono es obligatorio."),
-    contrasena: z.string().min(8, "La contraseña debe tener al menos 8 caracteres."),
-    confirmarContrasena: z.string()
-  })
-  .refine((datos) => datos.contrasena === datos.confirmarContrasena, {
-    message: "Las contraseñas no coinciden.",
-    path: ["confirmarContrasena"]
-  });
+// Sin campos de contraseña: el admin invita, no da de alta con una clave que
+// él elige. La persona invitada crea su propia contraseña desde el link que
+// le llega por email (ver POST /api/usuarios y /crear-contrasena).
+const esquemaNuevoUsuario = z.object({
+  nombre: z.string().trim().min(1, "El nombre es obligatorio."),
+  apellido: z.string().trim().min(1, "El apellido es obligatorio."),
+  cedula: z.string().trim().min(1, "La cédula es obligatoria."),
+  correo: z.string().trim().min(1, "El correo es obligatorio.").email("Ingresá un correo electrónico válido."),
+  telefono: z.string().trim().min(1, "El teléfono es obligatorio."),
+});
 
 export function Usuario() {
   // Término de búsqueda controlado desde la barra de búsqueda del header
@@ -83,14 +77,6 @@ export function Usuario() {
     setErrorModal("");
   };
 
-  const limpiarContrasenas = () => {
-    setNuevoUsuario((prev) => ({
-      ...prev,
-      contrasena: "",
-      confirmarContrasena: ""
-    }));
-  };
-
   const agregarUsuario = async (e) => {
     e.preventDefault();
 
@@ -98,14 +84,13 @@ export function Usuario() {
 
     if (!resultado.success) {
       setErrorModal(resultado.error.issues[0].message);
-      limpiarContrasenas();
       return;
     }
 
     try {
       setErrorModal("");
 
-      await api.post("/auth/register", resultado.data);
+      await api.post("/usuarios", resultado.data);
 
       await obtenerUsuarios();
 
@@ -115,13 +100,11 @@ export function Usuario() {
     } catch (error) {
       console.error("Error al agregar usuario:", error);
 
-      if (error.response?.data?.mensaje) {
-        setErrorModal(error.response.data.mensaje);
+      if (error.response?.data?.mensaje || error.response?.data?.message) {
+        setErrorModal(error.response.data.mensaje || error.response.data.message);
       } else {
-        setErrorModal("No se pudo agregar el usuario.");
+        setErrorModal("No se pudo invitar al usuario.");
       }
-
-      limpiarContrasenas();
     }
   };
 
@@ -340,7 +323,7 @@ export function Usuario() {
               </h2>
 
               <p className="mt-1 text-sm text-gray-500">
-                Completa los datos del nuevo usuario.
+                Le vamos a mandar un email para que cree su contraseña.
               </p>
 
             </div>
@@ -458,44 +441,6 @@ export function Usuario() {
 
               </div>
 
-              {/* Contraseña */}
-              <div>
-
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Contraseña
-                </label>
-
-                <input
-                  type="password"
-                  name="contrasena"
-                  value={nuevoUsuario.contrasena}
-                  onChange={manejarCambio}
-                  required
-                  placeholder="Ingresa una contraseña"
-                  className="w-full rounded-xl border border-[#EAEAEA] px-4 py-2.5 outline-none transition focus:border-[#00A78E]"
-                />
-
-              </div>
-
-              {/* Confirmar contraseña */}
-              <div>
-
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Confirmar contraseña
-                </label>
-
-                <input
-                  type="password"
-                  name="confirmarContrasena"
-                  value={nuevoUsuario.confirmarContrasena}
-                  onChange={manejarCambio}
-                  required
-                  placeholder="Repite la contraseña"
-                  className="w-full rounded-xl border border-[#EAEAEA] px-4 py-2.5 outline-none transition focus:border-[#00A78E]"
-                />
-
-              </div>
-
               {/* Botones */}
               <div className="flex justify-end gap-3 pt-4">
 
@@ -511,7 +456,7 @@ export function Usuario() {
                   type="submit"
                   className="cursor-pointer rounded-xl bg-[#00A78E] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#008F7A]"
                 >
-                  Guardar usuario
+                  Enviar invitación
                 </button>
 
               </div>

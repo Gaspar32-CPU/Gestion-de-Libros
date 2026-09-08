@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 // Pages (features)
 import Login from "../features/auth/pages/login";
 import Register from "../features/auth/pages/register";
+import CrearContrasena from "../features/auth/pages/CrearContrasena";
 import { RutaProtegida } from "../components/RutaProtegida";
 import { RutaPublica } from "../components/RutaPublica";
 import LandingPage from "../features/landing/pages/LandingPage";
@@ -33,6 +34,10 @@ export default function AppRoutes() {
           <Route path="/register" element={<Register/>} />
         </Route>
         <Route path="/libro/:id" element={<LibroDetalle/>} />
+        {/* Ruta suelta (no dentro de RutaPublica): un usuario invitado no
+            tiene sesión, pero si un admin logueado abre el link no tiene
+            sentido que RutaPublica lo mande a /catalogo antes de ver esto. */}
+        <Route path="/crear-contrasena" element={<CrearContrasena/>} />
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
 

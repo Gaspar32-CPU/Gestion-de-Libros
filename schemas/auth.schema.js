@@ -85,3 +85,14 @@ export const registerSchema = z.object({
   message: "Las contraseñas no coinciden",
   path: ["confirmarContrasena"],
 });
+
+// ---- CREAR CONTRASEÑA (cuenta invitada por un admin) ----
+export const crearContrasenaSchema = z.object({
+  contrasena: z
+    .string()
+    .min(6, "La contraseña debe tener al menos 6 caracteres"),
+  confirmarContrasena: z.string().min(1, "Confirmá tu contraseña"),
+}).refine((data) => data.contrasena === data.confirmarContrasena, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmarContrasena"],
+});
