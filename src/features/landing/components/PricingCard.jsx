@@ -1,4 +1,4 @@
-import { precioDelPlan, equivalenteMensualAnual, funcionalidadesDelPlan } from "../planes";
+import { precioDelPlan, equivalenteMensualAnual, funcionalidadesDelPlan, limiteDelPlan } from "../planes";
 
 export function PricingCard({ plan, ciclo, onContratar }) {
   const esAnual = ciclo === "anual";
@@ -26,11 +26,11 @@ export function PricingCard({ plan, ciclo, onContratar }) {
 
       <div className="mt-5 pt-5 border-t border-line grid grid-cols-2 gap-2 text-center">
         <div>
-          <p className="text-lg font-extrabold text-ink">{plan.limites.usuarios.toLocaleString("es-UY")}</p>
+          <p className="text-lg font-extrabold text-ink">{limiteDelPlan(plan, "usuarios")}</p>
           <p className="text-xs text-ink-3">usuarios</p>
         </div>
         <div>
-          <p className="text-lg font-extrabold text-ink">{plan.limites.titulos.toLocaleString("es-UY")}</p>
+          <p className="text-lg font-extrabold text-ink">{limiteDelPlan(plan, "titulos")}</p>
           <p className="text-xs text-ink-3">títulos</p>
         </div>
       </div>

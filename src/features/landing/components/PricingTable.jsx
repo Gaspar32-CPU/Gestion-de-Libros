@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { obtenerPlanes, obtenerComparativaPlanes } from "../../../services/planes";
+import { limiteDelPlan } from "../planes";
 
 function Valor({ valor }) {
   if (typeof valor === "boolean") {
@@ -24,8 +25,8 @@ export function PricingTable() {
         const limites = {
           nombre: "Límites",
           filas: [
-            { funcionalidad: "Usuarios incluidos", valores: planesData.map((p) => p.limites.usuarios) },
-            { funcionalidad: "Títulos en catálogo", valores: planesData.map((p) => p.limites.titulos) },
+            { funcionalidad: "Usuarios incluidos", valores: planesData.map((p) => limiteDelPlan(p, "usuarios")) },
+            { funcionalidad: "Títulos en catálogo", valores: planesData.map((p) => limiteDelPlan(p, "titulos")) },
           ],
         };
         setCategorias([...comparativaData.categorias, limites]);

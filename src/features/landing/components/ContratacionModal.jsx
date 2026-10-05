@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 import { cuentaSchema, organizacionSchema, pagoSchema } from "../../../../schemas/contratacion.schema";
-import { precioDelPlan } from "../planes";
+import { precioDelPlan, limiteDelPlan } from "../planes";
 
 const PASOS = ["Cuenta", "Organización", "Pago", "Identidad", "Listo"];
 
@@ -241,8 +241,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                   <p className="text-xs font-bold text-ink-3 tracking-wide">PLAN SELECCIONADO</p>
                   <p className="font-extrabold text-ink">{plan.nombre}</p>
                   <p className="text-sm text-ink-3">
-                    {plan.limites.usuarios.toLocaleString("es-UY")} usuarios ·{" "}
-                    {plan.limites.titulos.toLocaleString("es-UY")} títulos
+                    {limiteDelPlan(plan, "usuarios")} usuarios · {limiteDelPlan(plan, "titulos")} títulos
                   </p>
                 </div>
                 <div className="text-right">

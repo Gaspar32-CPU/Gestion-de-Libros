@@ -10,6 +10,13 @@ export function equivalenteMensualAnual(plan) {
   return Math.round((plan.precioMensual * MESES_COBRADOS_POR_ANIO) / 12);
 }
 
+// "usuarios" o "titulos" formateado (5000 -> "5.000"). Si el plan viene sin
+// ese dato, muestra "–" en vez de romper la pantalla o inventar un 0.
+export function limiteDelPlan(plan, clave) {
+  const valor = plan.limites?.[clave];
+  return typeof valor === "number" ? valor.toLocaleString("es-UY") : "–";
+}
+
 // Nombres legibles para las claves de la columna JSON "funcionalidades".
 const NOMBRES_FUNCIONALIDADES = {
   reservas: "Reservas de libros",
