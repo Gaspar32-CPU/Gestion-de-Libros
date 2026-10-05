@@ -12,7 +12,10 @@ export function PlanesSection() {
 
   useEffect(() => {
     obtenerPlanes()
-      .then(setPlanes)
+      .then((data) => {
+        if (!Array.isArray(data)) throw new Error("Respuesta inesperada de /planes");
+        setPlanes(data);
+      })
       .catch(() => setError(true))
       .finally(() => setCargando(false));
   }, []);
