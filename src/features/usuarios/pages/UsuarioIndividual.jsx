@@ -13,13 +13,13 @@ export default function UsuarioIndividual({ usuario }) {
             <div className="flex items-center gap-3">
 
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#DDEBD7] text-sm font-semibold text-[#47734A]">
-                {obtenerIniciales(usuario.nombre) || "U"}
+                {obtenerIniciales(usuario.nombreCompleto) || "Usuario"}
             </div>
 
             <div className="min-w-0">
 
                 <p className="truncate text-sm font-semibold text-[#152943]">
-                {usuario.nombre || "Sin nombre"}
+                {usuario.nombreCompleto || "Sin nombre"}
                 </p>
 
                 <p className="text-xs text-gray-400">

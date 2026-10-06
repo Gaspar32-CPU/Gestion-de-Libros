@@ -8,9 +8,16 @@ const ETIQUETAS_ROL = {
 };
 
 function normalizarUsuario(usuario) {
+  const nombre = usuario.nombre ?? '';
+  const apellido = usuario.apellido ?? '';
+
   return {
     id: usuario.id,
-    nombre: usuario.nombre ?? '',
+    nombre,
+    apellido,
+    // Los usuarios previos a la columna "apellido" lo tienen vacío y su
+    // nombre completo está todo en "nombre".
+    nombreCompleto: `${nombre} ${apellido}`.trim(),
     cedula: usuario.CI ?? '',
     correo: usuario.correo ?? '',
     rol: usuario.rol,
@@ -26,7 +33,7 @@ export async function obtenerUsuarios() {
   return data.map(normalizarUsuario);
 }
 
-// Filtra por nombre o correo, sin distinguir mayúsculas ni tildes.
+// Filtra por nombre completo o correo, sin distinguir mayúsculas ni tildes.
 export function filtrarUsuarios(usuarios, busqueda) {
   const termino = normalizarTexto(busqueda);
 
@@ -34,7 +41,7 @@ export function filtrarUsuarios(usuarios, busqueda) {
 
   return usuarios.filter(
     (usuario) =>
-      normalizarTexto(usuario.nombre).includes(termino) ||
+      normalizarTexto(usuario.nombreCompleto).includes(termino) ||
       normalizarTexto(usuario.correo).includes(termino)
   );
 }
