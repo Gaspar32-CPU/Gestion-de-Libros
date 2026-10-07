@@ -32,7 +32,7 @@ export function Usuarios() {
             setError(error.message || "Error al obtener los usuarios");
             setCargando(false);
           });
-  }, []);
+  }, [isSuperAdmin]);
 
   const usuariosFiltrados = useMemo(
     () => filtrarUsuarios(usuarios, busqueda),
