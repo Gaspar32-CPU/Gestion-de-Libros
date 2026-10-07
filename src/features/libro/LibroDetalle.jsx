@@ -80,7 +80,7 @@ export const LibroDetalle = () => {
     }
 
     try {
-      const res = await api.post('/prestamos', { libroId: libro.id });
+      const res = await api.post('/prestamos', { libroId: libro.id, usuarioId: usuario.id });
       navigate("/prestamo-exitoso", { replace: true, state: { prestamo: res.data, libro } });
     } catch (err) {
       setError(err.response?.data?.mensaje || 'Error al generar el préstamo.');
@@ -176,13 +176,11 @@ export const LibroDetalle = () => {
           {esLector && (
             <>
               <button
-                disabled={!esDisponible || libro.yaLoTiene}
+                disabled={!esDisponible}
                 onClick={handlePrestamo}
                 className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
               >
-                {libro.yaLoTiene ? (
-                  <span title="No puedes pedir más copias de este libro">Libro en posesión</span>
-                ) : esDisponible ? (
+                {esDisponible ? (
                   <>
                     Solicitar Préstamo
                     <ArrowBack sx={{ fontSize: 16, transform: 'rotate(180deg)', marginLeft: '0.5rem' }} />
