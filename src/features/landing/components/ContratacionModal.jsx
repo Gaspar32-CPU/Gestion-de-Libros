@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../../services/api";
 import { cuentaSchema, organizacionSchema, pagoSchema } from "../../../../schemas/contratacion.schema";
+import { precioDelPlan, limiteDelPlan } from "../planes";
 
 const PASOS = ["Cuenta", "Organización", "Pago", "Identidad", "Listo"];
 
@@ -42,7 +43,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
 
-  const precio = ciclo === "anual" ? plan.precioAnual : plan.precioMensual;
+  const precio = precioDelPlan(plan, ciclo);
   const periodo = ciclo === "anual" ? "año" : "mes";
 
   const set = (campo) => (e) => setDatos((d) => ({ ...d, [campo]: e.target.value }));
@@ -76,7 +77,8 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
       });
       setPaso((p) => p + 1);
     } catch (err) {
-      setError(err.response?.data?.message || err.response?.data?.error || "No se pudo crear tu biblioteca. Intentá de nuevo.");
+      const data = err.response?.data;
+      setError(data?.mensaje || data?.message || data?.error || "No se pudo crear tu biblioteca. Intentá de nuevo.");
     } finally {
       setCargando(false);
     }
@@ -239,8 +241,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                   <p className="text-xs font-bold text-ink-3 tracking-wide">PLAN SELECCIONADO</p>
                   <p className="font-extrabold text-ink">{plan.nombre}</p>
                   <p className="text-sm text-ink-3">
-                    {plan.limites.usuarios.toLocaleString("es-UY")} usuarios · {plan.limites.admins} admins ·{" "}
-                    {plan.limites.titulos.toLocaleString("es-UY")} títulos
+                    {limiteDelPlan(plan, "usuarios")} usuarios · {limiteDelPlan(plan, "titulos")} títulos
                   </p>
                 </div>
                 <div className="text-right">
