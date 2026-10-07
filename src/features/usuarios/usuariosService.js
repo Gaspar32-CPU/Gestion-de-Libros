@@ -28,8 +28,14 @@ function normalizarUsuario(usuario) {
 }
 
 // Usuarios de todas las organizaciones (GET /api/admin/usuarios, solo super-admin).
-export async function obtenerUsuarios() {
+export async function obtenerTodosUsuarios() {
   const { data } = await api.get('/admin/usuarios');
+  return data.map(normalizarUsuario);
+}
+
+// Usuarios de la mi organización (GET /api/usuarios).
+export async function obtenerMisUsuarios() {
+  const { data } = await api.get('/usuarios');
   return data.map(normalizarUsuario);
 }
 

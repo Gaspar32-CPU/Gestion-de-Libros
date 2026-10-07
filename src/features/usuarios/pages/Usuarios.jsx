@@ -1,25 +1,38 @@
 import { useEffect, useMemo, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { obtenerUsuarios, filtrarUsuarios } from "../usuariosService";
+import { obtenerTodosUsuarios, filtrarUsuarios, obtenerMisUsuarios } from "../usuariosService";
 import UsuarioIndividual from "./UsuarioIndividual";
+import { useAuth } from "../../../context/useAuth";
 
 export function Usuarios() {
-  // Término de búsqueda controlado desde la barra de búsqueda del header
   const { busqueda = "" } = useOutletContext() ?? {};
-
+  const { usuario } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
+  const isSuperAdmin = usuario?.rol === "super-admin" && usuario?.organizacionId === null;
 
   useEffect(() => {
-    obtenerUsuarios()
-      .then(setUsuarios)
-      .catch((error) => {
-        console.error("Error al obtener los usuarios:", error);
-        setError("No se pudieron obtener los usuarios.");
-      })
-      .finally(() => setCargando(false));
-  }, []);
+    isSuperAdmin
+      ? obtenerTodosUsuarios()
+          .then((usuarios) => {
+            setUsuarios(usuarios);
+            setCargando(false);
+          })
+          .catch((error) => {
+            setError(error.message || "Error al obtener los usuarios");
+            setCargando(false);
+          })
+      : obtenerMisUsuarios()
+          .then((usuarios) => {
+            setUsuarios(usuarios);
+            setCargando(false);
+          })
+          .catch((error) => {
+            setError(error.message || "Error al obtener los usuarios");
+            setCargando(false);
+          });
+  }, [isSuperAdmin]);
 
   const usuariosFiltrados = useMemo(
     () => filtrarUsuarios(usuarios, busqueda),
