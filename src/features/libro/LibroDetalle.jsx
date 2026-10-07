@@ -181,7 +181,7 @@ export const LibroDetalle = () => {
                 className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
               >
                 {libro.yaLoTiene ? (
-                  "Ya lo tenés pedido"
+                  <span title="No puedes pedir más copias de este libro">Libro en posesión</span>
                 ) : esDisponible ? (
                   <>
                     Solicitar Préstamo
