@@ -77,13 +77,6 @@ export const registerSchema = z.object({
   telefono: z
     .string()
     .regex(/^0\d{2}\s?\d{3}\s?\d{3}$/, "Formato de teléfono inválido (ej: 099 123 456)"),
-  contrasena: z
-    .string()
-    .min(6, "La contraseña debe tener al menos 6 caracteres"),
-  confirmarContrasena: z.string().min(1, "Confirmá tu contraseña"),
-}).refine((data) => data.contrasena === data.confirmarContrasena, {
-  message: "Las contraseñas no coinciden",
-  path: ["confirmarContrasena"],
 });
 
 // ---- CREAR CONTRASEÑA (cuenta invitada por un admin) ----
