@@ -24,9 +24,9 @@ export function RegisterForm () {
     e.preventDefault();
     setError("");
 
-    const { nombre, apellido, cedula, correo, telefono, contrasena, confirmarContrasena } = form;
+    const { nombre, apellido, cedula, correo, telefono } = form;
 
-    if (!nombre || !apellido || !cedula || !correo || !telefono || !contrasena || !confirmarContrasena) {
+    if (!nombre || !apellido || !cedula || !correo || !telefono) {
         setError('Todos los campos son obligatorios');
         return;
     }
@@ -54,7 +54,9 @@ export function RegisterForm () {
             CUENTA_BLOQUEADA: 'Tu cuenta está bloqueada, contactá al administrador.',
         };
 
-        throw new Error(mensajesPersonalizados[data.code] || data.message || 'Error al iniciar sesión.');
+        throw new Error(
+          mensajesPersonalizados[data.code] || data.mensaje || data.message || data.error || 'No se pudo completar el registro.'
+        );
       }
 
       navigate("/", { replace: true });
@@ -143,35 +145,6 @@ export function RegisterForm () {
                 placeholder="nombre@anima.edu.uy"
               />
               <p className="mt-1 text-[0.8rem] text-stone-400">Usa tu correo institucional (ej: @anima.edu.uy)</p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="contrasena" className="mb-1.5 block text-sm font-semibold text-stone-900">Contraseña</label>
-                <input
-                  id="contrasena"
-                  type="password"
-                  name="contrasena"
-                  value={form.contrasena}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  className="w-full rounded-[10px] border border-stone-300 bg-white px-3.5 py-2.5 text-[0.95rem] text-stone-900 placeholder-stone-400 outline-none transition-colors focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                  placeholder="••••••••"
-                />
-              </div>
-              <div>
-                <label htmlFor="confirmarContrasena" className="mb-1.5 block text-sm font-semibold text-stone-900">Confirmar contraseña</label>
-                <input
-                  id="confirmarContrasena"
-                  type="password"
-                  name="confirmarContrasena"
-                  value={form.confirmarContrasena}
-                  onChange={handleChange}
-                  autoComplete="new-password"
-                  className="w-full rounded-[10px] border border-stone-300 bg-white px-3.5 py-2.5 text-[0.95rem] text-stone-900 placeholder-stone-400 outline-none transition-colors focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20"
-                  placeholder="••••••••"
-                />
-              </div>
             </div>
 
             {error && (

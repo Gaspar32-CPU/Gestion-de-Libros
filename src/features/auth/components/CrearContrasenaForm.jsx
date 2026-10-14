@@ -61,7 +61,7 @@ export function CrearContrasenaForm() {
 
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
-                throw new Error(data.error || 'No se pudo crear la contraseña.');
+                throw new Error(data.mensaje || data.error || 'No se pudo crear la contraseña.');
             }
 
             setListo(true);

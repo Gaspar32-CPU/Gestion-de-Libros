@@ -1,0 +1,47 @@
+name: Build check
+
+# Reproduce el build real ("npm run build") que corre en el servidor antes
+# de servir dist/ con nginx, para detectar en el PR algo que rompa el
+# deploy en vez de enterarnos cuando un usuario ve la página en producción.
+#
+# Importante: "¿vite build termina con exit 0?" NO alcanza acá. El bug que
+# motivó este workflow (vite.config.js borrado, @tailwindcss/vite nunca se
+# registraba) hace que "vite build" termine en exit 0 igual: genera un
+# dist/ "válido", solo que sin que Tailwind se haya compilado (el CSS de
+# salida queda con el placeholder "@tailwind utilities;" sin procesar, es
+# decir, sin ninguna clase utilitaria real). Por eso se valida el
+# contenido del CSS generado, no solo que el comando no falle.
+
+on:
+  pull_request:
+    branches: [master, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build de producción
+        run: npm run build
+
+      - name: Verificar que Tailwind realmente se compiló
+        run: |
+          CSS_FILES=$(find dist/assets -name '*.css' 2>/dev/null)
+          if [ -z "$CSS_FILES" ]; then
+            echo "ERROR: el build no generó ningún archivo .css en dist/assets."
+            exit 1
+          fi
+          if grep -l '@tailwind\|@import "tailwindcss"' $CSS_FILES; then
+            echo "ERROR: quedó una directiva @tailwind/@import \"tailwindcss\" sin procesar en el CSS de salida."
+            echo "Esto pasa cuando @tailwindcss/vite no está registrado en vite.config.js (revisar que el archivo exista y tenga el plugin)."
+            exit 1
+          fi
+          echo "OK: el CSS generado no tiene directivas de Tailwind sin procesar."

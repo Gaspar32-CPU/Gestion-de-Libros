@@ -45,7 +45,9 @@ export function LoginForm() {
                     CUENTA_BLOQUEADA: 'Tu cuenta está bloqueada, contactá al administrador.',
                 };
 
-                throw new Error(mensajesPersonalizados[data.code] || data.message || 'Error al iniciar sesión.');
+                throw new Error(
+                    mensajesPersonalizados[data.code] || data.mensaje || data.message || data.error || 'Error al iniciar sesión.'
+                );
             }
 
             const { token } = await res.json();

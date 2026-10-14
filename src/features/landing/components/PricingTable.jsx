@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
 import { obtenerPlanes, obtenerComparativaPlanes } from "../../../services/planes";
+import { limiteDelPlan } from "../planes";
 
 function Valor({ valor }) {
   if (typeof valor === "boolean") {
@@ -17,8 +18,18 @@ export function PricingTable() {
   useEffect(() => {
     Promise.all([obtenerPlanes(), obtenerComparativaPlanes()])
       .then(([planesData, comparativaData]) => {
+        if (!Array.isArray(planesData)) throw new Error("Respuesta inesperada de /planes");
         setPlanes(planesData);
-        setCategorias(comparativaData.categorias);
+        // Los límites salen de cada plan (DB) y no del texto fijo de la
+        // comparativa, así nunca muestran números distintos a las tarjetas.
+        const limites = {
+          nombre: "Límites",
+          filas: [
+            { funcionalidad: "Usuarios incluidos", valores: planesData.map((p) => limiteDelPlan(p, "usuarios")) },
+            { funcionalidad: "Títulos en catálogo", valores: planesData.map((p) => limiteDelPlan(p, "titulos")) },
+          ],
+        };
+        setCategorias([...comparativaData.categorias, limites]);
       })
       .catch(() => setError(true))
       .finally(() => setCargando(false));
