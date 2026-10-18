@@ -1,4 +1,3 @@
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { obtenerIniciales } from "../../../utils/obtenerIniciales";
 
 const ROLES_ADMIN = ["admin", "super-admin"];
@@ -65,17 +64,17 @@ export default function UsuarioIndividual({ usuario }) {
 
             </div>
 
-            {/* Editar */}
+            {/* Editar
             <div className="flex justify-end">
 
-            <button
-                type="button"
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:bg-gray-50 hover:text-gray-900"
-            >
-                <EditOutlinedIcon sx={{ fontSize: 14 }} />
-            </button>
+                <button
+                    type="button"
+                    className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-500 shadow-sm transition hover:bg-gray-50 hover:text-gray-900"
+                >
+                    <EditOutlinedIcon sx={{ fontSize: 14 }} />
+                </button>
 
-            </div>
+            </div> */}
 
         </div>
 
