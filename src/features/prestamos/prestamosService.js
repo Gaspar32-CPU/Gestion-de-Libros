@@ -15,6 +15,7 @@ function normalizarPrestamo(prestamo) {
     fechaDevolucion: prestamo.fecha_devolucion_real ?? null,
     extensionesRealizadas: prestamo.extensiones_realizadas ?? 0,
     estado: (prestamo.estado ?? '').toUpperCase(),
+    maxExtensiones: prestamo.max_extensiones,
   };
 }
 
@@ -35,7 +36,12 @@ export async function marcarPrestamoDevuelto(id) {
   return normalizarPrestamo(data);
 }
 
+export async function marcarPrestamoRetirado(id) {
+  const { data } = await api.patch(`/prestamos/${id}/retirado`);
+  return normalizarPrestamo(data);
+}
+
 export async function extenderPrestamo(id) {
   const { data } = await api.patch(`/prestamos/mis-prestamos/${id}/extender`);
-  return data.fecha_devolucion_esperada;
+  return normalizarPrestamo(data);
 }
