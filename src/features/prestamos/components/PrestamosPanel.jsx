@@ -166,7 +166,7 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
                   const activo = item.estado === 'ACTIVO';
                   const pendienteRetiro = item.estado === 'PENDIENTE_RETIRO';
                   const sinExtensiones = item.extensionesRealizadas < item.maxExtensiones;
-                  const admin =  usuario.rol === "admin";
+                  const admin = usuario?.rol === "admin";
                   const enCurso = idAccionEnCurso === item.id;
                   const marcarDevuelto = admin && (atrasado || activo);
                   const marcarRetiro = admin && (pendienteRetiro);
