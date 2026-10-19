@@ -267,8 +267,8 @@ const handleAgregarResena = async (e) => {
           {/* Listado de Reseñas */}
           <h3 className="text-[#092e40] text-lg font-bold mb-5">Reseñas</h3>
           <div className="space-y-5">
-            {resenas.map((resena, idx) => (
-              <div key={idx} className="flex gap-3.75">
+            {resenas.map((resena) => (
+              <div key={resena.id} className="flex gap-3.75">
                 <div className="w-8.75 h-8.75 bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                   {obtenerIniciales(resena.usuario)}
                 </div>
