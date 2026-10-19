@@ -49,6 +49,7 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
   const [filtroEstado, setFiltroEstado] = useState('TODOS');
   const [idAccionEnCurso, setIdAccionEnCurso] = useState(null);
   const { usuario } = useAuth();
+  const noEsLector = usuario.rol !== "lector";
 
   useEffect(() => {
     cargarPrestamos()
@@ -145,7 +146,9 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/50 text-slate-400 text-xs font-bold tracking-wider uppercase">
                 <th className="p-4">Libro</th>
-                <th className="p-4">Usuario</th>
+                {noEsLector && (
+                  <th className="p-4">Usuario</th>
+                )}
                 <th className="p-4">Retiro</th>
                 <th className="p-4">Vencimiento</th>
                 <th className="p-4">Estado</th>
@@ -176,7 +179,9 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
                   return (
                     <tr key={item.id} className="hover:bg-slate-50">
                       <td className="p-4 font-bold text-slate-900">{item.libro.titulo}</td>
-                      <td className="p-4 text-slate-600">{item.usuario}</td>
+                      {noEsLector && (
+                        <td className="p-4 text-slate-600">{item.usuario}</td>
+                      )}
                       <td className="p-4 text-slate-600">{item.retiro}</td>
                       <td className="p-4 text-slate-600">{devuelto ? '—' : formatearFecha(item.fechaMaxima) ?? '—'}</td>
                       <td className="p-4">
@@ -186,9 +191,11 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
                       </td>
                       <td className="p-4 text-right whitespace-nowrap">
                         {devuelto ? (
-                          <span className="text-xs text-slate-400">
-                            ✓ {formatearFecha(item.fechaDevolucion) ?? '-'}
-                          </span>
+                          item.fechaDevolucion && (
+                            <span className="text-xs text-slate-400">
+                              ✓ {formatearFecha(item.fechaDevolucion)}
+                            </span>
+                          )
                         ) : (
                           <div className="flex items-center justify-end gap-2">
                             {mostrarExtender && sinExtensiones && !pendienteRetiro && (!atrasado && !admin) && activo && (

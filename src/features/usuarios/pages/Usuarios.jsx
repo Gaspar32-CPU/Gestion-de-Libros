@@ -12,7 +12,7 @@ const FILTROS = [
 
 export function Usuarios() {
   const { busqueda = "" } = useOutletContext() ?? {};
-    const [filtroEstado, setFiltroEstado] = useState('TODOS');
+  const [filtroEstado, setFiltroEstado] = useState('TODOS');
   const { usuario } = useAuth();
   const [usuarios, setUsuarios] = useState([]);
   const [cargando, setCargando] = useState(true);

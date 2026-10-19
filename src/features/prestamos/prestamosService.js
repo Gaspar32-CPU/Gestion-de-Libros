@@ -10,6 +10,7 @@ function normalizarPrestamo(prestamo) {
       autor: prestamo.autor,
       portadaUrl: prestamo.portada ?? '',
     },
+    usuario: prestamo?.nombre_usuario,
     retiro: prestamo.lugar_retiro ?? '',
     fechaMaxima: prestamo.fecha_devolucion_esperada ?? null,
     fechaDevolucion: prestamo.fecha_devolucion_real ?? null,
