@@ -6,8 +6,10 @@ export function Footer() {
           <img src="/Bookly-png.png" alt="" className="w-8" />
           <span className="font-extrabold text-ink">Bookly</span>
         </div>
-        <p className="text-sm text-ink-3">© 2026 Bookly · Sistema de gestión de préstamos</p>
+        <p className="text-sm text-ink-3">
+          © 2026 Bookly · Sistema de gestión de préstamos
+        </p>
       </div>
     </footer>
-  );
+  )
 }

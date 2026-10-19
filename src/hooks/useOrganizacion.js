@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useEffect, useState } from 'react'
+import api from '../services/api'
 
 export function useOrganizacion(organizacionId) {
-  const [datos, setDatos] = useState(null);
+  const [datos, setDatos] = useState(null)
 
   useEffect(() => {
-    if (!organizacionId) return;
+    if (!organizacionId) return
 
-    api.get(`/organizaciones/${organizacionId}`)
+    api
+      .get(`/organizaciones/${organizacionId}`)
       .then((res) => setDatos(res.data))
-      .catch((err) => console.error("Error al traer la organización", err));
-  }, [organizacionId]);
+      .catch((err) => console.error('Error al traer la organización', err))
+  }, [organizacionId])
 
-  return datos;
+  return datos
 }

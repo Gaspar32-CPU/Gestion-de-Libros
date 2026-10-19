@@ -1,4 +1,4 @@
-import Select from '../../../components/Select';
+import Select from '../../../components/Select'
 
 export default function FiltrosBusqueda({
   generos,
@@ -14,19 +14,30 @@ export default function FiltrosBusqueda({
       <div className="flex flex-wrap items-center gap-3">
         <span className="text-sm text-slate-500 font-medium">Filtrar:</span>
 
-        <Select value={generoFilter} onChange={(e) => onGeneroChange(e.target.value)}>
+        <Select
+          value={generoFilter}
+          onChange={(e) => onGeneroChange(e.target.value)}
+        >
           {generos.map((genero) => (
-            <option key={genero} value={genero}>{genero}</option>
+            <option key={genero} value={genero}>
+              {genero}
+            </option>
           ))}
         </Select>
 
-        <Select value={disponibilidadFilter} onChange={(e) => onDisponibilidadChange(e.target.value)}>
+        <Select
+          value={disponibilidadFilter}
+          onChange={(e) => onDisponibilidadChange(e.target.value)}
+        >
           <option value="Todos">Todos</option>
           <option value="Disponible">Disponible</option>
           <option value="No disponible">No disponible</option>
         </Select>
 
-        <Select value={ordenarPor} onChange={(e) => onOrdenarChange(e.target.value)}>
+        <Select
+          value={ordenarPor}
+          onChange={(e) => onOrdenarChange(e.target.value)}
+        >
           <option value="relevancia">Ordenar por...</option>
           <option value="titulo">Título (A-Z)</option>
           <option value="autor">Autor (A-Z)</option>
@@ -35,5 +46,5 @@ export default function FiltrosBusqueda({
         </Select>
       </div>
     </div>
-  );
+  )
 }

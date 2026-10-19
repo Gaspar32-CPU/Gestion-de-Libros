@@ -1,5 +1,10 @@
-import PrestamosPanel from './components/PrestamosPanel';
-import { obtenerMisPrestamos, marcarPrestamoDevuelto, marcarPrestamoRetirado, extenderPrestamo } from './prestamosService';
+import PrestamosPanel from './components/PrestamosPanel'
+import {
+  obtenerMisPrestamos,
+  marcarPrestamoDevuelto,
+  marcarPrestamoRetirado,
+  extenderPrestamo,
+} from './prestamosService'
 
 export default function MisPrestamos() {
   return (
@@ -12,5 +17,5 @@ export default function MisPrestamos() {
       onMarcarDevuelto={marcarPrestamoDevuelto}
       onExtender={extenderPrestamo}
     />
-  );
+  )
 }

@@ -1,5 +1,9 @@
-import PrestamosPanel from './components/PrestamosPanel';
-import { obtenerTodosLosPrestamos, marcarPrestamoRetirado, marcarPrestamoDevuelto } from './prestamosService';
+import PrestamosPanel from './components/PrestamosPanel'
+import {
+  obtenerTodosLosPrestamos,
+  marcarPrestamoRetirado,
+  marcarPrestamoDevuelto,
+} from './prestamosService'
 
 export default function TodosLosPrestamos() {
   return (
@@ -10,5 +14,5 @@ export default function TodosLosPrestamos() {
       cargarPrestamos={obtenerTodosLosPrestamos}
       onMarcarDevuelto={marcarPrestamoDevuelto}
     />
-  );
+  )
 }
