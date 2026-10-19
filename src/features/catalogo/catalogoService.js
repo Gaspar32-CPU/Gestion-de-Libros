@@ -26,6 +26,16 @@ function normalizarLibro(libro) {
   };
 }
 
+function normalizarResena(r) {
+  return {
+    id: r.id,
+    usuario: r.usuario,
+    calificacion: r.calificacion,
+    comentario: r.comentario,
+    fecha: r.fecha,
+  };
+}
+
 export async function obtenerLibros() {
   const { data } = await api.get('/libros');
   return data.map(normalizarLibro);
@@ -35,6 +45,17 @@ export async function obtenerLibroPorId(id) {
   const { data } = await api.get(`/libros/${id}`);
   return normalizarLibro(data);
 }
+
+export async function obtenerResenas(id) {
+  const { data } = await api.get(`/libros/${id}/resenas`);
+  return data.map(normalizarResena);
+}
+
+export async function crearResena(id, {calificacion, comentario}) {
+  const { data } = await api.post(`/libros/${id}/resenas`, {calificacion, comentario});
+  return normalizarResena(data);
+}
+
 
 function aCuerpoLibro(datos) {
   return {
@@ -80,28 +101,4 @@ export async function obtenerLibrosPaginados({ page = 1, limit = 4 } = {}) {
     hasMore: endIndex < libros.length,
     total: libros.length,
   };
-}
-
-
-const MOCK_REVIEWS = {
-  "1": [
-    { id: "r1", user: "Laura Gomez", rating: 5, comment: "Una obra maestra de la literatura. Lo leo cada año y siempre encuentro algo nuevo." },
-    { id: "r2", user: "Carlos Perez", rating: 4, comment: "Excelente edicion. Muy recomendada para todas las edades." }
-  ],
-  "2": [
-    { id: "r3", user: "Ana Martinez", rating: 5, comment: "El comienzo de una saga increible. La magia se siente real desde la primera pagina." }
-  ],
-  "3": [
-    { id: "r4", user: "Juan Rodriguez", rating: 4, comment: "Un clasico que todos deberian leer. Una narrativa densa pero fascinante." }
-  ],
-  "4": [] 
-};
-
-
-export function obtenerResenasPorLibroId(libroId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_REVIEWS[libroId] || []);
-    }, 400); // Demora simulada de red
-  });
 }
