@@ -15,8 +15,7 @@ function normalizarUsuario(usuario) {
     id: usuario.id,
     nombre,
     apellido,
-    // Los usuarios previos a la columna "apellido" lo tienen vacío y su
-    // nombre completo está todo en "nombre".
+    activo: usuario.activo,
     nombreCompleto: `${nombre} ${apellido}`.trim(),
     cedula: usuario.CI ?? '',
     correo: usuario.correo ?? '',

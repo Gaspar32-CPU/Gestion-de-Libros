@@ -1,5 +1,5 @@
 import PrestamosPanel from './components/PrestamosPanel';
-import { obtenerMisPrestamos, marcarPrestamoDevuelto, extenderPrestamo } from './prestamosService';
+import { obtenerMisPrestamos, marcarPrestamoDevuelto, marcarPrestamoRetirado, extenderPrestamo } from './prestamosService';
 
 export default function MisPrestamos() {
   return (
@@ -8,6 +8,7 @@ export default function MisPrestamos() {
       subtitulo="Marcá devoluciones y seguí el estado de cada préstamo."
       cargarPrestamos={obtenerMisPrestamos}
       mostrarExtender
+      onMarcarRetirado={marcarPrestamoRetirado}
       onMarcarDevuelto={marcarPrestamoDevuelto}
       onExtender={extenderPrestamo}
     />
