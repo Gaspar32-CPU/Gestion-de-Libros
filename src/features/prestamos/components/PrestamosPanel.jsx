@@ -6,8 +6,11 @@ const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'o
 const FILTROS = [
   { valor: 'TODOS', label: 'Todos' },
   { valor: 'ACTIVO', label: 'Activo' },
+  { valor: 'PENDIENTE_RETIRO', label: 'Pendiente de retiro' },
   { valor: 'ATRASADO', label: 'Atrasado' },
   { valor: 'DEVUELTO', label: 'Devuelto' },
+  { valor: 'CANCELADO', label: 'Cancelado' },
+
 ];
 
 function formatearFecha(fechaStr) {
