@@ -66,25 +66,20 @@ export async function eliminarLibro(id) {
   await api.delete(`/libros/${id}`);
 }
 
-export function obtenerLibrosPaginados({ page = 1, limit = 4, simulateError = false } = {}) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (simulateError) {
-        reject(new Error("Error al conectar con el servidor. Intente nuevamente."));
-        return;
-      }
+export async function obtenerLibrosPaginados({ page = 1, limit = 4 } = {}) {
+  const safePage = Math.max(1, Number(page) || 1);
+  const safeLimit = Math.max(1, Number(limit) || 4);
 
-      const startIndex = (page - 1) * limit;
-      const endIndex = startIndex + limit;
-      const paginatedBooks = libros.slice(startIndex, endIndex);
-      
-      resolve({
-        data: paginatedBooks,
-        hasMore: endIndex < libros.length,
-        total: libros.length
-      });
-    }, 800); 
-  });
+  const libros = await obtenerLibros(); // ya normalizados
+
+  const startIndex = (safePage - 1) * safeLimit;
+  const endIndex = startIndex + safeLimit;
+
+  return {
+    data: libros.slice(startIndex, endIndex),
+    hasMore: endIndex < libros.length,
+    total: libros.length,
+  };
 }
 
 

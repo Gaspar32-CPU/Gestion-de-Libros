@@ -7,17 +7,12 @@ import { obtenerLibroPorId } from '../catalogo/catalogoService';
 import { useAuth } from '../../context/useAuth';
 import api from '../../services/api';
 
-const FechaActual = () => {
-  const fecha = new Date();
-  return fecha.toLocaleDateString();
-}
-
 export const LibroDetalle = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [libro, setLibro] = useState(null);
-  const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const [libro, setLibro] = useState(null);
+  const [idCargado, setIdCargado] = useState(null);
   const { usuario } = useAuth();
 
   // Estados para controlar dinámicamente las reseñas
@@ -26,15 +21,29 @@ export const LibroDetalle = () => {
   const [estrellasSeleccionadas, setEstrellasSeleccionadas] = useState(0);
 
   useEffect(() => {
-    setCargando(true);
+    let cancelado = false;
+
     obtenerLibroPorId(id)
-      .then(setLibro)
+      .then((data) => {
+        if (!cancelado) {
+          setLibro(data);
+          setIdCargado(id);
+        }
+      })
       .catch((err) => {
         console.error('Error al traer el libro', err);
-        setLibro(null);
-      })
-      .finally(() => setCargando(false));
+        if (!cancelado) {
+          setLibro(null);
+          setIdCargado(id);
+        }
+      });
+
+    return () => {
+      cancelado = true;
+    };
   }, [id]);
+
+  const cargando = idCargado !== id;
 
   if (cargando) {
     return <div className="p-8 text-center text-slate-500">Cargando...</div>;
@@ -84,8 +93,6 @@ export const LibroDetalle = () => {
       navigate("/prestamo-exitoso", { replace: true, state: { prestamo: res.data, libro } });
     } catch (err) {
       setError(err.response?.data?.mensaje || 'Error al generar el préstamo.');
-    } finally {
-      setCargando(false);
     }
   };
 
