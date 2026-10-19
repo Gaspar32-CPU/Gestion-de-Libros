@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowBack, Block } from '@mui/icons-material';
 import { esColorPortada } from '../../utils/portada';
-import { obtenerLibroPorId } from '../catalogo/catalogoService';
+import { obtenerLibroPorId, crearResena, obtenerResenas } from '../catalogo/catalogoService';
 import { useAuth } from '../../context/useAuth';
 import api from '../../services/api';
+import { obtenerIniciales } from '../../utils/obtenerIniciales';
 
 export const LibroDetalle = () => {
   const { id } = useParams();
@@ -14,9 +15,9 @@ export const LibroDetalle = () => {
   const [libro, setLibro] = useState(null);
   const [idCargado, setIdCargado] = useState(null);
   const { usuario } = useAuth();
+  const [resenas, setResenas] = useState([]);
+  const [enviando, setEnviando] = useState(null);
 
-  // Estados para controlar dinámicamente las reseñas
-  const [listaResenas, setListaResenas] = useState([]);
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [estrellasSeleccionadas, setEstrellasSeleccionadas] = useState(0);
 
@@ -43,6 +44,12 @@ export const LibroDetalle = () => {
     };
   }, [id]);
 
+  useEffect(() => {
+    obtenerResenas(id)
+      .then(setResenas)
+      .catch((err) => console.error('Error al traer las reseñas.', err));
+  }, [id]);
+
   const cargando = idCargado !== id;
 
   if (cargando) {
@@ -58,25 +65,34 @@ export const LibroDetalle = () => {
     return "★".repeat(redondeado) + "☆".repeat(5 - redondeado);
   };
 
-  const handleAgregarResena = (e) => {
-    e.preventDefault();
-    if (!nuevoComentario.trim() || estrellasSeleccionadas === 0) return;
+const handleAgregarResena = async (e) => {
+  e.preventDefault();
+    
+  if (!nuevoComentario.trim() || estrellasSeleccionadas === 0) return;
 
-    const nueva = {
-      iniciales: "TU",
-      nombre: "Tu reseña",
-      estrellas: estrellasSeleccionadas,
-      comentario: nuevoComentario
-    };
-
-    setListaResenas([nueva, ...listaResenas]);
-    setNuevoComentario("");
+  setError('');
+  setEnviando(true);
+  try {
+    const nueva = await crearResena(id, {
+       calificacion: estrellasSeleccionadas, 
+       comentario: nuevoComentario.trim()
+     });
+    setResenas((prev) => [nueva, ...prev]);
+    setNuevoComentario('');
     setEstrellasSeleccionadas(0);
-  };
+  } catch (err) {
+    console.error('Error al crear la reseña', err);
+    setError(err.response?.data?.mensaje || 'No se pudo crear la reseña.');
+  } finally {
+    setEnviando(false);
+  }
+};
 
   const esDisponible = libro.ejemplaresLibres > 0;
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
+
+  const comentarioValido = nuevoComentario.trim().length >= 100 && nuevoComentario.trim().length <= 600;
   const esLector = usuario?.rol === "lector";
 
   const handlePrestamo = async (e) => {
@@ -98,7 +114,7 @@ export const LibroDetalle = () => {
 
 
   return (
-    <div className="mx-auto font-sans antialiased text-slate-950 p-4">
+    <div className="mx-auto font-sans antialiased text-slate-950 p-4 pb-12">
       <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6">
         <div className='flex items-center gap-1'>
           <ArrowBack sx={{ fontSize: 16 }} />
@@ -154,8 +170,8 @@ export const LibroDetalle = () => {
           </p>
           <div className="flex items-center gap-2 text-sm mb-6.25">
             <span className="text-[#f59e0b] tracking-[2px]">{renderEstrellas(libro.puntuacion)}</span>
-            <span className="font-bold text-[#092e40]">{libro.puntuacion}</span>
-            <span className="text-[#64748b]">({listaResenas.length} reseñas)</span>
+            <span className="font-bold text-[#092e40]">{libro.puntuacion.toFixed(1)}</span>
+            <span className="text-[#64748b]">({resenas.length} reseñas)</span>
           </div>
           <p className="text-[#64748b] leading-relaxed text-[15px] max-w-150 mb-6.25">
             {libro.descripcion}
@@ -233,11 +249,12 @@ export const LibroDetalle = () => {
                 value={nuevoComentario}
                 onChange={(e) => setNuevoComentario(e.target.value)}
                 placeholder="Escribe tu opinión sobre el libro aquí..."
+                maxLength={600}
                 className="w-full p-3 border border-[#e2e8f0] rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1fa48a] bg-white min-h-22.5 resize-none"
               />
               <button
                 type="submit"
-                disabled={!nuevoComentario.trim() || estrellasSeleccionadas === 0}
+                disabled={!comentarioValido || !nuevoComentario.trim() || estrellasSeleccionadas === 0 || enviando}
                 className="px-5 py-2 bg-[#1fa48a] hover:bg-[#198771] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Enviar Reseña
@@ -245,19 +262,21 @@ export const LibroDetalle = () => {
             </form>
           </div>
 
+          {error && <p className="text-xs text-red-500">{error}</p>}
+
           {/* Listado de Reseñas */}
           <h3 className="text-[#092e40] text-lg font-bold mb-5">Reseñas</h3>
           <div className="space-y-5">
-            {listaResenas.map((resena, idx) => (
-              <div key={idx} className="flex gap-3.75">
+            {resenas.map((resena) => (
+              <div key={resena.id} className="flex gap-3.75">
                 <div className="w-8.75 h-8.75 bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
-                  {resena.iniciales}
+                  {obtenerIniciales(resena.usuario)}
                 </div>
                 <div className="grow">
                   <p className="text-sm font-semibold text-[#092e40] flex items-center gap-1.5">
-                    {resena.nombre}
+                    {resena.usuario}
                     <span className="text-[#f59e0b] text-[10px] ml-1 tracking-[1px]">
-                      {renderEstrellas(resena.estrellas)}
+                      {renderEstrellas(resena.calificacion)}
                     </span>
                   </p>
                   <p className="text-sm text-[#64748b] mt-0.75">{resena.comentario}</p>
