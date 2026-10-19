@@ -10,7 +10,6 @@ const FILTROS = [
   { valor: 'ATRASADO', label: 'Atrasado' },
   { valor: 'DEVUELTO', label: 'Devuelto' },
   { valor: 'CANCELADO', label: 'Cancelado' },
-
 ];
 
 function formatearFecha(fechaStr) {
