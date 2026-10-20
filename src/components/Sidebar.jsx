@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
+import { LogoutOutlined } from "@mui/icons-material";
 import UsuarioAvatar from "./UsuarioAvatar";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
 import { useAuth } from "../context/useAuth";
 
 export default function Sidebar ({opciones, usuario, organizacion, configuracion}) {
-    const { logout } = useAuth  ();
+    const { logout } = useAuth();
     return(
         <div className="sticky top-0 flex flex-col h-screen w-60 bg-ink text-white/55">
             <div className="border-b border-b-ink-2">
@@ -30,12 +31,24 @@ export default function Sidebar ({opciones, usuario, organizacion, configuracion
                     </NavLink>
                 ))}
             </div>
-            <div className="mt-auto border-t border-t-ink-2">
-                <button
-                    onClick={logout}
-                    className="flex gap-2 items-center rounded-xl py-2 cursor-pointer px-3"
+            <div className="mt-auto border-t border-t-ink-2 flex items-center pr-3">
+                <NavLink
+                    to="/perfil"
+                    aria-label="Mi perfil"
+                    className={({ isActive }) =>
+                        `flex-1 min-w-0 rounded-xl ${isActive ? "bg-ink-2" : "hover:bg-ink-2"}`
+                    }
                 >
                     <UsuarioAvatar iniciales={obtenerIniciales(usuario.nombre)} nombre={usuario.nombre} rol={usuario.rol}/>
+                </NavLink>
+                <button
+                    type="button"
+                    onClick={logout}
+                    aria-label="Cerrar sesión"
+                    title="Cerrar sesión"
+                    className="p-2 rounded-lg hover:bg-ink-2 cursor-pointer shrink-0"
+                >
+                    <LogoutOutlined fontSize="small"/>
                 </button>
             </div>
         </div>
