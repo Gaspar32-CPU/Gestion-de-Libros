@@ -20,6 +20,7 @@ export default function Catalogo() {
   const [libros, setLibros] = useState([]);
   const [generoFilter, setGeneroFilter] = useState('Todos');
   const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos');
+  const [idiomaFilter, setIdiomaFilter] = useState('Todos');
   const [ordenarPor, setOrdenarPor] = useState('relevancia');
 
   useEffect(() => {
@@ -30,6 +31,14 @@ export default function Catalogo() {
 
   const generos = useMemo(
     () => ['Todos', ...new Set(libros.map((libro) => libro.genero))],
+    [libros]
+  );
+
+  const idiomas = useMemo(
+    () => [
+      'Todos',
+      ...[...new Set(libros.map((libro) => libro.idioma).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+    ],
     [libros]
   );
 
@@ -50,12 +59,14 @@ export default function Catalogo() {
         (disponibilidadFilter === 'Disponible' && disponible) ||
         (disponibilidadFilter === 'No disponible' && !disponible);
 
-      return coincideTexto && coincideGenero && coincideDisponibilidad;
+      const coincideIdioma = idiomaFilter === 'Todos' || libro.idioma === idiomaFilter;
+
+      return coincideTexto && coincideGenero && coincideDisponibilidad && coincideIdioma;
     });
 
     const comparador = COMPARADORES[ordenarPor];
     return comparador ? [...resultado].sort(comparador) : resultado;
-  }, [libros, busqueda, generoFilter, disponibilidadFilter, ordenarPor]);
+  }, [libros, busqueda, generoFilter, disponibilidadFilter, idiomaFilter, ordenarPor]);
 
   const total = librosFiltrados.length;
   const disponibles = librosFiltrados.filter((libro) => libro.ejemplaresLibres > 0).length;
@@ -80,6 +91,9 @@ export default function Catalogo() {
         onGeneroChange={setGeneroFilter}
         disponibilidadFilter={disponibilidadFilter}
         onDisponibilidadChange={setDisponibilidadFilter}
+        idiomas={idiomas}
+        idiomaFilter={idiomaFilter}
+        onIdiomaChange={setIdiomaFilter}
         ordenarPor={ordenarPor}
         onOrdenarChange={setOrdenarPor}
       />
