@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/useAuth';
+import { normalizarTexto } from '../../../utils/normalizarTexto';
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
@@ -42,7 +43,7 @@ function normalizarEstado(estado) {
 // propios préstamos) y la del admin (todos los de su organización). Lo que
 // cambia entre una y otra es de dónde vienen los datos y qué acciones se
 // habilitan, no la forma de mostrarlos.
-export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mostrarExtender = false, onMarcarRetirado, onMarcarDevuelto, onExtender }) {
+export default function PrestamosPanel({ titulo, subtitulo, busqueda = '', cargarPrestamos, mostrarExtender = false, onMarcarRetirado, onMarcarDevuelto, onExtender }) {
   const [prestamos, setPrestamos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -66,9 +67,15 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
     return acc;
   }, {});
 
-  const prestamosFiltrados = filtroEstado === 'TODOS'
+  const terminoBusqueda = normalizarTexto(busqueda.trim());
+
+  const prestamosPorEstado = filtroEstado === 'TODOS'
     ? prestamos
     : prestamos.filter((p) => p.estado === filtroEstado);
+
+  const prestamosFiltrados = terminoBusqueda
+    ? prestamosPorEstado.filter((p) => normalizarTexto(p.libro?.titulo).includes(terminoBusqueda))
+    : prestamosPorEstado;
 
   const handleMarcarDevuelto = async (id) => {
     setError('');
@@ -162,7 +169,11 @@ export default function PrestamosPanel({ titulo, subtitulo, cargarPrestamos, mos
                 </tr>
               ) : prestamosFiltrados.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-sm text-slate-500">No hay préstamos en este estado.</td>
+                  <td colSpan={6} className="p-8 text-center text-sm text-slate-500">
+                    {terminoBusqueda
+                      ? 'No encontramos préstamos que coincidan con tu búsqueda.'
+                      : 'No hay préstamos en este estado.'}
+                  </td>
                 </tr>
               ) : (
                 prestamosFiltrados.map((item) => {
