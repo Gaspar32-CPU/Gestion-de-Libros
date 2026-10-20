@@ -17,7 +17,7 @@ const OPCIONES = [
 ];
 
 const PLACEHOLDERS_BUSQUEDA = {
-  "/catalogo": "Buscar por título o autor...",
+  "/catalogo": "Buscar por título, autor o ISBN...",
   "/gestion-catalogo": "Buscar por título o autor...",
   "/allprestamos": "Buscar por título del libro...",
   "/usuarios": "Buscar por nombre o email...",

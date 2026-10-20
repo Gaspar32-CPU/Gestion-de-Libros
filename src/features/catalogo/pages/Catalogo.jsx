@@ -44,12 +44,14 @@ export default function Catalogo() {
 
   const librosFiltrados = useMemo(() => {
     const termino = normalizarTexto(busqueda);
+    const terminoIsbn = termino.replace(/[\s-]/g, '');
 
     const resultado = libros.filter((libro) => {
       const coincideTexto =
         !termino ||
         normalizarTexto(libro.titulo).includes(termino) ||
-        normalizarTexto(libro.autor).includes(termino);
+        normalizarTexto(libro.autor).includes(termino) ||
+        (terminoIsbn !== '' && (libro.isbn || '').replace(/[\s-]/g, '').includes(terminoIsbn));
 
       const coincideGenero = generoFilter === 'Todos' || libro.genero === generoFilter;
 
