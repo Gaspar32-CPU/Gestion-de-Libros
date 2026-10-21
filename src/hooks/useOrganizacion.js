@@ -1,23 +1,28 @@
-import { useEffect, useState } from "react";
-import api from "../services/api";
+import { useEffect, useState } from 'react'
+import api from '../services/api'
 
 export function useOrganizacion(organizacionId) {
   // Guardamos a qué organizacionId corresponden los datos para no mostrar
   // los de una organización anterior (logout, cambio de usuario, etc.).
-  const [resultado, setResultado] = useState({ id: null, datos: null });
+  const [resultado, setResultado] = useState({ id: null, datos: null })
 
   useEffect(() => {
-    if (!organizacionId) return;
+    if (!organizacionId) return
 
-    let cancelado = false;
-    api.get(`/organizaciones/${organizacionId}`)
+    let cancelado = false
+    api
+      .get(`/organizaciones/${organizacionId}`)
       .then((res) => {
-        if (!cancelado) setResultado({ id: organizacionId, datos: res.data });
+        if (!cancelado) setResultado({ id: organizacionId, datos: res.data })
       })
-      .catch((err) => console.error("Error al traer la organización", err));
+      .catch((err) => console.error('Error al traer la organización', err))
 
-    return () => { cancelado = true; };
-  }, [organizacionId]);
+    return () => {
+      cancelado = true
+    }
+  }, [organizacionId])
 
-  return organizacionId && resultado.id === organizacionId ? resultado.datos : null;
+  return organizacionId && resultado.id === organizacionId
+    ? resultado.datos
+    : null
 }

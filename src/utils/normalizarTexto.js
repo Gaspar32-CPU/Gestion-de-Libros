@@ -1,8 +1,5 @@
 export function normalizarTexto(texto) {
-    if (!texto) return "";
+  if (!texto) return ''
 
-    return texto
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
-        .toLowerCase();
+  return texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
 }

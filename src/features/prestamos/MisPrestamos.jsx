@@ -1,9 +1,14 @@
-import { useOutletContext } from 'react-router-dom';
-import PrestamosPanel from './components/PrestamosPanel';
-import { obtenerMisPrestamos, marcarPrestamoDevuelto, marcarPrestamoRetirado, extenderPrestamo } from './prestamosService';
+import { useOutletContext } from 'react-router-dom'
+import PrestamosPanel from './components/PrestamosPanel'
+import {
+  obtenerMisPrestamos,
+  marcarPrestamoDevuelto,
+  marcarPrestamoRetirado,
+  extenderPrestamo,
+} from './prestamosService'
 
 export default function MisPrestamos() {
-  const { busqueda = '' } = useOutletContext() ?? {};
+  const { busqueda = '' } = useOutletContext() ?? {}
 
   return (
     <PrestamosPanel
@@ -16,5 +21,5 @@ export default function MisPrestamos() {
       onMarcarDevuelto={marcarPrestamoDevuelto}
       onExtender={extenderPrestamo}
     />
-  );
+  )
 }

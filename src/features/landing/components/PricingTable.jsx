@@ -1,55 +1,83 @@
-import { Fragment, useEffect, useState } from "react";
-import { obtenerPlanes, obtenerComparativaPlanes } from "../../../services/planes";
-import { limiteDelPlan } from "../planes";
+import { Fragment, useEffect, useState } from 'react'
+import {
+  obtenerPlanes,
+  obtenerComparativaPlanes,
+} from '../../../services/planes'
+import { limiteDelPlan } from '../planes'
 
 function Valor({ valor }) {
-  if (typeof valor === "boolean") {
-    return valor ? <span className="text-brand font-bold">✓</span> : <span className="text-ink-3">–</span>;
+  if (typeof valor === 'boolean') {
+    return valor ? (
+      <span className="text-brand font-bold">✓</span>
+    ) : (
+      <span className="text-ink-3">–</span>
+    )
   }
-  return <span className="font-bold text-ink">{typeof valor === "number" ? valor.toLocaleString("es-UY") : valor}</span>;
+  return (
+    <span className="font-bold text-ink">
+      {typeof valor === 'number' ? valor.toLocaleString('es-UY') : valor}
+    </span>
+  )
 }
 
 export function PricingTable() {
-  const [planes, setPlanes] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(false);
+  const [planes, setPlanes] = useState([])
+  const [categorias, setCategorias] = useState([])
+  const [cargando, setCargando] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     Promise.all([obtenerPlanes(), obtenerComparativaPlanes()])
       .then(([planesData, comparativaData]) => {
-        if (!Array.isArray(planesData)) throw new Error("Respuesta inesperada de /planes");
-        setPlanes(planesData);
+        if (!Array.isArray(planesData))
+          throw new Error('Respuesta inesperada de /planes')
+        setPlanes(planesData)
         // Los límites salen de cada plan (DB) y no del texto fijo de la
         // comparativa, así nunca muestran números distintos a las tarjetas.
         const limites = {
-          nombre: "Límites",
+          nombre: 'Límites',
           filas: [
-            { funcionalidad: "Usuarios incluidos", valores: planesData.map((p) => limiteDelPlan(p, "usuarios")) },
-            { funcionalidad: "Títulos en catálogo", valores: planesData.map(() => "Ilimitados") },
+            {
+              funcionalidad: 'Usuarios incluidos',
+              valores: planesData.map((p) => limiteDelPlan(p, 'usuarios')),
+            },
+            {
+              funcionalidad: 'Títulos en catálogo',
+              valores: planesData.map(() => 'Ilimitados'),
+            },
           ],
-        };
-        setCategorias([...comparativaData.categorias, limites]);
+        }
+        setCategorias([...comparativaData.categorias, limites])
       })
       .catch(() => setError(true))
-      .finally(() => setCargando(false));
-  }, []);
+      .finally(() => setCargando(false))
+  }, [])
 
   if (cargando || error) {
     return (
       <section id="comparativa" className="px-30 py-20 bg-bg">
-        <p className="text-sm font-bold text-brand tracking-wide">COMPARATIVA</p>
-        <h2 className="mt-3 text-4xl font-extrabold text-ink">Todo lo que incluye cada plan</h2>
+        <p className="text-sm font-bold text-brand tracking-wide">
+          COMPARATIVA
+        </p>
+        <h2 className="mt-3 text-4xl font-extrabold text-ink">
+          Todo lo que incluye cada plan
+        </h2>
         {cargando && <p className="mt-10 text-ink-3">Cargando comparativa…</p>}
-        {error && <p className="mt-10 text-red-600">No pudimos cargar la comparativa en este momento.</p>}
+        {error && (
+          <p className="mt-10 text-red-600">
+            No pudimos cargar la comparativa en este momento.
+          </p>
+        )}
       </section>
-    );
+    )
   }
 
   return (
     <section id="comparativa" className="px-30 py-20 bg-bg">
       <p className="text-sm font-bold text-brand tracking-wide">COMPARATIVA</p>
-      <h2 className="mt-3 text-4xl font-extrabold text-ink">Todo lo que incluye cada plan</h2>
+      <h2 className="mt-3 text-4xl font-extrabold text-ink">
+        Todo lo que incluye cada plan
+      </h2>
 
       <div className="mt-10 overflow-x-auto rounded-2xl border border-line">
         <table className="w-full text-sm border-collapse">
@@ -61,10 +89,12 @@ export function PricingTable() {
               {planes.map((plan, i) => (
                 <th
                   key={plan.id}
-                  className={`text-center px-6 py-4 ${i === 1 ? "bg-brand/5" : ""}`}
+                  className={`text-center px-6 py-4 ${i === 1 ? 'bg-brand/5' : ''}`}
                 >
                   <p className="font-extrabold text-ink">{plan.nombre}</p>
-                  <p className="text-xs text-ink-3 font-normal">US$ {plan.precioMensual}/mes</p>
+                  <p className="text-xs text-ink-3 font-normal">
+                    US$ {plan.precioMensual}/mes
+                  </p>
                 </th>
               ))}
             </tr>
@@ -81,10 +111,18 @@ export function PricingTable() {
                   </td>
                 </tr>
                 {categoria.filas.map((fila) => (
-                  <tr key={fila.funcionalidad} className="border-t border-line bg-white">
-                    <td className="px-6 py-3 text-ink-2">{fila.funcionalidad}</td>
+                  <tr
+                    key={fila.funcionalidad}
+                    className="border-t border-line bg-white"
+                  >
+                    <td className="px-6 py-3 text-ink-2">
+                      {fila.funcionalidad}
+                    </td>
                     {fila.valores.map((valor, i) => (
-                      <td key={i} className={`px-6 py-3 text-center ${i === 1 ? "bg-brand/5" : ""}`}>
+                      <td
+                        key={i}
+                        className={`px-6 py-3 text-center ${i === 1 ? 'bg-brand/5' : ''}`}
+                      >
                         <Valor valor={valor} />
                       </td>
                     ))}
@@ -96,5 +134,5 @@ export function PricingTable() {
         </table>
       </div>
     </section>
-  );
+  )
 }
