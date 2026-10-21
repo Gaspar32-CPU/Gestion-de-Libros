@@ -18,6 +18,7 @@ import { RutaPorRol } from "../components/RutaPorRol";
 import { LayoutSegunRol } from "./LayoutSegunRol";
 import SuperAdminLayout from "../layouts/SuperAdminLayout";
 import PrestamoExitoso from "../features/prestamos/components/PrestamoExitoso";
+import ReportarProblema from "../features/reportes/pages/ReportarProblema";
 
 export default function AppRoutes() {
   return (
@@ -48,6 +49,7 @@ export default function AppRoutes() {
             {/* El catálogo es por organización: el super-admin no pertenece a ninguna */}
             <Route element={<RutaPorRol rolesPermitidos={["admin", "lector"]} redirectTo="/plataforma" />}>
               <Route path="/catalogo" element={<Catalogo/>} />
+              <Route path="/reportar" element={<ReportarProblema/>} />
             </Route>
             <Route path="/perfil" element={<></>} />
           </Route>
@@ -80,7 +82,6 @@ export default function AppRoutes() {
               <Route path="/prestamos" element={<MisPrestamos />} />
               <Route path="/prestamo-exitoso" element={<PrestamoExitoso />} />
               <Route path="/prestamos/nuevo" element={<></>} />// Esta ruta es para un usuario cree un nuevo préstamo
-              <Route path="/reportar" element={<></>} /> // Esta ruta es para que un usuario vea reporte un problema
             </Route>
           </Route>
         </Route>

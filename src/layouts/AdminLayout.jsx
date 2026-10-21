@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DashboardHeader from "../components/DashboardHeader";
-import { DashboardOutlined, Equalizer, Inventory2, MenuBook, PersonOutlined, Settings } from "@mui/icons-material";
+import { DashboardOutlined, Equalizer, Inventory2, MenuBook, PersonOutlined, Settings, ReportProblem } from "@mui/icons-material";
 import { useAuth } from "../context/useAuth";
 import { Outlet, useLocation } from "react-router-dom";
 import { useOrganizacion } from "../hooks/useOrganizacion";
@@ -14,6 +14,7 @@ const OPCIONES = [
   { label: "Usuarios", icon: PersonOutlined, path: "/usuarios" },
   { label: "Reportes", icon: Equalizer, path: "/reportes" },
   { label: "Configuración", icon: Settings, path: "/configuracion" },
+  { label: "Reportar problema", icon: ReportProblem, path: "/reportar" },
 ];
 
 const PLACEHOLDERS_BUSQUEDA = {
