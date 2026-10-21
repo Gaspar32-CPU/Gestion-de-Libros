@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
+    "@emnapi/runtime": "^1.11.3",
     "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/react": "^19.2.17",
