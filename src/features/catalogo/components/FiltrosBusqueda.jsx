@@ -1,49 +1,80 @@
 import Select from '../../../components/Select'
 
+function Filtro({ titulo, children }) {
+  return (
+    <label className="flex flex-col gap-1.5">
+      <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+        {titulo}
+      </span>
+      {children}
+    </label>
+  )
+}
+
 export default function FiltrosBusqueda({
   generos,
   generoFilter,
   onGeneroChange,
   disponibilidadFilter,
   onDisponibilidadChange,
+  idiomas = [],
+  idiomaFilter,
+  onIdiomaChange,
   ordenarPor,
   onOrdenarChange,
 }) {
   return (
     <div className="mb-8 bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="text-sm text-slate-500 font-medium">Filtrar:</span>
+      <div className="flex flex-wrap items-end gap-3">
+        <Filtro titulo="Género">
+          <Select
+            value={generoFilter}
+            onChange={(e) => onGeneroChange(e.target.value)}
+          >
+            {generos.map((genero) => (
+              <option key={genero} value={genero}>
+                {genero}
+              </option>
+            ))}
+          </Select>
+        </Filtro>
 
-        <Select
-          value={generoFilter}
-          onChange={(e) => onGeneroChange(e.target.value)}
-        >
-          {generos.map((genero) => (
-            <option key={genero} value={genero}>
-              {genero}
-            </option>
-          ))}
-        </Select>
+        <Filtro titulo="Disponibilidad">
+          <Select
+            value={disponibilidadFilter}
+            onChange={(e) => onDisponibilidadChange(e.target.value)}
+          >
+            <option value="Todos">Todos</option>
+            <option value="Disponible">Disponible</option>
+            <option value="No disponible">No disponible</option>
+          </Select>
+        </Filtro>
 
-        <Select
-          value={disponibilidadFilter}
-          onChange={(e) => onDisponibilidadChange(e.target.value)}
-        >
-          <option value="Todos">Todos</option>
-          <option value="Disponible">Disponible</option>
-          <option value="No disponible">No disponible</option>
-        </Select>
+        <Filtro titulo="Idioma">
+          <Select
+            value={idiomaFilter}
+            onChange={(e) => onIdiomaChange(e.target.value)}
+          >
+            {idiomas.map((idioma) => (
+              <option key={idioma} value={idioma}>
+                {idioma}
+              </option>
+            ))}
+          </Select>
+        </Filtro>
 
-        <Select
-          value={ordenarPor}
-          onChange={(e) => onOrdenarChange(e.target.value)}
-        >
-          <option value="relevancia">Ordenar por...</option>
-          <option value="titulo">Título (A-Z)</option>
-          <option value="autor">Autor (A-Z)</option>
-          <option value="puntuacion">Mejor puntuados</option>
-          <option value="anio">Más recientes</option>
-        </Select>
+        <Filtro titulo="Ordenar por">
+          <Select
+            value={ordenarPor}
+            onChange={(e) => onOrdenarChange(e.target.value)}
+          >
+            <option value="relevancia">Relevancia</option>
+            <option value="titulo">Título (A-Z)</option>
+            <option value="autor">Autor (A-Z)</option>
+            <option value="puntuacion">Mejor puntuados</option>
+            <option value="anio">Más recientes</option>
+          </Select>
+        </Filtro>
       </div>
     </div>
   )

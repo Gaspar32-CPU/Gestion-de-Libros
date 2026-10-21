@@ -20,6 +20,7 @@ export default function Catalogo() {
   const [libros, setLibros] = useState([])
   const [generoFilter, setGeneroFilter] = useState('Todos')
   const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos')
+  const [idiomaFilter, setIdiomaFilter] = useState('Todos')
   const [ordenarPor, setOrdenarPor] = useState('relevancia')
 
   useEffect(() => {
@@ -33,14 +34,27 @@ export default function Catalogo() {
     [libros],
   )
 
+  const idiomas = useMemo(
+    () => [
+      'Todos',
+      ...[...new Set(libros.map((libro) => libro.idioma).filter(Boolean))].sort(
+        (a, b) => a.localeCompare(b),
+      ),
+    ],
+    [libros],
+  )
+
   const librosFiltrados = useMemo(() => {
     const termino = normalizarTexto(busqueda)
+    const terminoIsbn = termino.replace(/[\s-]/g, '')
 
     const resultado = libros.filter((libro) => {
       const coincideTexto =
         !termino ||
         normalizarTexto(libro.titulo).includes(termino) ||
-        normalizarTexto(libro.autor).includes(termino)
+        normalizarTexto(libro.autor).includes(termino) ||
+        (terminoIsbn !== '' &&
+          (libro.isbn || '').replace(/[\s-]/g, '').includes(terminoIsbn))
 
       const coincideGenero =
         generoFilter === 'Todos' || libro.genero === generoFilter
@@ -51,12 +65,27 @@ export default function Catalogo() {
         (disponibilidadFilter === 'Disponible' && disponible) ||
         (disponibilidadFilter === 'No disponible' && !disponible)
 
-      return coincideTexto && coincideGenero && coincideDisponibilidad
+      const coincideIdioma =
+        idiomaFilter === 'Todos' || libro.idioma === idiomaFilter
+
+      return (
+        coincideTexto &&
+        coincideGenero &&
+        coincideDisponibilidad &&
+        coincideIdioma
+      )
     })
 
     const comparador = COMPARADORES[ordenarPor]
     return comparador ? [...resultado].sort(comparador) : resultado
-  }, [libros, busqueda, generoFilter, disponibilidadFilter, ordenarPor])
+  }, [
+    libros,
+    busqueda,
+    generoFilter,
+    disponibilidadFilter,
+    idiomaFilter,
+    ordenarPor,
+  ])
 
   const total = librosFiltrados.length
   const disponibles = librosFiltrados.filter(
@@ -87,6 +116,9 @@ export default function Catalogo() {
         onGeneroChange={setGeneroFilter}
         disponibilidadFilter={disponibilidadFilter}
         onDisponibilidadChange={setDisponibilidadFilter}
+        idiomas={idiomas}
+        idiomaFilter={idiomaFilter}
+        onIdiomaChange={setIdiomaFilter}
         ordenarPor={ordenarPor}
         onOrdenarChange={setOrdenarPor}
       />
