@@ -13,7 +13,7 @@ export const LibroSugerencia = ({
 }) => {
   return (
     <div
-      className={`relative flex flex-col items-center justify-center text-center aspect-3/4 w-full overflow-hidden rounded-sm shadow-md ${className}`}
+      className={`relative flex flex-col items-center justify-center text-center aspect-[3/4] w-full overflow-hidden rounded-sm shadow-md ${className}`}
     >
       {esColorPortada(portadaUrl) || !portadaUrl ? (
         <div

@@ -2,16 +2,27 @@ import { useEffect, useState } from 'react'
 import api from '../services/api'
 
 export function useOrganizacion(organizacionId) {
-  const [datos, setDatos] = useState(null)
+  // Guardamos a qué organizacionId corresponden los datos para no mostrar
+  // los de una organización anterior (logout, cambio de usuario, etc.).
+  const [resultado, setResultado] = useState({ id: null, datos: null })
 
   useEffect(() => {
     if (!organizacionId) return
 
+    let cancelado = false
     api
       .get(`/organizaciones/${organizacionId}`)
-      .then((res) => setDatos(res.data))
+      .then((res) => {
+        if (!cancelado) setResultado({ id: organizacionId, datos: res.data })
+      })
       .catch((err) => console.error('Error al traer la organización', err))
+
+    return () => {
+      cancelado = true
+    }
   }, [organizacionId])
 
-  return datos
+  return organizacionId && resultado.id === organizacionId
+    ? resultado.datos
+    : null
 }

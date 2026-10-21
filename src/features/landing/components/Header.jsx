@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../../context/useAuth'
+import { useOrganizacion } from '../../../hooks/useOrganizacion'
 
 export function Header() {
   // eslint-disable-next-line no-unused-vars
   const { usuario, logout, cargando } = useAuth()
+  const datosOrganizacion = useOrganizacion(usuario?.organizacionId)
 
   return (
     <header className="bg-bg border-b border-line px-30">
@@ -49,12 +51,17 @@ export function Header() {
               </Link>
             </>
           ) : (
-            <button
-              className="bg-red-500 py-2 px-4 cursor-pointer rounded-xl border border-line text-white hover:bg-red-600 transition-all duration-300 active:translate-y-1 active:scale-100"
-              onClick={logout}
-            >
-              Cerrar sesión
-            </button>
+            <>
+              <button
+                className="bg-red-500 py-2 px-4 cursor-pointer rounded-xl border border-line text-white hover:bg-red-600 transition-all duration-300 active:translate-y-1 active:scale-100"
+                onClick={logout}
+              >
+                Cerrar sesión
+              </button>
+              <Link to="/catalogo">
+                {datosOrganizacion?.organizacion?.nombre || 'Mi organización'}
+              </Link>
+            </>
           )}
         </nav>
       </div>

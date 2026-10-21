@@ -24,7 +24,6 @@ function normalizarLibro(libro) {
     ejemplaresTotales: libro.stock,
     idioma: libro.idioma || '',
     codigoInterno: libro.codigo_interno || '',
-    yaLoTiene: Boolean(libro.ya_lo_tiene),
   }
 }
 

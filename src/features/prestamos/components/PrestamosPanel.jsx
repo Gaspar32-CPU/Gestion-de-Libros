@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../../context/useAuth'
+import { normalizarTexto } from '../../../utils/normalizarTexto'
 
 const MESES = [
   'ene',
@@ -61,6 +62,7 @@ function normalizarEstado(estado) {
 export default function PrestamosPanel({
   titulo,
   subtitulo,
+  busqueda = '',
   cargarPrestamos,
   mostrarExtender = false,
   onMarcarRetirado,
@@ -93,10 +95,18 @@ export default function PrestamosPanel({
     return acc
   }, {})
 
-  const prestamosFiltrados =
+  const terminoBusqueda = normalizarTexto(busqueda.trim())
+
+  const prestamosPorEstado =
     filtroEstado === 'TODOS'
       ? prestamos
       : prestamos.filter((p) => p.estado === filtroEstado)
+
+  const prestamosFiltrados = terminoBusqueda
+    ? prestamosPorEstado.filter((p) =>
+        normalizarTexto(p.libro?.titulo ?? '').includes(terminoBusqueda),
+      )
+    : prestamosPorEstado
 
   const handleMarcarDevuelto = async (id) => {
     setError('')
@@ -211,7 +221,9 @@ export default function PrestamosPanel({
                     colSpan={6}
                     className="p-8 text-center text-sm text-slate-500"
                   >
-                    No hay préstamos en este estado.
+                    {terminoBusqueda
+                      ? 'No encontramos préstamos que coincidan con tu búsqueda.'
+                      : 'No hay préstamos en este estado.'}
                   </td>
                 </tr>
               ) : (

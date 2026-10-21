@@ -43,7 +43,7 @@ export function PricingTable() {
             },
             {
               funcionalidad: 'Títulos en catálogo',
-              valores: planesData.map((p) => limiteDelPlan(p, 'titulos')),
+              valores: planesData.map(() => 'Ilimitados'),
             },
           ],
         }
