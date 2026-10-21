@@ -74,7 +74,7 @@ export default function PrestamosPanel({ titulo, subtitulo, busqueda = '', carga
     : prestamos.filter((p) => p.estado === filtroEstado);
 
   const prestamosFiltrados = terminoBusqueda
-    ? prestamosPorEstado.filter((p) => normalizarTexto(p.libro?.titulo).includes(terminoBusqueda))
+    ? prestamosPorEstado.filter((p) => normalizarTexto(p.libro?.titulo ?? '').includes(terminoBusqueda))
     : prestamosPorEstado;
 
   const handleMarcarDevuelto = async (id) => {
