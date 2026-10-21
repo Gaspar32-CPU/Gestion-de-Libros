@@ -1,9 +1,13 @@
-import { useOutletContext } from 'react-router-dom';
-import PrestamosPanel from './components/PrestamosPanel';
-import { obtenerTodosLosPrestamos, marcarPrestamoRetirado, marcarPrestamoDevuelto } from './prestamosService';
+import { useOutletContext } from 'react-router-dom'
+import PrestamosPanel from './components/PrestamosPanel'
+import {
+  obtenerTodosLosPrestamos,
+  marcarPrestamoRetirado,
+  marcarPrestamoDevuelto,
+} from './prestamosService'
 
 export default function TodosLosPrestamos() {
-  const { busqueda = '' } = useOutletContext() ?? {};
+  const { busqueda = '' } = useOutletContext() ?? {}
 
   return (
     <PrestamosPanel
@@ -14,5 +18,5 @@ export default function TodosLosPrestamos() {
       cargarPrestamos={obtenerTodosLosPrestamos}
       onMarcarDevuelto={marcarPrestamoDevuelto}
     />
-  );
+  )
 }

@@ -1,31 +1,31 @@
-import { useState } from 'react';
-import { isbnSchema } from '../../../../schemas/book.schema';
-import api from '../../../services/api';
+import { useState } from 'react'
+import { isbnSchema } from '../../../../schemas/book.schema'
+import api from '../../../services/api'
 
 export default function BusquedaIsbn({ onEncontrado }) {
-  const [isbn, setIsbn] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [libroEncontrado, setLibroEncontrado] = useState(null);
+  const [isbn, setIsbn] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [libroEncontrado, setLibroEncontrado] = useState(null)
 
   const handleBuscar = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLibroEncontrado(null);
+    e.preventDefault()
+    setError('')
+    setLibroEncontrado(null)
 
-    const result = isbnSchema.safeParse({ isbn });
+    const result = isbnSchema.safeParse({ isbn })
     if (!result.success) {
-      setError(result.error.issues[0].message);
-      return;
+      setError(result.error.issues[0].message)
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
 
     try {
       // Usamos la instancia `api` (no fetch) para que viaje el token de admin
       // igual que en el resto de las llamadas del catálogo.
-      const { data } = await api.get(`/libros/isbn/${result.data.isbn}`);
-      setLibroEncontrado(data.libro);
+      const { data } = await api.get(`/libros/isbn/${result.data.isbn}`)
+      setLibroEncontrado(data.libro)
       onEncontrado({
         titulo: data.libro.titulo ?? '',
         autor: data.libro.autor ?? '',
@@ -35,19 +35,25 @@ export default function BusquedaIsbn({ onEncontrado }) {
         descripcion: data.libro.descripcion ?? '',
         portadaUrl: data.libro.portada ?? '',
         isbn: result.data.isbn,
-      });
+      })
     } catch (err) {
-      setError(err.response?.data?.mensaje || 'No se encontró ningún libro con ese ISBN.');
+      setError(
+        err.response?.data?.mensaje ||
+          'No se encontró ningún libro con ese ISBN.',
+      )
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
       <div className="flex items-end gap-3">
         <div className="flex-1">
-          <label htmlFor="busqueda-isbn" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          <label
+            htmlFor="busqueda-isbn"
+            className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
+          >
             ISBN del libro
           </label>
           <input
@@ -70,7 +76,8 @@ export default function BusquedaIsbn({ onEncontrado }) {
       </div>
 
       <p className="mt-2 text-xs text-slate-500">
-        Consultamos la base bibliográfica y traemos título, autor, editorial, año y resumen. El stock y el código interno los completás vos.
+        Consultamos la base bibliográfica y traemos título, autor, editorial,
+        año y resumen. El stock y el código interno los completás vos.
       </p>
 
       {error && <p className="mt-2 text-sm text-rose-600">{error}</p>}
@@ -85,12 +92,18 @@ export default function BusquedaIsbn({ onEncontrado }) {
             />
           )}
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-slate-900 truncate">{libroEncontrado.titulo}</p>
-            <p className="text-xs text-slate-500 truncate">{libroEncontrado.autor}</p>
-            <p className="text-xs text-slate-400 mt-1">Se completaron los campos de abajo. Revisalos antes de guardar.</p>
+            <p className="text-sm font-semibold text-slate-900 truncate">
+              {libroEncontrado.titulo}
+            </p>
+            <p className="text-xs text-slate-500 truncate">
+              {libroEncontrado.autor}
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              Se completaron los campos de abajo. Revisalos antes de guardar.
+            </p>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }

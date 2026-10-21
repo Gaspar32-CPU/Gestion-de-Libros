@@ -1,28 +1,36 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../../../services/api";
-import { cuentaSchema, organizacionSchema, pagoSchema } from "../../../../schemas/contratacion.schema";
-import { precioDelPlan, limiteDelPlan } from "../planes";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import api from '../../../services/api'
+import {
+  cuentaSchema,
+  organizacionSchema,
+  pagoSchema,
+} from '../../../../schemas/contratacion.schema'
+import { precioDelPlan, limiteDelPlan } from '../planes'
 
-const PASOS = ["Cuenta", "Organización", "Pago", "Identidad", "Listo"];
+const PASOS = ['Cuenta', 'Organización', 'Pago', 'Identidad', 'Listo']
 
-const ESQUEMAS_POR_PASO = { 1: cuentaSchema, 2: organizacionSchema, 3: pagoSchema };
+const ESQUEMAS_POR_PASO = {
+  1: cuentaSchema,
+  2: organizacionSchema,
+  3: pagoSchema,
+}
 
 const INICIAL = {
-  nombre: "",
-  apellido: "",
-  cedula: "",
-  telefono: "",
-  correo: "",
-  contrasena: "",
-  organizacion: "",
-  dominio: "",
-  nombreTarjeta: "",
-  numeroTarjeta: "",
-  vencimiento: "",
-  cvv: "",
-  nombreApp: "",
-};
+  nombre: '',
+  apellido: '',
+  cedula: '',
+  telefono: '',
+  correo: '',
+  contrasena: '',
+  organizacion: '',
+  dominio: '',
+  nombreTarjeta: '',
+  numeroTarjeta: '',
+  vencimiento: '',
+  cvv: '',
+  nombreApp: '',
+}
 
 function Campo({ label, ...props }) {
   return (
@@ -33,36 +41,37 @@ function Campo({ label, ...props }) {
         className="mt-1 w-full rounded-xl border border-line px-4 py-2.5 text-ink outline-none focus:border-brand"
       />
     </label>
-  );
+  )
 }
 
 export function ContratacionModal({ plan, ciclo, onClose }) {
-  const navigate = useNavigate();
-  const [paso, setPaso] = useState(1);
-  const [datos, setDatos] = useState(INICIAL);
-  const [error, setError] = useState("");
-  const [cargando, setCargando] = useState(false);
+  const navigate = useNavigate()
+  const [paso, setPaso] = useState(1)
+  const [datos, setDatos] = useState(INICIAL)
+  const [error, setError] = useState('')
+  const [cargando, setCargando] = useState(false)
 
-  const precio = precioDelPlan(plan, ciclo);
-  const periodo = ciclo === "anual" ? "año" : "mes";
+  const precio = precioDelPlan(plan, ciclo)
+  const periodo = ciclo === 'anual' ? 'año' : 'mes'
 
-  const set = (campo) => (e) => setDatos((d) => ({ ...d, [campo]: e.target.value }));
+  const set = (campo) => (e) =>
+    setDatos((d) => ({ ...d, [campo]: e.target.value }))
 
   function validarPaso() {
-    const esquema = ESQUEMAS_POR_PASO[paso];
-    if (!esquema) return "";
-    const resultado = esquema.safeParse(datos);
-    return resultado.success ? "" : resultado.error.issues[0].message;
+    const esquema = ESQUEMAS_POR_PASO[paso]
+    if (!esquema) return ''
+    const resultado = esquema.safeParse(datos)
+    return resultado.success ? '' : resultado.error.issues[0].message
   }
 
   async function crearCuentaAdministradora() {
-    setCargando(true);
+    setCargando(true)
     try {
       // El registro crea de una sola vez la cuenta y su organización: al
       // mandar "organizacion" y "dominio" (paso 2), el backend entiende que
       // no es un lector sumándose a una org existente, sino el alta de una
       // organización nueva, y crea a quien se registra como su admin.
-      await api.post("/auth/register", {
+      await api.post('/auth/register', {
         nombre: datos.nombre,
         apellido: datos.apellido,
         cedula: datos.cedula,
@@ -74,42 +83,48 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
         dominio: datos.dominio,
         planId: plan.id,
         ciclo,
-      });
-      setPaso((p) => p + 1);
+      })
+      setPaso((p) => p + 1)
     } catch (err) {
-      const data = err.response?.data;
-      setError(data?.mensaje || data?.message || data?.error || "No se pudo crear tu biblioteca. Intentá de nuevo.");
+      const data = err.response?.data
+      setError(
+        data?.mensaje ||
+          data?.message ||
+          data?.error ||
+          'No se pudo crear tu biblioteca. Intentá de nuevo.',
+      )
     } finally {
-      setCargando(false);
+      setCargando(false)
     }
   }
 
   async function siguiente() {
-    const mensaje = validarPaso();
+    const mensaje = validarPaso()
     if (mensaje) {
-      setError(mensaje);
-      return;
+      setError(mensaje)
+      return
     }
-    setError("");
+    setError('')
 
     if (paso === 3) {
-      await crearCuentaAdministradora();
-      return;
+      await crearCuentaAdministradora()
+      return
     }
 
     if (paso === 4) {
-      setDatos((d) => ({ ...d, nombreApp: d.nombreApp || datos.organizacion }));
+      setDatos((d) => ({ ...d, nombreApp: d.nombreApp || datos.organizacion }))
     }
-    setPaso((p) => p + 1);
+    setPaso((p) => p + 1)
   }
 
   function atras() {
-    setError("");
-    setPaso((p) => p - 1);
+    setError('')
+    setPaso((p) => p - 1)
   }
 
-  const inicialOrganizacion = datos.organizacion.trim().charAt(0).toUpperCase() || "B";
-  const nombreApp = datos.nombreApp || datos.organizacion || "Tu biblioteca";
+  const inicialOrganizacion =
+    datos.organizacion.trim().charAt(0).toUpperCase() || 'B'
+  const nombreApp = datos.nombreApp || datos.organizacion || 'Tu biblioteca'
 
   return (
     <div
@@ -124,14 +139,14 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-bold text-brand tracking-wide">
-                {paso < 5 ? `PASO ${paso} DE 4` : "TODO PRONTO"}
+                {paso < 5 ? `PASO ${paso} DE 4` : 'TODO PRONTO'}
               </p>
               <h2 className="mt-1 text-xl font-extrabold text-ink">
-                {paso === 1 && "Creá tu cuenta de administrador"}
-                {paso === 2 && "Datos de tu organización"}
-                {paso === 3 && "Confirmá el pago"}
-                {paso === 4 && "Personalizá tu biblioteca"}
-                {paso === 5 && "Bienvenido a Bookly"}
+                {paso === 1 && 'Creá tu cuenta de administrador'}
+                {paso === 2 && 'Datos de tu organización'}
+                {paso === 3 && 'Confirmá el pago'}
+                {paso === 4 && 'Personalizá tu biblioteca'}
+                {paso === 5 && 'Bienvenido a Bookly'}
               </h2>
             </div>
             <button
@@ -146,25 +161,29 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
 
           <div className="mt-4 flex gap-2">
             {PASOS.map((nombrePaso, i) => {
-              const numero = i + 1;
-              const completado = numero < paso;
-              const activo = numero === paso;
+              const numero = i + 1
+              const completado = numero < paso
+              const activo = numero === paso
               return (
                 <div key={nombrePaso} className="flex-1">
                   <p
                     className={`text-xs mb-1 truncate ${
-                      activo ? "font-bold text-ink" : "text-ink-3"
+                      activo ? 'font-bold text-ink' : 'text-ink-3'
                     }`}
                   >
                     {nombrePaso}
                   </p>
                   <div
                     className={`h-1 rounded-full ${
-                      completado ? "bg-brand-2" : activo ? "bg-brand" : "bg-line"
+                      completado
+                        ? 'bg-brand-2'
+                        : activo
+                          ? 'bg-brand'
+                          : 'bg-line'
                     }`}
                   />
                 </div>
-              );
+              )
             })}
           </div>
         </div>
@@ -173,30 +192,50 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
           {paso === 1 && (
             <div className="space-y-4">
               <p className="text-sm text-ink-2">
-                Esta cuenta va a ser la administradora de la biblioteca: carga el catálogo,
-                gestiona préstamos y configura las reglas.
+                Esta cuenta va a ser la administradora de la biblioteca: carga
+                el catálogo, gestiona préstamos y configura las reglas.
               </p>
               <div className="grid grid-cols-2 gap-4">
-                <Campo label="Nombre" placeholder="Tabaré" value={datos.nombre} onChange={set("nombre")} />
-                <Campo label="Apellido" placeholder="Marmolejo" value={datos.apellido} onChange={set("apellido")} />
+                <Campo
+                  label="Nombre"
+                  placeholder="Tabaré"
+                  value={datos.nombre}
+                  onChange={set('nombre')}
+                />
+                <Campo
+                  label="Apellido"
+                  placeholder="Marmolejo"
+                  value={datos.apellido}
+                  onChange={set('apellido')}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Campo label="Cédula" placeholder="5.123.456-7" value={datos.cedula} onChange={set("cedula")} />
-                <Campo label="Teléfono" placeholder="099 123 456" value={datos.telefono} onChange={set("telefono")} />
+                <Campo
+                  label="Cédula"
+                  placeholder="5.123.456-7"
+                  value={datos.cedula}
+                  onChange={set('cedula')}
+                />
+                <Campo
+                  label="Teléfono"
+                  placeholder="099 123 456"
+                  value={datos.telefono}
+                  onChange={set('telefono')}
+                />
               </div>
               <Campo
                 label="Correo institucional"
                 type="email"
                 placeholder="tabare@anima.edu.uy"
                 value={datos.correo}
-                onChange={set("correo")}
+                onChange={set('correo')}
               />
               <Campo
                 label="Contraseña"
                 type="password"
                 placeholder="Mínimo 8 caracteres"
                 value={datos.contrasena}
-                onChange={set("contrasena")}
+                onChange={set('contrasena')}
               />
             </div>
           )}
@@ -204,31 +243,34 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
           {paso === 2 && (
             <div className="space-y-4">
               <p className="text-sm text-ink-2">
-                Solo las personas con un correo de este dominio van a poder registrarse en tu biblioteca.
+                Solo las personas con un correo de este dominio van a poder
+                registrarse en tu biblioteca.
               </p>
               <Campo
                 label="Nombre de la organización"
                 placeholder="Bachillerato Tecnológico Ánima"
                 value={datos.organizacion}
-                onChange={set("organizacion")}
+                onChange={set('organizacion')}
               />
               <Campo
                 label="Dominio de correo"
                 placeholder="@anima.edu.uy"
                 value={datos.dominio}
-                onChange={set("dominio")}
+                onChange={set('dominio')}
               />
               {datos.dominio.trim() && (
                 <p className="text-sm text-brand-d">
-                  ✓ Se aceptarán correos {datos.dominio.trim().startsWith("@") ? "" : "@"}
+                  ✓ Se aceptarán correos{' '}
+                  {datos.dominio.trim().startsWith('@') ? '' : '@'}
                   {datos.dominio.trim()}
                 </p>
               )}
               <div className="rounded-xl bg-bg border border-line px-4 py-3 text-sm text-ink-2 flex gap-3">
                 <span>🔒</span>
                 <p>
-                  Los datos de tu organización quedan aislados: ningún otro cliente de Bookly puede
-                  ver tu catálogo, tus usuarios ni tus préstamos.
+                  Los datos de tu organización quedan aislados: ningún otro
+                  cliente de Bookly puede ver tu catálogo, tus usuarios ni tus
+                  préstamos.
                 </p>
               </div>
             </div>
@@ -238,14 +280,19 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
             <div className="space-y-4">
               <div className="flex items-center justify-between rounded-xl border border-line px-4 py-3">
                 <div>
-                  <p className="text-xs font-bold text-ink-3 tracking-wide">PLAN SELECCIONADO</p>
+                  <p className="text-xs font-bold text-ink-3 tracking-wide">
+                    PLAN SELECCIONADO
+                  </p>
                   <p className="font-extrabold text-ink">{plan.nombre}</p>
                   <p className="text-sm text-ink-3">
-                    {limiteDelPlan(plan, "usuarios")} usuarios · {limiteDelPlan(plan, "titulos")} títulos
+                    {limiteDelPlan(plan, 'usuarios')} usuarios · títulos
+                    ilimitados
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-extrabold text-ink">US$ {precio}</p>
+                  <p className="text-xl font-extrabold text-ink">
+                    US$ {precio}
+                  </p>
                   <p className="text-xs text-ink-3">por {periodo}</p>
                 </div>
               </div>
@@ -253,21 +300,33 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                 label="Nombre en la tarjeta"
                 placeholder="Tabaré Marmolejo"
                 value={datos.nombreTarjeta}
-                onChange={set("nombreTarjeta")}
+                onChange={set('nombreTarjeta')}
               />
               <Campo
                 label="Número de tarjeta"
                 placeholder="4509 0000 0000 0000"
                 value={datos.numeroTarjeta}
-                onChange={set("numeroTarjeta")}
+                onChange={set('numeroTarjeta')}
               />
               <div className="grid grid-cols-2 gap-4">
-                <Campo label="Vencimiento" placeholder="09/29" value={datos.vencimiento} onChange={set("vencimiento")} />
-                <Campo label="CVV" placeholder="123" value={datos.cvv} onChange={set("cvv")} />
+                <Campo
+                  label="Vencimiento"
+                  placeholder="09/29"
+                  value={datos.vencimiento}
+                  onChange={set('vencimiento')}
+                />
+                <Campo
+                  label="CVV"
+                  placeholder="123"
+                  value={datos.cvv}
+                  onChange={set('cvv')}
+                />
               </div>
               <p className="text-xs text-ink-3">
-                Al confirmar creamos tu organización y tu cuenta de administrador. Facturación{" "}
-                {ciclo === "anual" ? "anual" : "mensual"}, cancelable en cualquier momento.
+                Al confirmar creamos tu organización y tu cuenta de
+                administrador. Facturación{' '}
+                {ciclo === 'anual' ? 'anual' : 'mensual'}, cancelable en
+                cualquier momento.
               </p>
             </div>
           )}
@@ -275,8 +334,8 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
           {paso === 4 && (
             <div className="space-y-4">
               <p className="text-sm text-ink-2">
-                Tu biblioteca va a usar la identidad de tu institución, no la nuestra. Podés cambiar esto
-                cuando quieras.
+                Tu biblioteca va a usar la identidad de tu institución, no la
+                nuestra. Podés cambiar esto cuando quieras.
               </p>
 
               <div className="rounded-xl border border-line overflow-hidden">
@@ -286,7 +345,9 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                       {inicialOrganizacion}
                     </span>
                     <div>
-                      <p className="text-sm font-bold text-white leading-none">{nombreApp}</p>
+                      <p className="text-sm font-bold text-white leading-none">
+                        {nombreApp}
+                      </p>
                       <p className="text-xs text-ink-3">Biblioteca</p>
                     </div>
                   </div>
@@ -306,9 +367,9 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
 
               <Campo
                 label="Nombre de la app"
-                placeholder={datos.organizacion || "Biblioteca Ánima"}
+                placeholder={datos.organizacion || 'Biblioteca Ánima'}
                 value={datos.nombreApp}
-                onChange={set("nombreApp")}
+                onChange={set('nombreApp')}
               />
 
               <div>
@@ -318,7 +379,8 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                     {inicialOrganizacion}
                   </span>
                   <p className="text-sm text-ink-2">
-                    Por ahora usamos la inicial de tu organización. Podés subir el logo desde Configuración.
+                    Por ahora usamos la inicial de tu organización. Podés subir
+                    el logo desde Configuración.
                   </p>
                 </div>
               </div>
@@ -331,25 +393,41 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                 <div className="w-16 h-16 rounded-full bg-brand-2/20 text-brand-d text-3xl flex items-center justify-center">
                   ✓
                 </div>
-                <h3 className="mt-4 text-2xl font-extrabold text-ink">Tu biblioteca está lista</h3>
+                <h3 className="mt-4 text-2xl font-extrabold text-ink">
+                  Tu biblioteca está lista
+                </h3>
                 <p className="mt-2 text-ink-2">
-                  Creamos <span className="font-bold">{datos.organizacion || "tu organización"}</span> con el
-                  plan {plan.nombre} y tu cuenta de administrador.
+                  Creamos{' '}
+                  <span className="font-bold">
+                    {datos.organizacion || 'tu organización'}
+                  </span>{' '}
+                  con el plan {plan.nombre} y tu cuenta de administrador.
                 </p>
               </div>
 
               {[
                 {
-                  titulo: "Organización creada",
-                  detalle: `${datos.organizacion || "Tu organización"} · dominio ${
-                    datos.dominio.trim().startsWith("@") ? datos.dominio.trim() : `@${datos.dominio.trim()}`
+                  titulo: 'Organización creada',
+                  detalle: `${datos.organizacion || 'Tu organización'} · dominio ${
+                    datos.dominio.trim().startsWith('@')
+                      ? datos.dominio.trim()
+                      : `@${datos.dominio.trim()}`
                   }`,
                 },
-                { titulo: "Cuenta de administrador", detalle: datos.correo },
-                { titulo: `Plan ${plan.nombre} activo`, detalle: `US$ ${precio} por ${periodo}` },
-                { titulo: "Identidad configurada", detalle: `${nombreApp} · colores aplicados` },
+                { titulo: 'Cuenta de administrador', detalle: datos.correo },
+                {
+                  titulo: `Plan ${plan.nombre} activo`,
+                  detalle: `US$ ${precio} por ${periodo}`,
+                },
+                {
+                  titulo: 'Identidad configurada',
+                  detalle: `${nombreApp} · colores aplicados`,
+                },
               ].map((item) => (
-                <div key={item.titulo} className="flex items-start gap-3 rounded-xl bg-bg border border-line px-4 py-3">
+                <div
+                  key={item.titulo}
+                  className="flex items-start gap-3 rounded-xl bg-bg border border-line px-4 py-3"
+                >
                   <span className="text-brand font-bold">✓</span>
                   <div>
                     <p className="font-bold text-ink text-sm">{item.titulo}</p>
@@ -359,8 +437,8 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
               ))}
 
               <div className="rounded-xl bg-brand-2/10 border border-brand-2/30 px-4 py-3 text-sm text-ink-2">
-                Próximo paso: cargá tu catálogo. Si tenés la planilla de Excel, la importamos por vos —
-                escribinos a hola@bookly.app.
+                Próximo paso: cargá tu catálogo. Si tenés la planilla de Excel,
+                la importamos por vos — escribinos a hola@bookly.app.
               </div>
             </div>
           )}
@@ -381,7 +459,9 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
               </button>
             )}
             {paso < 5 && (
-              <span className="text-sm text-ink-3">{paso === 3 ? "Pago seguro" : "Podés cambiar todo después"}</span>
+              <span className="text-sm text-ink-3">
+                {paso === 3 ? 'Pago seguro' : 'Podés cambiar todo después'}
+              </span>
             )}
           </div>
 
@@ -392,12 +472,16 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
               disabled={cargando}
               className="bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {paso === 3 ? (cargando ? "Creando tu biblioteca..." : "Pagar y crear mi biblioteca") : "Continuar"}
+              {paso === 3
+                ? cargando
+                  ? 'Creando tu biblioteca...'
+                  : 'Pagar y crear mi biblioteca'
+                : 'Continuar'}
             </button>
           ) : (
             <button
               type="button"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate('/login')}
               className="bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors"
             >
               Entrar a Bookly
@@ -406,5 +490,5 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
