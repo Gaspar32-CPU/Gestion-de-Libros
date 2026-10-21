@@ -10,7 +10,7 @@ export function equivalenteMensualAnual(plan) {
   return Math.round((plan.precioMensual * MESES_COBRADOS_POR_ANIO) / 12);
 }
 
-// "usuarios" o "titulos" formateado (5000 -> "5.000"). Si el plan viene sin
+// "usuarios" formateado (5000 -> "5.000"). Si el plan viene sin
 // ese dato, muestra "–" en vez de romper la pantalla o inventar un 0.
 export function limiteDelPlan(plan, clave) {
   const valor = plan.limites?.[clave];

@@ -241,7 +241,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                   <p className="text-xs font-bold text-ink-3 tracking-wide">PLAN SELECCIONADO</p>
                   <p className="font-extrabold text-ink">{plan.nombre}</p>
                   <p className="text-sm text-ink-3">
-                    {limiteDelPlan(plan, "usuarios")} usuarios · {limiteDelPlan(plan, "titulos")} títulos
+                    {limiteDelPlan(plan, "usuarios")} usuarios · títulos ilimitados
                   </p>
                 </div>
                 <div className="text-right">

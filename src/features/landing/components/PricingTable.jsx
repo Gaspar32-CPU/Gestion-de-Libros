@@ -26,7 +26,7 @@ export function PricingTable() {
           nombre: "Límites",
           filas: [
             { funcionalidad: "Usuarios incluidos", valores: planesData.map((p) => limiteDelPlan(p, "usuarios")) },
-            { funcionalidad: "Títulos en catálogo", valores: planesData.map((p) => limiteDelPlan(p, "titulos")) },
+            { funcionalidad: "Títulos en catálogo", valores: planesData.map(() => "Ilimitados") },
           ],
         };
         setCategorias([...comparativaData.categorias, limites]);
