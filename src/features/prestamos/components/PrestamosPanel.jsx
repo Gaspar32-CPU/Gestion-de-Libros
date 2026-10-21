@@ -104,9 +104,9 @@ export default function PrestamosPanel({
 
   const prestamosFiltrados = terminoBusqueda
     ? prestamosPorEstado.filter((p) =>
-        normalizarTexto(p.libro?.titulo).includes(terminoBusqueda),
+        normalizarTexto(p.libro?.titulo ?? "").includes(terminoBusqueda),
       )
-    : prestamosPorEstado
+    : prestamosPorEstado;
 
   const handleMarcarDevuelto = async (id) => {
     setError('')
