@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../context/useAuth';
 import { obtenerIniciales } from '../../../utils/obtenerIniciales';
-import { obtenerPerfil, actualizarPerfil } from '../perfilService';
+import { urlArchivo } from '../../../utils/urlArchivo';
+import { obtenerPerfil, actualizarPerfil, subirFoto, quitarFoto } from '../perfilService';
 
 const ETIQUETAS_ROL = { lector: 'Lector', admin: 'Administrador', 'super-admin': 'Super admin' };
+
+const TIPOS_FOTO_ACEPTADOS = ['image/png', 'image/jpeg', 'image/webp'];
+const MAX_SIZE_MB_FOTO = 2;
 
 const CAMPO = 'w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 focus:outline-none focus:border-[#1fa48a]';
 const CAMPO_BLOQUEADO = 'w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-sm text-slate-400 cursor-not-allowed';
@@ -23,10 +27,11 @@ function Campo({ etiqueta, children, nota }) {
 const FORM_VACIO = { foto: '', nombre: '', apellido: '', telefono: '', contrasena: '', confirmarContrasena: '' };
 
 export default function Perfil() {
-  const { usuario } = useAuth();
+  const { usuario, actualizarUsuario } = useAuth();
   const inputFoto = useRef(null);
   const [perfil, setPerfil] = useState(null);
   const [form, setForm] = useState(FORM_VACIO);
+  const [archivoFoto, setArchivoFoto] = useState(null);
   const [cambiandoContrasena, setCambiandoContrasena] = useState(false);
   const [notificarNovedades, setNotificarNovedades] = useState(false);
   const [errores, setErrores] = useState({});
@@ -54,21 +59,48 @@ export default function Perfil() {
     setExito('');
   };
 
-  const cambiarFoto = (e) => {
+  // El archivo se sube recién al guardar (ver guardarFoto más abajo), igual
+  // que el logo de organización: hasta entonces solo mostramos una preview
+  // local con un object URL.
+  const cambiarFoto = (archivo) => {
+    if (form.foto?.startsWith('blob:')) URL.revokeObjectURL(form.foto);
+    setArchivoFoto(archivo);
+    setForm((prev) => ({ ...prev, foto: archivo ? URL.createObjectURL(archivo) : '' }));
+    setExito('');
+  };
+
+  const seleccionarFoto = (e) => {
     const archivo = e.target.files?.[0];
+    e.target.value = '';
     if (!archivo) return;
-    const lector = new FileReader();
-    lector.onload = () => {
-      setForm((prev) => ({ ...prev, foto: lector.result }));
-      setExito('');
-    };
-    lector.readAsDataURL(archivo);
+
+    if (!TIPOS_FOTO_ACEPTADOS.includes(archivo.type)) {
+      setError('Formato no válido. Usá PNG, JPG o WEBP.');
+      return;
+    }
+    if (archivo.size > MAX_SIZE_MB_FOTO * 1024 * 1024) {
+      setError(`La foto supera los ${MAX_SIZE_MB_FOTO} MB.`);
+      return;
+    }
+
+    setError('');
+    cambiarFoto(archivo);
   };
 
   const cancelarContrasena = () => {
     setCambiandoContrasena(false);
     setForm((prev) => ({ ...prev, contrasena: '', confirmarContrasena: '' }));
     setErrores((prev) => ({ ...prev, contrasena: '', confirmarContrasena: '' }));
+  };
+
+  const cancelarCambios = () => {
+    if (form.foto?.startsWith('blob:')) URL.revokeObjectURL(form.foto);
+    setArchivoFoto(null);
+    setForm({ ...FORM_VACIO, foto: perfil.foto, nombre: perfil.nombre, apellido: perfil.apellido, telefono: perfil.telefono });
+    setCambiandoContrasena(false);
+    setErrores({});
+    setError('');
+    setExito('');
   };
 
   const hayCambios = perfil && (
@@ -91,6 +123,17 @@ export default function Perfil() {
     return Object.keys(nuevosErrores).length === 0;
   };
 
+  // La foto tiene sus propios endpoints (POST/DELETE), igual que el logo de
+  // organización: el PUT de abajo no la toca.
+  const guardarFoto = async () => {
+    if (form.foto === perfil.foto) return;
+    if (archivoFoto) {
+      await subirFoto(usuario.id, archivoFoto);
+    } else {
+      await quitarFoto(usuario.id);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -99,16 +142,19 @@ export default function Perfil() {
 
     setGuardando(true);
     try {
+      await guardarFoto();
       const actualizado = await actualizarPerfil(usuario.id, {
-        foto: form.foto,
         nombre: form.nombre.trim(),
         apellido: form.apellido.trim(),
         correo: perfil.correo,
         telefono: form.telefono.trim(),
         contrasena: form.contrasena,
       });
+      if (form.foto?.startsWith('blob:')) URL.revokeObjectURL(form.foto);
+      setArchivoFoto(null);
       setPerfil(actualizado);
       setForm((prev) => ({ ...prev, foto: actualizado.foto, nombre: actualizado.nombre, apellido: actualizado.apellido, telefono: actualizado.telefono, contrasena: '', confirmarContrasena: '' }));
+      actualizarUsuario({ nombre: actualizado.nombre, apellido: actualizado.apellido, foto: actualizado.foto });
       setCambiandoContrasena(false);
       setExito('Todo guardado');
     } catch (err) {
@@ -130,8 +176,8 @@ export default function Perfil() {
   return (
     <div className="max-w-3xl mx-auto p-4 md:p-8 text-slate-800">
       <div className="flex items-center gap-5 mb-8">
-        <div className="w-20 h-20 rounded-full bg-lime-500 flex items-center justify-center text-2xl font-extrabold text-ink shrink-0">
-          {iniciales}
+        <div className="w-20 h-20 rounded-full bg-lime-500 flex items-center justify-center text-2xl font-extrabold text-ink shrink-0 overflow-hidden">
+          {form.foto ? <img src={urlArchivo(form.foto)} alt="" className="w-full h-full object-cover" /> : iniciales}
         </div>
         <div className="min-w-0">
           <h1 className="text-3xl md:text-4xl font-bold text-slate-900">Mi perfil</h1>
@@ -141,16 +187,21 @@ export default function Perfil() {
 
       <div className="flex flex-col gap-5">
         <section className={`${CARD} flex items-center gap-4`}>
-          <div className="w-14 h-14 rounded-full bg-lime-500 flex items-center justify-center font-extrabold text-ink shrink-0 overflow-hidden">
-            {form.foto ? <img src={form.foto} alt="" className="w-full h-full object-cover" /> : iniciales}
-          </div>
           <div className="flex-1 min-w-0">
             <p className="font-bold text-slate-900">Foto de perfil</p>
+            <p className="text-xs text-slate-400">PNG, JPG o WEBP. Hasta {MAX_SIZE_MB_FOTO} MB.</p>
           </div>
-          <input ref={inputFoto} type="file" accept="image/*" onChange={cambiarFoto} className="hidden" />
-          <button type="button" onClick={() => inputFoto.current?.click()} className={BOTON_SECUNDARIO}>
-            Subir foto
-          </button>
+          <input ref={inputFoto} type="file" accept={TIPOS_FOTO_ACEPTADOS.join(',')} onChange={seleccionarFoto} className="hidden" />
+          <div className="flex gap-2">
+            <button type="button" onClick={() => inputFoto.current?.click()} className={BOTON_SECUNDARIO}>
+              Subir foto
+            </button>
+            {form.foto && (
+              <button type="button" onClick={() => cambiarFoto(null)} className={BOTON_SECUNDARIO}>
+                Quitar
+              </button>
+            )}
+          </div>
         </section>
 
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
@@ -245,6 +296,14 @@ export default function Perfil() {
               className="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#1fa48a] hover:bg-[#198771] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 cursor-pointer"
             >
               {guardando ? 'Guardando...' : 'Guardar cambios'}
+            </button>
+            <button
+              type="button"
+              onClick={cancelarCambios}
+              disabled={!hayCambios || guardando}
+              className={`${BOTON_SECUNDARIO} disabled:cursor-not-allowed disabled:opacity-50`}
+            >
+              Cancelar
             </button>
             {!error && (
               <span className="text-sm text-slate-500">

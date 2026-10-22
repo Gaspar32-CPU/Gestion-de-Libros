@@ -18,15 +18,28 @@ export async function obtenerPerfil(id) {
 }
 
 export async function actualizarPerfil(id, datos) {
+  // La foto tiene sus propios endpoints (ver subirFoto/quitarFoto), igual
+  // que el logo de organización: este PUT no la toca.
   const cuerpo = {
     nombre: datos.nombre,
     apellido: datos.apellido,
     correo: datos.correo,
     telefono: datos.telefono,
-    foto: datos.foto,
   };
   if (datos.contrasena) cuerpo.contrasena = datos.contrasena;
 
   const { data } = await api.put(`/usuarios/${id}`, cuerpo);
+  return normalizarPerfil(data);
+}
+
+export async function subirFoto(id, archivo) {
+  const body = new FormData();
+  body.append('foto', archivo);
+  const { data } = await api.post(`/usuarios/${id}/foto`, body);
+  return normalizarPerfil(data);
+}
+
+export async function quitarFoto(id) {
+  const { data } = await api.delete(`/usuarios/${id}/foto`);
   return normalizarPerfil(data);
 }

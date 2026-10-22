@@ -61,6 +61,7 @@ export default function Sidebar({
             iniciales={obtenerIniciales(usuario.nombre)}
             nombre={usuario.nombre}
             rol={usuario.rol}
+            foto={usuario.foto}
           />
         </NavLink>
         <div className="flex items-center justify-center w-12 h-12 shrink-0">
