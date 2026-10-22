@@ -7,6 +7,7 @@ import ReglasPrestamos from './ReglasPrestamos'
 import WeeklySchedule from '../components/WeeklySchedule'
 import PlantillaNotificacion from '../components/PlantillaNotificacion'
 import { TIPOS_MENSAJE } from '../data/mensajes'
+import { horarioInvalido, nombreDia } from '../data/horarios'
 import {
   editarMiConfiguracion,
   obtenerMiConfiguracion,
@@ -79,6 +80,7 @@ export function Configuracion() {
 
   const faltanObligatorios =
     !configuracion.nombreApp.trim() || !configuracion.lugarRetiro.trim()
+  const diaInvalido = horarioInvalido(configuracion.horarios)
 
   const cambiarLogo = (archivo) => {
     if (configuracion.logo?.startsWith('blob:')) {
@@ -173,6 +175,8 @@ export function Configuracion() {
             coloresSecundarios={Object.values(coloresSecundarios)}
             primario={configuracion.colorPrimario}
             secundario={configuracion.colorSecundario}
+            primarioGuardado={original.colorPrimario}
+            secundarioGuardado={original.colorSecundario}
             onChangePrimario={(color) => cambiar('colorPrimario', color)}
             onChangeSecundario={(color) => cambiar('colorSecundario', color)}
           />
@@ -186,7 +190,10 @@ export function Configuracion() {
             </p>
           </div>
           <div>
-            <WeeklySchedule />
+            <WeeklySchedule
+              horarios={configuracion.horarios}
+              onChange={(horarios) => cambiar('horarios', horarios)}
+            />
             <div className="flex flex-col gap-3 mt-3">
               <div className="flex gap-10">
                 <div className="flex-1">
@@ -252,6 +259,11 @@ export function Configuracion() {
             <p className="text-gray-500">
               El nombre de la app y el lugar de retiro son obligatorios.
             </p>
+          ) : hayCambios && diaInvalido ? (
+            <p className="text-gray-500">
+              El {nombreDia(diaInvalido.dia).toLowerCase()} tiene que abrir
+              antes de cerrar.
+            </p>
           ) : hayCambios ? (
             <p className="text-gray-500">Tenés cambios sin guardar.</p>
           ) : null}
@@ -268,7 +280,9 @@ export function Configuracion() {
           <button
             type="button"
             onClick={guardar}
-            disabled={!hayCambios || faltanObligatorios || guardando}
+            disabled={
+              !hayCambios || faltanObligatorios || diaInvalido || guardando
+            }
             className="cursor-pointer rounded-[10px] border-none bg-[#14877a] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0f5c53] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {guardando ? 'Guardando...' : 'Guardar cambios'}

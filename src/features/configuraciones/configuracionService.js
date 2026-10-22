@@ -1,5 +1,6 @@
 import api from '../../services/api'
 import { completarMensajes } from './data/mensajes'
+import { completarHorarios } from './data/horarios'
 
 function normalizarConfiguracion(config) {
   return {
@@ -12,6 +13,7 @@ function normalizarConfiguracion(config) {
     maxLibrosPorUsuario: config.maxLibrosPorUsuario ?? 3,
     lugarRetiro: config.lugarRetiro ?? '',
     lugarDevolucion: config.lugarDevolucion ?? '',
+    horarios: completarHorarios(config.horarios),
     diasPrestamo: config.diasPrestamo ?? 30,
     permiteExtension: Boolean(config.permiteExtension),
     maxExtensiones: config.maxExtensiones ?? 2,

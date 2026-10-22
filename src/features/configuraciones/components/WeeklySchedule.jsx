@@ -1,52 +1,32 @@
-import { useState } from "react";
-import { dias as diasIniciales } from "../../prestamos/utils/horarios";
 import ToggleComponent from "./ToggleComponente";
+import { nombreDia } from "../data/horarios";
 
-export default function WeeklySchedule() {
-    const [dias, setDias] = useState(diasIniciales);
-    const [horas, setHoras] = useState(
-        diasIniciales.map(() => ({
-            apertura: "08:00",
-            cierre: "17:00",
-        }))
-    );
-
-    const cambiarEstadoDia = (numero) => {
-        setDias((diasActuales) =>
-            diasActuales.map((dia) =>
-                dia.numero === numero
-                    ? { ...dia, abierto: !dia.abierto }
-                    : dia
-            )
-        );
-    };
-
-    const cambiarHora = (index, tipo, valor) => {
-        setHoras((horasActuales) =>
-            horasActuales.map((hora, i) =>
-                i === index ? { ...hora, [tipo]: valor } : hora
-            )
+export default function WeeklySchedule({ horarios, onChange }) {
+    const cambiarDia = (dia, campos) => {
+        onChange(
+            horarios.map((h) => (h.dia === dia ? { ...h, ...campos } : h))
         );
     };
 
     return (
         <div className="flex flex-col gap-3 w-full border-b border-gray-300 pb-3 mb-3">
-            {dias.map((dia, index) => (
-                <div key={index} className="flex items-center justify-between">
+            {horarios.map((horario) => (
+                <div key={horario.dia} className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <ToggleComponent 
-                            onChange={() => cambiarEstadoDia(dia.numero)}
-                            checked={dia.abierto}
+                        <ToggleComponent
+                            onChange={() => cambiarDia(horario.dia, { abierto: !horario.abierto })}
+                            checked={horario.abierto}
                         />
-                        <p className="font-semibold text-gray-700">{dia.nombre}</p>
+                        <p className="font-semibold text-gray-700">{nombreDia(horario.dia)}</p>
                     </div>
-                    {dia.abierto ? (
+                    {horario.abierto ? (
                         <div className="flex items-center gap-2">
                             <input
                                 type="time"
-                                value={horas[index].apertura}
+                                value={horario.apertura}
+                                required
                                 onChange={(e) =>
-                                    cambiarHora(index, "apertura", e.target.value)
+                                    cambiarDia(horario.dia, { apertura: e.target.value })
                                 }
                                 className="p-2 border border-gray-300 rounded-md"
                             />
@@ -55,11 +35,14 @@ export default function WeeklySchedule() {
 
                             <input
                                 type="time"
-                                value={horas[index].cierre}
+                                value={horario.cierre}
+                                required
                                 onChange={(e) =>
-                                    cambiarHora(index, "cierre", e.target.value)
+                                    cambiarDia(horario.dia, { cierre: e.target.value })
                                 }
-                                className="p-2 border border-gray-300 rounded-md"
+                                className={`p-2 border rounded-md ${
+                                    horario.apertura >= horario.cierre ? "border-red-400" : "border-gray-300"
+                                }`}
                             />
                         </div>
                     ) : (
