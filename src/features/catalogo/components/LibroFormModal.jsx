@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Close, KeyboardArrowDown } from '@mui/icons-material';
-import PortadaInput from './PortadaInput';
-import BusquedaIsbn from './BusquedaIsbn';
+import { useState } from 'react'
+import { Close, KeyboardArrowDown } from '@mui/icons-material'
+import PortadaInput from './PortadaInput'
+import BusquedaIsbn from './BusquedaIsbn'
 
-const IDIOMAS = ['Español', 'Inglés', 'Portugués', 'Francés', 'Otro'];
+const IDIOMAS = ['Español', 'Inglés', 'Portugués', 'Francés', 'Otro']
 
 const LIBRO_VACIO = {
   portadaUrl: '',
@@ -17,12 +17,17 @@ const LIBRO_VACIO = {
   isbn: '',
   descripcion: '',
   stock: '',
-};
+}
 
-export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExterno }) {
-  const esEdicion = Boolean(libro?.id);
-  const [modo, setModo] = useState('manual'); // 'manual' | 'isbn' — solo aplica al crear
-  const [isbnListo, setIsbnListo] = useState(false);
+export default function LibroFormModal({
+  libro,
+  onGuardar,
+  onCerrar,
+  errorExterno,
+}) {
+  const esEdicion = Boolean(libro?.id)
+  const [modo, setModo] = useState('manual') // 'manual' | 'isbn' — solo aplica al crear
+  const [isbnListo, setIsbnListo] = useState(false)
   // El stock editable es el total de ejemplares (columna `stock` en la base).
   // Los "disponibles" no se guardan aparte: el back los calcula restando los
   // préstamos activos, así que no tiene sentido pedírselo al admin.
@@ -30,45 +35,45 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
     ...LIBRO_VACIO,
     ...libro,
     stock: libro?.ejemplaresTotales ?? '',
-  });
-  const [error, setError] = useState('');
+  })
+  const [error, setError] = useState('')
 
   // En modo ISBN, el resto del formulario se muestra recién cuando la
   // búsqueda encontró un libro (o siempre, si es edición o carga manual).
-  const mostrarCampos = esEdicion || modo === 'manual' || isbnListo;
+  const mostrarCampos = esEdicion || modo === 'manual' || isbnListo
 
   const handleModoChange = (nuevoModo) => {
-    setModo(nuevoModo);
-    if (nuevoModo === 'isbn') setIsbnListo(false);
-  };
+    setModo(nuevoModo)
+    if (nuevoModo === 'isbn') setIsbnListo(false)
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handlePortadaChange = (portadaUrl) => {
-    setForm((prev) => ({ ...prev, portadaUrl }));
-  };
+    setForm((prev) => ({ ...prev, portadaUrl }))
+  }
 
   const handleEncontradoPorIsbn = (datos) => {
-    setForm((prev) => ({ ...prev, ...datos }));
-    setIsbnListo(true);
-  };
+    setForm((prev) => ({ ...prev, ...datos }))
+    setIsbnListo(true)
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError('')
 
     if (!form.titulo.trim() || !form.autor.trim() || !form.genero.trim()) {
-      setError('Título, autor y género son obligatorios.');
-      return;
+      setError('Título, autor y género son obligatorios.')
+      return
     }
 
-    const stock = Number(form.stock);
+    const stock = Number(form.stock)
     if (!Number.isInteger(stock) || stock < 0) {
-      setError('El stock debe ser un número entero mayor o igual a 0.');
-      return;
+      setError('El stock debe ser un número entero mayor o igual a 0.')
+      return
     }
 
     onGuardar({
@@ -76,8 +81,8 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
       id: libro?.id,
       anio: form.anio ? Number(form.anio) : undefined,
       stock,
-    });
-  };
+    })
+  }
 
   return (
     <div
@@ -94,7 +99,9 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
               {esEdicion ? 'Editar libro' : 'Alta de libro'}
             </h2>
             <p className="text-sm text-slate-500 mt-0.5">
-              {esEdicion ? 'Actualizá los datos del ejemplar' : 'Completá los datos del ejemplar'}
+              {esEdicion
+                ? 'Actualizá los datos del ejemplar'
+                : 'Completá los datos del ejemplar'}
             </p>
           </div>
           <button
@@ -131,19 +138,60 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
 
           {mostrarCampos && (
             <>
-              <PortadaInput value={form.portadaUrl} onChange={handlePortadaChange} titulo={form.titulo} />
+              <PortadaInput
+                value={form.portadaUrl}
+                onChange={handlePortadaChange}
+                titulo={form.titulo}
+              />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Campo label="Título" name="titulo" value={form.titulo} onChange={handleChange} placeholder="Ej. Cien años de soledad" required />
-                <Campo label="Autor" name="autor" value={form.autor} onChange={handleChange} placeholder="Ej. Gabriel García Márquez" required />
+                <Campo
+                  label="Título"
+                  name="titulo"
+                  value={form.titulo}
+                  onChange={handleChange}
+                  placeholder="Ej. Cien años de soledad"
+                  required
+                />
+                <Campo
+                  label="Autor"
+                  name="autor"
+                  value={form.autor}
+                  onChange={handleChange}
+                  placeholder="Ej. Gabriel García Márquez"
+                  required
+                />
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Campo label="Género" name="genero" value={form.genero} onChange={handleChange} placeholder="Ej. Novela" required />
-                <Campo label="Editorial" name="editorial" value={form.editorial} onChange={handleChange} placeholder="Ej. Sudamericana" />
-                <Campo label="Año de publicación" name="anio" type="number" value={form.anio} onChange={handleChange} placeholder="Ej. 1967" />
+                <Campo
+                  label="Género"
+                  name="genero"
+                  value={form.genero}
+                  onChange={handleChange}
+                  placeholder="Ej. Novela"
+                  required
+                />
+                <Campo
+                  label="Editorial"
+                  name="editorial"
+                  value={form.editorial}
+                  onChange={handleChange}
+                  placeholder="Ej. Sudamericana"
+                />
+                <Campo
+                  label="Año de publicación"
+                  name="anio"
+                  type="number"
+                  value={form.anio}
+                  onChange={handleChange}
+                  placeholder="Ej. 1967"
+                />
                 <div>
-                  <label htmlFor="idioma" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                  <label
+                    htmlFor="idioma"
+                    className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
+                  >
                     Idioma
                   </label>
                   <div className="relative">
@@ -154,9 +202,13 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
                       onChange={handleChange}
                       className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
                     >
-                      <option value="" disabled>Seleccioná un idioma</option>
+                      <option value="" disabled>
+                        Seleccioná un idioma
+                      </option>
                       {IDIOMAS.map((idioma) => (
-                        <option key={idioma} value={idioma}>{idioma}</option>
+                        <option key={idioma} value={idioma}>
+                          {idioma}
+                        </option>
                       ))}
                     </select>
                     <KeyboardArrowDown
@@ -168,18 +220,42 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Campo label="Código interno" name="codigoInterno" value={form.codigoInterno} onChange={handleChange} placeholder="Ej. NOV-014" />
-                <Campo label="SNI / ISBN" name="isbn" value={form.isbn} onChange={handleChange} placeholder="Ej. 978-84-376-0494-7" />
-                <Campo label="Stock (ejemplares)" name="stock" type="number" value={form.stock} onChange={handleChange} placeholder="Ej. 6" required />
+                <Campo
+                  label="Código interno"
+                  name="codigoInterno"
+                  value={form.codigoInterno}
+                  onChange={handleChange}
+                  placeholder="Ej. NOV-014"
+                />
+                <Campo
+                  label="SNI / ISBN"
+                  name="isbn"
+                  value={form.isbn}
+                  onChange={handleChange}
+                  placeholder="Ej. 978-84-376-0494-7"
+                />
+                <Campo
+                  label="Stock (ejemplares)"
+                  name="stock"
+                  type="number"
+                  value={form.stock}
+                  onChange={handleChange}
+                  placeholder="Ej. 6"
+                  required
+                />
               </div>
               {esEdicion && (
                 <p className="text-xs text-slate-400 -mt-2">
-                  Los ejemplares disponibles se calculan solos según los préstamos activos.
+                  Los ejemplares disponibles se calculan solos según los
+                  préstamos activos.
                 </p>
               )}
 
               <div>
-                <label htmlFor="descripcion" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                <label
+                  htmlFor="descripcion"
+                  className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
+                >
                   Resumen
                 </label>
                 <textarea
@@ -219,13 +295,24 @@ export default function LibroFormModal({ libro, onGuardar, onCerrar, errorExtern
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-function Campo({ label, name, value, onChange, type = 'text', required = false, placeholder }) {
+function Campo({
+  label,
+  name,
+  value,
+  onChange,
+  type = 'text',
+  required = false,
+  placeholder,
+}) {
   return (
     <div>
-      <label htmlFor={name} className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+      <label
+        htmlFor={name}
+        className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
+      >
         {label}
       </label>
       <input
@@ -239,7 +326,7 @@ function Campo({ label, name, value, onChange, type = 'text', required = false, 
         className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
       />
     </div>
-  );
+  )
 }
 
 function ModoCard({ titulo, descripcion, activo, onClick }) {
@@ -248,11 +335,13 @@ function ModoCard({ titulo, descripcion, activo, onClick }) {
       type="button"
       onClick={onClick}
       className={`text-left rounded-xl border px-4 py-3 transition-colors cursor-pointer ${
-        activo ? 'border-[#1fa48a] bg-[#1fa48a]/5' : 'border-slate-200 hover:border-slate-300'
+        activo
+          ? 'border-[#1fa48a] bg-[#1fa48a]/5'
+          : 'border-slate-200 hover:border-slate-300'
       }`}
     >
       <p className="text-sm font-bold text-slate-900">{titulo}</p>
       <p className="text-xs text-slate-500 mt-0.5">{descripcion}</p>
     </button>
-  );
+  )
 }

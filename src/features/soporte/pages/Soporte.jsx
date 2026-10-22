@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import Select from '../../../components/Select';
-import { obtenerReportesSoporte, cambiarEstadoReporte } from '../soporteService';
+import { cambiarEstadoReporte } from '../soporteService';
 import { obtenerSecciones } from '../../reportes/reportesService';
 import { avisarCambioSoporte } from '../usePendientesSoporte';
 
@@ -20,7 +21,7 @@ const FILTROS_ESTADO = [
 
 const ROLES = {
   lector: 'Lector',
-  admin_organizacion: 'Administrador',
+  admin: 'Administrador',
 };
 
 const BOTON_BLANCO =
@@ -40,15 +41,23 @@ function tiempoRelativo(fecha) {
 }
 
 export default function Soporte() {
-  const [reportes, setReportes] = useState([]);
+  // Los reportes vienen del hook compartido con el badge del menú
+  // (SuperAdminLayout), para no pedirlos dos veces al entrar a /soporte.
+  const {
+    reportesSoporte: reportes = [],
+    soporteCargado = false,
+    errorSoporte = false,
+  } = useOutletContext() ?? {};
+
   const [secciones, setSecciones] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [errorCarga, setErrorCarga] = useState('');
+  const [cargandoSecciones, setCargandoSecciones] = useState(true);
+  const [errorSecciones, setErrorSecciones] = useState('');
 
   const [filtroEstado, setFiltroEstado] = useState('abierto');
   const [filtroVista, setFiltroVista] = useState('todas');
 
-  const [actualizandoId, setActualizandoId] = useState(null);
+  // Ids con una petición en curso (puede haber más de una fila a la vez).
+  const [idsActualizando, setIdsActualizando] = useState(() => new Set());
   const [errorAccion, setErrorAccion] = useState('');
 
   // Reporte que se está por resolver: muestra el campo de comentario.
@@ -56,20 +65,11 @@ export default function Soporte() {
   const [comentario, setComentario] = useState('');
   const [errorComentario, setErrorComentario] = useState('');
 
-  function cargarReportes() {
-    return obtenerReportesSoporte().then(setReportes);
-  }
-
-  // Reportes y secciones se piden juntos. Como el usuario es super-admin,
-  // /api/secciones devuelve las vistas de todos los roles.
   useEffect(() => {
-    Promise.all([obtenerReportesSoporte(), obtenerSecciones()])
-      .then(([reportesRecibidos, seccionesRecibidas]) => {
-        setReportes(reportesRecibidos);
-        setSecciones(seccionesRecibidas);
-      })
-      .catch(() => setErrorCarga('No pudimos cargar los reportes. Recargá la página para intentar de nuevo.'))
-      .finally(() => setCargando(false));
+    obtenerSecciones()
+      .then(setSecciones)
+      .catch(() => setErrorSecciones('No pudimos cargar las secciones. Recargá la página para intentar de nuevo.'))
+      .finally(() => setCargandoSecciones(false));
   }, []);
 
   function abrirResolucion(id) {
@@ -85,22 +85,25 @@ export default function Soporte() {
   }
 
   async function cambiarEstado(id, estado, comentarioResolucion) {
-    setActualizandoId(id);
+    setIdsActualizando((anteriores) => new Set(anteriores).add(id));
     setErrorAccion('');
     try {
-      const actualizado = await cambiarEstadoReporte(id, estado, comentarioResolucion);
-      setReportes((anteriores) => anteriores.map((r) => (r.id === id ? actualizado : r)));
-      cerrarResolucion();
+      await cambiarEstadoReporte(id, estado, comentarioResolucion);
+      if (resolviendoId === id) cerrarResolucion();
       avisarCambioSoporte();
     } catch (error) {
       setErrorAccion(error.response?.data?.mensaje ?? 'No pudimos actualizar el reporte. Probá de nuevo.');
       // Si otro super admin lo cambió mientras tanto, traemos la lista actualizada.
       if (error.response?.status === 409) {
-        cerrarResolucion();
-        cargarReportes().catch(() => {});
+        if (resolviendoId === id) cerrarResolucion();
+        avisarCambioSoporte();
       }
     } finally {
-      setActualizandoId(null);
+      setIdsActualizando((anteriores) => {
+        const siguientes = new Set(anteriores);
+        siguientes.delete(id);
+        return siguientes;
+      });
     }
   }
 
@@ -112,13 +115,19 @@ export default function Soporte() {
     cambiarEstado(id, 'resuelto', comentario.trim());
   }
 
-  const contarEstado = (id) => (id === 'todos' ? reportes.length : reportes.filter((r) => r.estado === id).length);
-
-  const visibles = reportes.filter(
-    (r) =>
-      (filtroEstado === 'todos' || r.estado === filtroEstado) &&
-      (filtroVista === 'todas' || r.id_seccion === Number(filtroVista)),
+  const porVista = reportes.filter(
+    (r) => filtroVista === 'todas' || Number(r.id_seccion) === Number(filtroVista),
   );
+
+  const contarEstado = (id) =>
+    id === 'todos' ? porVista.length : porVista.filter((r) => r.estado === id).length;
+
+  const visibles = porVista.filter((r) => filtroEstado === 'todos' || r.estado === filtroEstado);
+
+  const cargando = !soporteCargado || cargandoSecciones;
+  const errorCarga = errorSoporte
+    ? 'No pudimos cargar los reportes. Recargá la página para intentar de nuevo.'
+    : errorSecciones;
 
   return (
     <div className="max-w-[900px] p-9 text-[#16324F]">
@@ -171,7 +180,7 @@ export default function Soporte() {
       <div className="flex flex-col gap-3">
         {visibles.map((reporte) => {
           const estado = ESTADOS[reporte.estado] ?? ESTADOS.abierto;
-          const ocupado = actualizandoId === reporte.id;
+          const ocupado = idsActualizando.has(reporte.id);
           const resolviendo = resolviendoId === reporte.id;
 
           return (

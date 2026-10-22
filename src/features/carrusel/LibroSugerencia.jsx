@@ -1,23 +1,33 @@
-import { esColorPortada } from '../../utils/portada';
+import { esColorPortada } from '../../utils/portada'
 
 // Mismo color de respaldo que usa PortadaInput cuando el admin no elige portada:
 // un libro sin portada cargada en la base no debe intentar cargar un <img> vacío.
-const COLOR_POR_DEFECTO = '#1fa48a';
+const COLOR_POR_DEFECTO = '#1fa48a'
 
-export const LibroSugerencia = ({ portadaUrl, titulo, genero, autor, className="" }) => {
+export const LibroSugerencia = ({
+  portadaUrl,
+  titulo,
+  genero,
+  autor,
+  className = '',
+}) => {
   return (
     <div
-      className={`relative flex flex-col items-center justify-center text-center aspect-3/4 w-full overflow-hidden rounded-sm shadow-md ${className}`}
+      className={`relative flex flex-col items-center justify-center text-center aspect-[3/4] w-full overflow-hidden rounded-sm shadow-md ${className}`}
     >
       {esColorPortada(portadaUrl) || !portadaUrl ? (
         <div
           className="absolute inset-0"
-          style={{ backgroundColor: esColorPortada(portadaUrl) ? portadaUrl : COLOR_POR_DEFECTO }}
+          style={{
+            backgroundColor: esColorPortada(portadaUrl)
+              ? portadaUrl
+              : COLOR_POR_DEFECTO,
+          }}
         />
       ) : (
         <img
           src={portadaUrl}
-          alt={titulo ? `Portada de ${titulo}` : "Portada del libro"}
+          alt={titulo ? `Portada de ${titulo}` : 'Portada del libro'}
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
@@ -30,5 +40,5 @@ export const LibroSugerencia = ({ portadaUrl, titulo, genero, autor, className="
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

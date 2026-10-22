@@ -4,24 +4,34 @@ import { obtenerReportesSoporte } from './soporteService';
 const EVENTO = 'soporte-actualizado';
 
 // La pantalla Soporte llama a esto después de tomar o resolver un reporte,
-// para que el número del menú se vuelva a calcular.
+// para que el número del menú y la lista se vuelvan a calcular.
 export function avisarCambioSoporte() {
   window.dispatchEvent(new Event(EVENTO));
 }
 
-// Cantidad de reportes no resueltos (abiertos + en curso).
+// Única fuente de los reportes de soporte: la usa tanto el badge del menú
+// como la pantalla Soporte, para no duplicar el fetch.
 export function usePendientesSoporte() {
-  const [pendientes, setPendientes] = useState(0);
+  const [reportes, setReportes] = useState([]);
+  const [cargado, setCargado] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let activo = true;
 
     function cargar() {
       obtenerReportesSoporte()
-        .then((reportes) => {
-          if (activo) setPendientes(reportes.filter((r) => r.estado !== 'resuelto').length);
+        .then((datos) => {
+          if (!activo) return;
+          setReportes(datos);
+          setError(false);
         })
-        .catch(() => {});
+        .catch(() => {
+          if (activo) setError(true);
+        })
+        .finally(() => {
+          if (activo) setCargado(true);
+        });
     }
 
     cargar();
@@ -32,5 +42,7 @@ export function usePendientesSoporte() {
     };
   }, []);
 
-  return pendientes;
+  const pendientes = reportes.filter((r) => r.estado !== 'resuelto').length;
+
+  return { pendientes, reportes, cargado, error };
 }
