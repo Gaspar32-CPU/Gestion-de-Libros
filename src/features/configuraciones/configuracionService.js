@@ -17,6 +17,7 @@ function normalizarConfiguracion(config) {
     colorSecundario: config.color_secundario ?? null,
     maxLibrosPorUsuario: config.max_libros_por_usuario ?? 3,
     lugarRetiro: config.lugar_retiro ?? '',
+    lugarDevolucion: config.lugar_devolucion ?? '',
     diasPrestamo: config.dias_prestamo ?? null,
     permiteExtension: Boolean(config.permite_extension),
     maxExtensiones: config.max_extensiones ?? 2,
