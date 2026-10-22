@@ -19,7 +19,6 @@ const OPCIONES = [
   { label: 'Usuarios', icon: PersonOutlined, path: '/usuarios' },
   { label: 'Planes', icon: Assignment, path: '/planes' },
   { label: 'Soporte', icon: ReportProblem, path: '/reportes' },
-  { label: 'Auditoría', icon: HistoryOutlined, path: '/auditoria' },
 ]
 
 const PLACEHOLDERS_BUSQUEDA = {

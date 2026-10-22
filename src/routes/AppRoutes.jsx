@@ -68,7 +68,7 @@ export default function AppRoutes() {
               <Route path="/plataforma" element={<></>} />
               <Route path="/organizaciones" element={<></>} />
               <Route path="/planes" element={<></>} />
-              <Route path="/auditoria" element={<></>} />
+              <Route path="/reportes" element={<></>} />
             </Route>
           </Route>
 
@@ -83,8 +83,15 @@ export default function AppRoutes() {
               <Route path="/allprestamos" element={<TodosLosPrestamos />} />
               <Route path="/gestion-catalogo" element={<GestionCatalogo />} />
               <Route path="/usuarios" element={<Usuarios />} />
-              <Route path="/reportes" element={<></>} />
               <Route path="/configuracion" element={<Configuracion />} />
+            </Route>
+          </Route>
+
+          <Route
+            element={<RutaPorRol rolesPermitidos={['admin']} />}
+          >
+            <Route element={<LayoutSegunRol />}>
+              <Route path="/reportar" element={<></>} />
             </Route>
           </Route>
 

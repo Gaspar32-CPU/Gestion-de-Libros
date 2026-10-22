@@ -7,6 +7,7 @@ import {
   Inventory2,
   MenuBook,
   PersonOutlined,
+  ReportProblem,
   Settings,
 } from '@mui/icons-material'
 import { useAuth } from '../context/useAuth'
@@ -19,7 +20,7 @@ const OPCIONES = [
   { label: 'Gestión catálogo', icon: MenuBook, path: '/gestion-catalogo' },
   { label: 'Préstamos', icon: Inventory2, path: '/allprestamos' },
   { label: 'Usuarios', icon: PersonOutlined, path: '/usuarios' },
-  { label: 'Reportes', icon: Equalizer, path: '/reportes' },
+  { label: 'Reportar problema', icon: ReportProblem, path: '/reportar' },
   { label: 'Configuración', icon: Settings, path: '/configuracion' },
 ]
 
