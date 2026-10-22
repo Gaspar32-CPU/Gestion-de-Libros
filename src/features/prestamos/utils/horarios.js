@@ -34,17 +34,17 @@ function formatearFecha(fecha) {
   return fecha.toISOString().split('T')[0]
 }
 
+export const dias = [
+  { numero: 0, nombre: 'Domingo', abierto: false },
+  { numero: 1, nombre: 'Lunes', abierto: true },
+  { numero: 2, nombre: 'Martes', abierto: true },
+  { numero: 3, nombre: 'Miércoles', abierto: true },
+  { numero: 4, nombre: 'Jueves', abierto: true },
+  { numero: 5, nombre: 'Viernes', abierto: true },
+  { numero: 6, nombre: 'Sábado', abierto: false },
+]
 function nombreDia(numeroDia) {
-  const dias = [
-    'Domingo',
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-  ]
-  return dias[numeroDia]
+  return dias.find((d) => d.numero === numeroDia)?.nombre || 'Desconocido'
 }
 
 export function puedeRetirarManana(horarioInstitucion, feriados = []) {

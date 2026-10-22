@@ -18,6 +18,7 @@ import { RutaPorRol } from '../components/RutaPorRol'
 import { LayoutSegunRol } from './LayoutSegunRol'
 import SuperAdminLayout from '../layouts/SuperAdminLayout'
 import PrestamoExitoso from '../features/prestamos/components/PrestamoExitoso'
+import { Configuracion } from '../features/configuraciones/pages/Configuracion'
 
 export default function AppRoutes() {
   return (
@@ -83,7 +84,7 @@ export default function AppRoutes() {
               <Route path="/gestion-catalogo" element={<GestionCatalogo />} />
               <Route path="/usuarios" element={<Usuarios />} />
               <Route path="/reportes" element={<></>} />
-              <Route path="/configuracion" element={<></>} />
+              <Route path="/configuracion" element={<Configuracion />} />
             </Route>
           </Route>
 
