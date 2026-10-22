@@ -18,6 +18,7 @@ import { RutaPorRol } from '../components/RutaPorRol'
 import { LayoutSegunRol } from './LayoutSegunRol'
 import SuperAdminLayout from '../layouts/SuperAdminLayout'
 import PrestamoExitoso from '../features/prestamos/components/PrestamoExitoso'
+import Perfil from '../features/perfil/pages/Perfil'
 import { Configuracion } from '../features/configuraciones/pages/Configuracion'
 import ReportarProblema from '../features/reportes/pages/ReportarProblema'
 import Soporte from '../features/soporte/pages/Soporte'
@@ -63,7 +64,7 @@ export default function AppRoutes() {
               <Route path="/catalogo" element={<Catalogo />} />
               <Route path="/reportar" element={<ReportarProblema />} />
             </Route>
-            <Route path="/perfil" element={<></>} />
+            <Route path="/perfil" element={<Perfil />} />
           </Route>
 
           <Route element={<RutaPorRol rolesPermitidos={['super-admin']} />}>
