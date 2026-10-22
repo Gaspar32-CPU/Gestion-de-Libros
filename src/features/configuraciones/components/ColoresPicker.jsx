@@ -29,13 +29,13 @@ export default function ColoresPicker({
   )
 
   return (
-    <div className="flex gap-10">
-      <div className="flex gap-2">
+    <div className="flex flex-col gap-4 sm:flex-row sm:gap-10">
+      <div className="flex flex-wrap gap-2">
         {conColorGuardado(coloresPrimarios, primarioGuardado).map(
           renderColor(primario, onChangePrimario),
         )}
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {conColorGuardado(coloresSecundarios, secundarioGuardado).map(
           renderColor(secundario, onChangeSecundario),
         )}

@@ -21,6 +21,7 @@ export default function UsuarioLayout() {
   const { usuario } = useAuth()
   const datosOrganizacion = useOrganizacion(usuario?.organizacionId)
   const [busqueda, setBusqueda] = useState('')
+  const [menuAbierto, setMenuAbierto] = useState(false)
   const location = useLocation()
   const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[location.pathname]
 
@@ -31,10 +32,19 @@ export default function UsuarioLayout() {
         usuario={usuario}
         organizacion={datosOrganizacion?.organizacion}
         configuracion={datosOrganizacion?.configuracion}
+        abierto={menuAbierto}
+        onCerrar={() => setMenuAbierto(false)}
       />
+      {menuAbierto && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setMenuAbierto(false)}
+        />
+      )}
       <main className="flex-1 min-w-0">
         <DashboardHeader
           onBuscar={setBusqueda}
+          onMenu={() => setMenuAbierto(true)}
           mostrarBusqueda={!!placeholderBusqueda}
           placeholder={placeholderBusqueda}
         />

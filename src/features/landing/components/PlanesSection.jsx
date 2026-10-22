@@ -22,11 +22,14 @@ export function PlanesSection() {
   }, [])
 
   return (
-    <section id="planes" className="px-30 py-20 bg-bg">
+    <section
+      id="planes"
+      className="px-4 md:px-12 lg:px-30 py-16 lg:py-20 bg-bg"
+    >
       <p className="text-sm font-bold text-brand tracking-wide">PLANES</p>
       <div className="mt-3 flex items-end justify-between gap-6 flex-wrap">
         <div>
-          <h2 className="text-4xl font-extrabold text-ink">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-ink">
             Un precio por el tamaño de tu institución
           </h2>
           <p className="mt-3 text-ink-2 max-w-xl">
@@ -35,11 +38,11 @@ export function PlanesSection() {
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-1 bg-white border border-line rounded-xl p-1">
+        <div className="inline-flex items-center gap-1 bg-white border border-line rounded-xl p-1 mx-auto md:mx-0">
           <button
             type="button"
             onClick={() => setCiclo('mensual')}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
+            className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-colors ${
               ciclo === 'mensual' ? 'bg-ink text-white' : 'text-ink-2'
             }`}
           >
@@ -48,7 +51,7 @@ export function PlanesSection() {
           <button
             type="button"
             onClick={() => setCiclo('anual')}
-            className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 ${
               ciclo === 'anual' ? 'bg-ink text-white' : 'text-ink-2'
             }`}
           >
@@ -68,7 +71,7 @@ export function PlanesSection() {
 
       {!cargando && !error && (
         <>
-          <div className="mt-10 grid grid-cols-3 gap-6 items-start">
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
             {planes.map((plan) => (
               <PricingCard
                 key={plan.id}

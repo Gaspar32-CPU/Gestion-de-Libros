@@ -42,9 +42,11 @@ const Contenedor = ({ libros = [] }) => {
 
   return (
     <div className="flex items-center gap-2 w-full">
-      <IconButton onClick={() => desplazar('izquierda')} size="small">
-        <ArrowBackIosRoundedIcon />
-      </IconButton>
+      <div className="hidden sm:block">
+        <IconButton onClick={() => desplazar('izquierda')} size="small">
+          <ArrowBackIosRoundedIcon />
+        </IconButton>
+      </div>
 
       <div
         ref={scrollRef}
@@ -66,9 +68,11 @@ const Contenedor = ({ libros = [] }) => {
         ))}
       </div>
 
-      <IconButton onClick={() => desplazar('derecha')} size="small">
-        <ArrowBackIosRoundedIcon style={{ transform: 'rotate(180deg)' }} />
-      </IconButton>
+      <div className="hidden sm:block">
+        <IconButton onClick={() => desplazar('derecha')} size="small">
+          <ArrowBackIosRoundedIcon style={{ transform: 'rotate(180deg)' }} />
+        </IconButton>
+      </div>
     </div>
   )
 }

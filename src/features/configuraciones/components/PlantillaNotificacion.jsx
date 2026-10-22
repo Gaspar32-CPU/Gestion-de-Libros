@@ -44,7 +44,7 @@ export default function PlantillaNotificacion({ titulo, mensaje, onChange }) {
                 key={variable.clave}
                 type="button"
                 onClick={() => insertarVariable(variable.clave)}
-                className="px-2 py-1 text-xs rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer"
+                className="min-h-10 px-3 py-2 text-xs sm:min-h-0 sm:px-2 sm:py-1 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 cursor-pointer"
               >
                 + {variable.etiqueta}
               </button>

@@ -5,8 +5,8 @@ const ROLES_ADMIN = ['admin', 'super-admin']
 export default function UsuarioIndividual({ usuario }) {
   const usuarioEstado = usuario.activo === 'ACTIVO' ? 'Activo' : 'Inactivo'
   return (
-    <div className="grid grid-cols-[2.5fr_2.5fr_1.5fr_1.5fr_50px] items-center gap-4 rounded-2xl border border-[#EAEAEA] bg-white px-6 py-4 shadow-sm transition hover:shadow-md">
-      <div className="flex items-center gap-3">
+    <div className="grid grid-cols-2 items-center gap-3 rounded-2xl border border-[#EAEAEA] bg-white p-4 shadow-sm transition hover:shadow-md md:grid-cols-[2.5fr_2.5fr_1.5fr_1.5fr_50px] md:gap-4 md:px-6 md:py-4">
+      <div className="col-span-2 flex items-center gap-3 md:col-span-1">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#DDEBD7] text-sm font-semibold text-[#47734A]">
           {obtenerIniciales(usuario.nombreCompleto) || 'Usuario'}
         </div>
@@ -20,7 +20,9 @@ export default function UsuarioIndividual({ usuario }) {
         </div>
       </div>
 
-      <div className="truncate text-sm text-gray-500">{usuario.correo}</div>
+      <div className="col-span-2 truncate text-sm text-gray-500 md:col-span-1">
+        {usuario.correo}
+      </div>
 
       {/* Rol */}
       <div>
