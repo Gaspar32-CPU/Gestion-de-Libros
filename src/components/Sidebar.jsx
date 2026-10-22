@@ -36,7 +36,7 @@ export default function Sidebar({
         </div>
       </div>
       <div className="flex flex-col gap-2 p-3.5">
-        {opciones.map(({ label, icon: Icon, path }) => (
+        {opciones.map(({ label, icon: Icon, path, badge }) => (
           <NavLink
             key={path}
             to={path}
@@ -46,6 +46,11 @@ export default function Sidebar({
           >
             <Icon color="inherit" />
             <p className="font-bold text-sm cursor-pointer">{label}</p>
+            {badge > 0 && (
+              <span className="ml-auto rounded-full bg-[#86C440] px-[7px] py-px text-[11px] font-extrabold text-[#16324F]">
+                {badge}
+              </span>
+            )}
           </NavLink>
         ))}
       </div>
