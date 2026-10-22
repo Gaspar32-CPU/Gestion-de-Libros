@@ -1,5 +1,6 @@
 import { jwtDecode } from 'jwt-decode'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import api from '../services/api'
 import { AuthContext } from './AuthContext'
 
 function leerUsuarioInicial() {
@@ -35,8 +36,38 @@ export function AuthProvider({ children }) {
     setUsuario(null)
   }
 
+  // El token sigue firmado con los datos viejos hasta el próximo login, así
+  // que después de guardar el perfil hay que actualizar el usuario en
+  // memoria "a mano" para que la sidebar y demás lugares que usan useAuth()
+  // reflejen el cambio sin tener que recargar ni volver a loguearse.
+  function actualizarUsuario(cambios) {
+    setUsuario((actual) => (actual ? { ...actual, ...cambios } : actual))
+  }
+
+  // El JWT no lleva la foto (ni el resto de los datos de perfil que no hacen
+  // falta para autorizar rutas), así que en un login o un reload de página
+  // la sidebar no la conocía hasta que el usuario entraba a "Mi perfil" y
+  // guardaba algo. Se completa acá, una vez, apenas hay sesión.
+  useEffect(() => {
+    if (!usuario?.id) return
+    let cancelado = false
+
+    api
+      .get(`/usuarios/${usuario.id}`)
+      .then(({ data }) => {
+        if (!cancelado) actualizarUsuario({ foto: data.foto })
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelado = true
+    }
+  }, [usuario?.id])
+
   return (
-    <AuthContext.Provider value={{ usuario, login, logout, cargando }}>
+    <AuthContext.Provider
+      value={{ usuario, login, logout, cargando, actualizarUsuario }}
+    >
       {children}
     </AuthContext.Provider>
   )
