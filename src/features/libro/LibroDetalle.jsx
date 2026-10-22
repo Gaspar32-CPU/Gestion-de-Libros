@@ -1,122 +1,139 @@
 // src/features/libro/LibroDetalle.jsx
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowBack, Block } from '@mui/icons-material';
-import { esColorPortada } from '../../utils/portada';
-import { obtenerLibroPorId, crearResena, obtenerResenas } from '../catalogo/catalogoService';
-import { useAuth } from '../../context/useAuth';
-import api from '../../services/api';
-import { obtenerIniciales } from '../../utils/obtenerIniciales';
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ArrowBack, Block } from '@mui/icons-material'
+import { esColorPortada } from '../../utils/portada'
+import {
+  obtenerLibroPorId,
+  crearResena,
+  obtenerResenas,
+} from '../catalogo/catalogoService'
+import { useAuth } from '../../context/useAuth'
+import api from '../../services/api'
+import { obtenerIniciales } from '../../utils/obtenerIniciales'
 
 export const LibroDetalle = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [error, setError] = useState('');
-  const [libro, setLibro] = useState(null);
-  const [idCargado, setIdCargado] = useState(null);
-  const { usuario } = useAuth();
-  const [resenas, setResenas] = useState([]);
-  const [enviando, setEnviando] = useState(null);
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [error, setError] = useState('')
+  const [libro, setLibro] = useState(null)
+  const [idCargado, setIdCargado] = useState(null)
+  const { usuario } = useAuth()
+  const [resenas, setResenas] = useState([])
+  const [enviando, setEnviando] = useState(null)
 
-  const [nuevoComentario, setNuevoComentario] = useState("");
-  const [estrellasSeleccionadas, setEstrellasSeleccionadas] = useState(0);
+  const [nuevoComentario, setNuevoComentario] = useState('')
+  const [estrellasSeleccionadas, setEstrellasSeleccionadas] = useState(0)
 
   useEffect(() => {
-    let cancelado = false;
+    let cancelado = false
 
     obtenerLibroPorId(id)
       .then((data) => {
         if (!cancelado) {
-          setLibro(data);
-          setIdCargado(id);
+          setLibro(data)
+          setIdCargado(id)
         }
       })
       .catch((err) => {
-        console.error('Error al traer el libro', err);
+        console.error('Error al traer el libro', err)
         if (!cancelado) {
-          setLibro(null);
-          setIdCargado(id);
+          setLibro(null)
+          setIdCargado(id)
         }
-      });
+      })
 
     return () => {
-      cancelado = true;
-    };
-  }, [id]);
+      cancelado = true
+    }
+  }, [id])
 
   useEffect(() => {
     obtenerResenas(id)
       .then(setResenas)
-      .catch((err) => console.error('Error al traer las reseñas.', err));
-  }, [id]);
+      .catch((err) => console.error('Error al traer las reseñas.', err))
+  }, [id])
 
-  const cargando = idCargado !== id;
+  const cargando = idCargado !== id
 
   if (cargando) {
-    return <div className="p-8 text-center text-slate-500">Cargando...</div>;
+    return <div className="p-8 text-center text-slate-500">Cargando...</div>
   }
 
   if (!libro) {
-    return <div className="p-8 text-center text-slate-500">No se encontró la información del libro.</div>;
+    return (
+      <div className="p-8 text-center text-slate-500">
+        No se encontró la información del libro.
+      </div>
+    )
   }
 
   const renderEstrellas = (nota) => {
-    const redondeado = Math.round(nota);
-    return "★".repeat(redondeado) + "☆".repeat(5 - redondeado);
-  };
-
-const handleAgregarResena = async (e) => {
-  e.preventDefault();
-    
-  if (!nuevoComentario.trim() || estrellasSeleccionadas === 0) return;
-
-  setError('');
-  setEnviando(true);
-  try {
-    const nueva = await crearResena(id, {
-       calificacion: estrellasSeleccionadas, 
-       comentario: nuevoComentario.trim()
-     });
-    setResenas((prev) => [nueva, ...prev]);
-    setNuevoComentario('');
-    setEstrellasSeleccionadas(0);
-  } catch (err) {
-    console.error('Error al crear la reseña', err);
-    setError(err.response?.data?.mensaje || 'No se pudo crear la reseña.');
-  } finally {
-    setEnviando(false);
+    const redondeado = Math.round(nota)
+    return '★'.repeat(redondeado) + '☆'.repeat(5 - redondeado)
   }
-};
 
-  const esDisponible = libro.ejemplaresLibres > 0;
+  const handleAgregarResena = async (e) => {
+    e.preventDefault()
+
+    if (!nuevoComentario.trim() || estrellasSeleccionadas === 0) return
+
+    setError('')
+    setEnviando(true)
+    try {
+      const nueva = await crearResena(id, {
+        calificacion: estrellasSeleccionadas,
+        comentario: nuevoComentario.trim(),
+      })
+      setResenas((prev) => [nueva, ...prev])
+      setNuevoComentario('')
+      setEstrellasSeleccionadas(0)
+    } catch (err) {
+      console.error('Error al crear la reseña', err)
+      setError(err.response?.data?.mensaje || 'No se pudo crear la reseña.')
+    } finally {
+      setEnviando(false)
+    }
+  }
+
+  const esDisponible = libro.ejemplaresLibres > 0
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
 
-  const comentarioValido = nuevoComentario.trim().length >= 100 && nuevoComentario.trim().length <= 600;
-  const esLector = usuario?.rol === "lector";
+  const comentarioValido =
+    nuevoComentario.trim().length >= 100 && nuevoComentario.trim().length <= 600
+  const esLector = usuario?.rol === 'lector'
 
   const handlePrestamo = async (e) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError('')
 
     if (!esDisponible) {
-      alert("No hay ejemplares disponibles para préstamo.");
-      return;
+      alert('No hay ejemplares disponibles para préstamo.')
+      return
     }
 
     try {
-      const res = await api.post('/prestamos', { libroId: libro.id });
-      navigate("/prestamo-exitoso", { replace: true, state: { prestamo: res.data, libro } });
+      const res = await api.post('/prestamos', {
+        libroId: libro.id,
+        usuarioId: usuario.id,
+      })
+      navigate('/prestamo-exitoso', {
+        replace: true,
+        state: { prestamo: res.data, libro },
+      })
     } catch (err) {
-      setError(err.response?.data?.mensaje || 'Error al generar el préstamo.');
+      setError(err.response?.data?.mensaje || 'Error al generar el préstamo.')
     }
-  };
-
+  }
 
   return (
     <div className="mx-auto font-sans antialiased text-slate-950 p-4 pb-12">
-      <Link to="/catalogo" className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6">
-        <div className='flex items-center gap-1'>
+      <Link
+        to="/catalogo"
+        className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6"
+      >
+        <div className="flex items-center gap-1">
           <ArrowBack sx={{ fontSize: 16 }} />
           Volver al catálogo
         </div>
@@ -138,21 +155,28 @@ const handleAgregarResena = async (e) => {
             />
           )}
           <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3 ${esDisponible ? "bg-success-bg text-success" : "bg-danger-bg text-danger"}`}>
-              {esDisponible ? "Disponible" : "No disponible"}
+            <span
+              className={`text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3 ${esDisponible ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}
+            >
+              {esDisponible ? 'Disponible' : 'No disponible'}
             </span>
             <div className="flex flex-wrap gap-1 mb-2">
-              {Array.from({ length: libro.ejemplaresTotales || 0 }).map((_, idx) => (
-                <div 
-                  key={idx} 
-                  className={`w-4 h-5 rounded-xs ${
-                    idx < libro.ejemplaresLibres ? 'bg-[#1fa48a]' : 'bg-[#e2e8f0]'
-                  }`} 
-                />
-              ))}
+              {Array.from({ length: libro.ejemplaresTotales || 0 }).map(
+                (_, idx) => (
+                  <div
+                    key={idx}
+                    className={`w-4 h-5 rounded-xs ${
+                      idx < libro.ejemplaresLibres
+                        ? 'bg-[#1fa48a]'
+                        : 'bg-[#e2e8f0]'
+                    }`}
+                  />
+                ),
+              )}
             </div>
             <p className="text-xs text-[#64748b]">
-              {libro.ejemplaresLibres} de {libro.ejemplaresTotales} ejemplares libres
+              {libro.ejemplaresLibres} de {libro.ejemplaresTotales} ejemplares
+              libres
             </p>
           </div>
         </div>
@@ -169,8 +193,12 @@ const handleAgregarResena = async (e) => {
             {libro.autor} · {libro.anio} · {libro.editorial}
           </p>
           <div className="flex items-center gap-2 text-sm mb-6.25">
-            <span className="text-[#f59e0b] tracking-[2px]">{renderEstrellas(libro.puntuacion)}</span>
-            <span className="font-bold text-[#092e40]">{libro.puntuacion.toFixed(1)}</span>
+            <span className="text-[#f59e0b] tracking-[2px]">
+              {renderEstrellas(libro.puntuacion)}
+            </span>
+            <span className="font-bold text-[#092e40]">
+              {libro.puntuacion.toFixed(1)}
+            </span>
             <span className="text-[#64748b]">({resenas.length} reseñas)</span>
           </div>
           <p className="text-[#64748b] leading-relaxed text-[15px] max-w-150 mb-6.25">
@@ -179,36 +207,56 @@ const handleAgregarResena = async (e) => {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 border border-[#e7e5d8] rounded-xl p-5 mb-6.25">
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">IDIOMA</span>
-              <span className="text-sm font-semibold text-[#092e40]">{libro.idioma}</span>
+              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                IDIOMA
+              </span>
+              <span className="text-sm font-semibold text-[#092e40]">
+                {libro.idioma}
+              </span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">SNI / ISBN</span>
-              <span className="text-sm font-semibold text-[#092e40]">{libro.isbn}</span>
+              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                SNI / ISBN
+              </span>
+              <span className="text-sm font-semibold text-[#092e40]">
+                {libro.isbn}
+              </span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">EDITORIAL</span>
-              <span className="text-sm font-semibold text-[#092e40]">{libro.editorial}</span>
+              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                EDITORIAL
+              </span>
+              <span className="text-sm font-semibold text-[#092e40]">
+                {libro.editorial}
+              </span>
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">EDICIÓN</span>
-              <span className="text-sm font-semibold text-[#092e40]">{libro.edicion}</span>
+              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                EDICIÓN
+              </span>
+              <span className="text-sm font-semibold text-[#092e40]">
+                {libro.edicion}
+              </span>
             </div>
           </div>
 
           {esLector && (
             <>
               <button
-                disabled={!esDisponible || libro.yaLoTiene}
+                disabled={!esDisponible}
                 onClick={handlePrestamo}
                 className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
               >
-                {libro.yaLoTiene ? (
-                  <span title="No puedes pedir más copias de este libro">Libro en posesión</span>
-                ) : esDisponible ? (
+                {esDisponible ? (
                   <>
                     Solicitar Préstamo
-                    <ArrowBack sx={{ fontSize: 16, transform: 'rotate(180deg)', marginLeft: '0.5rem' }} />
+                    <ArrowBack
+                      sx={{
+                        fontSize: 16,
+                        transform: 'rotate(180deg)',
+                        marginLeft: '0.5rem',
+                      }}
+                    />
                   </>
                 ) : (
                   <>
@@ -217,17 +265,25 @@ const handleAgregarResena = async (e) => {
                   </>
                 )}
               </button>
-              {error && <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">{error}</p>}
+              {error && (
+                <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">
+                  {error}
+                </p>
+              )}
             </>
           )}
-          <p className="text-xs text-[#64748b] mb-7.5">{libro.condicionesPrestamo}</p>
+          <p className="text-xs text-[#64748b] mb-7.5">
+            {libro.condicionesPrestamo}
+          </p>
           <hr className="border-0 border-t border-[#e7e5d8] mb-7.5" />
 
           {/* Sección de entrada: Tu reseña (Colores idénticos a tu mockup) */}
           <div className="bg-[#f5f4ef] rounded-xl p-5 mb-8 border border-[#e8e7e1]">
             <h4 className="text-sm font-bold text-[#092e40] mb-1">Tu reseña</h4>
-            <p className="text-xs text-slate-500 mb-4">Leiste este libro. Contá qué te pareció.</p>
-            
+            <p className="text-xs text-slate-500 mb-4">
+              Leiste este libro. Contá qué te pareció.
+            </p>
+
             <div className="flex items-center gap-1.5 mb-4">
               {[1, 2, 3, 4, 5].map((num) => (
                 <button
@@ -235,13 +291,17 @@ const handleAgregarResena = async (e) => {
                   type="button"
                   onClick={() => setEstrellasSeleccionadas(num)}
                   className={`text-2xl cursor-pointer transition-colors ${
-                    num <= estrellasSeleccionadas ? 'text-[#f59e0b]' : 'text-slate-300'
+                    num <= estrellasSeleccionadas
+                      ? 'text-[#f59e0b]'
+                      : 'text-slate-300'
                   }`}
                 >
                   ★
                 </button>
               ))}
-              <span className="text-xs text-slate-500 ml-2 font-medium">Elegí una calificación</span>
+              <span className="text-xs text-slate-500 ml-2 font-medium">
+                Elegí una calificación
+              </span>
             </div>
 
             <form onSubmit={handleAgregarResena} className="space-y-4">
@@ -254,7 +314,12 @@ const handleAgregarResena = async (e) => {
               />
               <button
                 type="submit"
-                disabled={!comentarioValido || !nuevoComentario.trim() || estrellasSeleccionadas === 0 || enviando}
+                disabled={
+                  !comentarioValido ||
+                  !nuevoComentario.trim() ||
+                  estrellasSeleccionadas === 0 ||
+                  enviando
+                }
                 className="px-5 py-2 bg-[#1fa48a] hover:bg-[#198771] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Enviar Reseña
@@ -279,15 +344,15 @@ const handleAgregarResena = async (e) => {
                       {renderEstrellas(resena.calificacion)}
                     </span>
                   </p>
-                  <p className="text-sm text-[#64748b] mt-0.75">{resena.comentario}</p>
+                  <p className="text-sm text-[#64748b] mt-0.75">
+                    {resena.comentario}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </div>
-  );
-};
-
+  )
+}
