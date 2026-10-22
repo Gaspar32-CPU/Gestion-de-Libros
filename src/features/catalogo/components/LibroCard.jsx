@@ -1,25 +1,47 @@
-import { Link } from "react-router-dom";
-import { LibroSugerencia } from "../../carrusel/LibroSugerencia";
+import { Link } from 'react-router-dom'
+import { LibroSugerencia } from '../../carrusel/LibroSugerencia'
 
 export default function LibroCard({ libro }) {
-  const { titulo, autor, anio, categoria, categoriaColor, descripcion, ejemplaresLibres, puntuacion} = libro;
+  const {
+    titulo,
+    autor,
+    anio,
+    categoria,
+    categoriaColor,
+    descripcion,
+    ejemplaresLibres,
+    puntuacion,
+  } = libro
 
-const disponible = ejemplaresLibres > 0;
+  const disponible = ejemplaresLibres > 0
 
-return (
+  return (
     <Link
       to={`/libro/${libro.id}`}
       className="flex flex-col bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 no-underline text-inherit"
     >
-      <LibroSugerencia className="rounded-none" key={libro.id} portadaUrl={libro.portadaUrl} genero={libro.genero} />
+      <LibroSugerencia
+        className="rounded-none"
+        key={libro.id}
+        portadaUrl={libro.portadaUrl}
+        genero={libro.genero}
+      />
 
       <div className="p-4 flex flex-col grow">
-        <span className={`text-xs font-bold tracking-wide ${categoriaColor} mb-1`}>{categoria}</span>
-        <h3 className="font-bold text-slate-900 text-lg leading-snug mb-1">{titulo}</h3>
+        <span
+          className={`text-xs font-bold tracking-wide ${categoriaColor} mb-1`}
+        >
+          {categoria}
+        </span>
+        <h3 className="font-bold text-slate-900 text-lg leading-snug mb-1">
+          {titulo}
+        </h3>
         <p className="text-sm text-slate-500 mb-3">
           {autor} {anio && `· ${anio}`}
         </p>
-        <p className="text-sm text-slate-500 line-clamp-1 mb-4">{descripcion}</p>
+        <p className="text-sm text-slate-500 line-clamp-1 mb-4">
+          {descripcion}
+        </p>
 
         <div className="mt-auto flex items-center justify-between">
           <span
@@ -38,5 +60,5 @@ return (
         </div>
       </div>
     </Link>
-  );
+  )
 }
