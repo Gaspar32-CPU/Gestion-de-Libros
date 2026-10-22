@@ -1,15 +1,68 @@
 // Datos de ejemplo únicamente para maquetar la vista visual del catálogo.
 export const librosDestacados = [
-  { id: 'd1', categoria: 'NOVELA', titulo: 'El principito', color: 'from-blue-500 to-blue-700' },
-  { id: 'd2', categoria: 'CIENCIA FICCIÓN', titulo: '1984', autor: 'George Orwell', color: 'from-slate-700 to-slate-900' },
-  { id: 'd3', categoria: 'CIENCIA', titulo: 'Física conceptual', autor: 'Paul Hewitt', color: 'from-cyan-600 to-teal-700' },
-  { id: 'd4', categoria: 'CUENTO', titulo: 'Ficciones', autor: 'Jorge Luis Borges', color: 'from-purple-600 to-indigo-800' },
-  { id: 'd5', categoria: 'NOVELA', titulo: 'El túnel', autor: 'Ernesto Sabato', color: 'from-amber-800 to-stone-900' },
-  { id: 'd6', categoria: 'TECNOLOGÍA', titulo: 'Programación en Python', autor: 'Ana Bell', color: 'from-emerald-600 to-teal-800' },
-  { id: 'd7', categoria: 'NOVELA', titulo: 'Crónica de una muerte anunciada', autor: 'Gabriel García Márquez', color: 'from-rose-700 to-red-900' },
-  { id: 'd8', categoria: 'ARTE', titulo: 'Historia del arte', autor: 'E. H. Gombrich', color: 'from-amber-500 to-yellow-700' },
-  { id: 'd9', categoria: 'FANTASÍA', titulo: 'El nombre del viento', autor: 'Patrick Rothfuss', color: 'from-slate-600 to-blue-900' },
-];
+  {
+    id: 'd1',
+    categoria: 'NOVELA',
+    titulo: 'El principito',
+    color: 'from-blue-500 to-blue-700',
+  },
+  {
+    id: 'd2',
+    categoria: 'CIENCIA FICCIÓN',
+    titulo: '1984',
+    autor: 'George Orwell',
+    color: 'from-slate-700 to-slate-900',
+  },
+  {
+    id: 'd3',
+    categoria: 'CIENCIA',
+    titulo: 'Física conceptual',
+    autor: 'Paul Hewitt',
+    color: 'from-cyan-600 to-teal-700',
+  },
+  {
+    id: 'd4',
+    categoria: 'CUENTO',
+    titulo: 'Ficciones',
+    autor: 'Jorge Luis Borges',
+    color: 'from-purple-600 to-indigo-800',
+  },
+  {
+    id: 'd5',
+    categoria: 'NOVELA',
+    titulo: 'El túnel',
+    autor: 'Ernesto Sabato',
+    color: 'from-amber-800 to-stone-900',
+  },
+  {
+    id: 'd6',
+    categoria: 'TECNOLOGÍA',
+    titulo: 'Programación en Python',
+    autor: 'Ana Bell',
+    color: 'from-emerald-600 to-teal-800',
+  },
+  {
+    id: 'd7',
+    categoria: 'NOVELA',
+    titulo: 'Crónica de una muerte anunciada',
+    autor: 'Gabriel García Márquez',
+    color: 'from-rose-700 to-red-900',
+  },
+  {
+    id: 'd8',
+    categoria: 'ARTE',
+    titulo: 'Historia del arte',
+    autor: 'E. H. Gombrich',
+    color: 'from-amber-500 to-yellow-700',
+  },
+  {
+    id: 'd9',
+    categoria: 'FANTASÍA',
+    titulo: 'El nombre del viento',
+    autor: 'Patrick Rothfuss',
+    color: 'from-slate-600 to-blue-900',
+  },
+]
 
 export const librosCatalogo = [
   {
@@ -156,4 +209,4 @@ export const librosCatalogo = [
     disponible: true,
     puntuacion: 4.9,
   },
-];
+]
