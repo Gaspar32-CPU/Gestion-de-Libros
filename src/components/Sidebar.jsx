@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import UsuarioAvatar from "./UsuarioAvatar";
 import { obtenerIniciales } from "../utils/obtenerIniciales";
+import { urlArchivo } from "../utils/urlArchivo";
 import { useAuth } from "../context/useAuth";
 
 export default function Sidebar ({opciones, usuario, organizacion, configuracion}) {
@@ -9,7 +10,13 @@ export default function Sidebar ({opciones, usuario, organizacion, configuracion
         <div className="sticky top-0 flex flex-col h-screen w-60 bg-ink text-white/55">
             <div className="border-b border-b-ink-2">
                 <div className="flex gap-1.5 items-center px-4 py-4">
-                    <img src={configuracion?.logo || "/Bookly-png.png"} alt="Imagen organizacion" className="w-10 shrink-0"/>
+                    {configuracion?.logo ? (
+                        <img src={urlArchivo(configuracion.logo)} alt="Imagen organizacion" className="w-10 h-10 shrink-0 rounded-xl object-cover"/>
+                    ) : (
+                        <div className="flex w-10 h-10 shrink-0 items-center justify-center rounded-xl bg-[#1fa58a] text-sm font-bold text-white">
+                            {obtenerIniciales(organizacion?.nombre) || "B"}
+                        </div>
+                    )}
                     <div className="flex flex-col min-w-0">
                         <p className="font-extrabold text-white leading-tight">{organizacion?.nombre || "Bookly"}</p>
                         <p className="text-xs font-semibold">Biblioteca</p>
