@@ -31,25 +31,27 @@ export default function Sidebar ({opciones, usuario, organizacion, configuracion
                     </NavLink>
                 ))}
             </div>
-            <div className="mt-auto border-t border-t-ink-2 flex items-center pr-3">
+            <div className="mt-auto border-t border-t-ink-2 flex items-center">
                 <NavLink
                     to="/perfil"
                     aria-label="Mi perfil"
                     className={({ isActive }) =>
-                        `flex-1 min-w-0 rounded-xl ${isActive ? "bg-ink-2" : "hover:bg-ink-2"}`
+                        `flex-1 min-w-0 ${isActive ? "" : "hover:bg-ink-2/20"}`
                     }
                 >
                     <UsuarioAvatar iniciales={obtenerIniciales(usuario.nombre)} nombre={usuario.nombre} rol={usuario.rol}/>
                 </NavLink>
-                <button
-                    type="button"
-                    onClick={logout}
-                    aria-label="Cerrar sesión"
-                    title="Cerrar sesión"
-                    className="p-2 rounded-lg hover:bg-ink-2 cursor-pointer shrink-0"
-                >
-                    <LogoutOutlined fontSize="small"/>
-                </button>
+                <div className="flex items-center justify-center w-12 h-12 shrink-0">
+                    <button
+                        type="button"
+                        onClick={logout}
+                        aria-label="Cerrar sesión"
+                        title="Cerrar sesión"
+                        className="p-2 mx-auto rounded-lg hover:bg-ink-2/20 cursor-pointer shrink-0"
+                    >
+                        <LogoutOutlined fontSize="small"/>
+                    </button>
+                </div>
             </div>
         </div>
     )

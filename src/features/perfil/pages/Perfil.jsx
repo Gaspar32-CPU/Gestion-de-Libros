@@ -146,7 +146,6 @@ export default function Perfil() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="font-bold text-slate-900">Foto de perfil</p>
-            <p className="text-sm text-slate-500">Por ahora se muestran tus iniciales.</p>
           </div>
           <input ref={inputFoto} type="file" accept="image/*" onChange={cambiarFoto} className="hidden" />
           <button type="button" onClick={() => inputFoto.current?.click()} className={BOTON_SECUNDARIO}>

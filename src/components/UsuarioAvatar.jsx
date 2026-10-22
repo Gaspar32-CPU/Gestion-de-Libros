@@ -8,7 +8,7 @@ export default function UsuarioAvatar({ iniciales, nombre, rol }) {
                     {iniciales}
                 </div>
                 <div className="flex flex-col truncate">
-                    <p className="font-bold text-sm text-white truncate">{nombre}</p>
+                    <p className="font-bold text-sm text-white truncate hover:underline">{nombre}</p>
                     <p className="text-xs font-semibold text-white/55 truncate">{rol}</p>
                 </div>
             </div>
