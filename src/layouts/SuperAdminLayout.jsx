@@ -5,13 +5,14 @@ import { Assignment, DashboardOutlined, HistoryOutlined, PeopleAlt, PersonOutlin
 import { useAuth } from "../context/useAuth";
 import { Outlet, useLocation } from "react-router-dom";
 import { useOrganizacion } from "../hooks/useOrganizacion";
+import { usePendientesSoporte } from "../features/soporte/usePendientesSoporte";
 
 const OPCIONES = [
   { label: "Plataforma", icon: DashboardOutlined, path: "/plataforma" },
   { label: "Organizaciones", icon: PeopleAlt, path: "/organizaciones" },
   { label: "Usuarios", icon: PersonOutlined, path: "/usuarios" },
   { label: "Planes", icon: Assignment, path: "/planes" },
-  { label: "Soporte", icon: ReportProblem, path: "/reportes" },
+  { label: "Soporte", icon: ReportProblem, path: "/soporte" },
   { label: "Auditoría", icon: HistoryOutlined, path: "/auditoria" },
 ];
 
@@ -26,10 +27,14 @@ export default function SuperAdminLayout() {
   const [busqueda, setBusqueda] = useState("");
   const location = useLocation();
   const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[location.pathname];
+  const pendientesSoporte = usePendientesSoporte();
+  const opciones = OPCIONES.map((opcion) =>
+    opcion.path === "/soporte" ? { ...opcion, badge: pendientesSoporte } : opcion,
+  );
 
   return (
     <div className="flex">
-        <Sidebar opciones={OPCIONES} usuario={usuario} organizacion={datosOrganizacion?.organizacion} configuracion={datosOrganizacion?.configuracion} />
+        <Sidebar opciones={opciones} usuario={usuario} organizacion={datosOrganizacion?.organizacion} configuracion={datosOrganizacion?.configuracion} />
         <main className="flex-1 min-w-0">
             <DashboardHeader onBuscar={setBusqueda} mostrarBusqueda={!!placeholderBusqueda} placeholder={placeholderBusqueda} />
             <Outlet context={{ busqueda }} />

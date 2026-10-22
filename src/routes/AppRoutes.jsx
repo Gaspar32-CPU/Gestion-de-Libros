@@ -19,6 +19,7 @@ import { LayoutSegunRol } from "./LayoutSegunRol";
 import SuperAdminLayout from "../layouts/SuperAdminLayout";
 import PrestamoExitoso from "../features/prestamos/components/PrestamoExitoso";
 import ReportarProblema from "../features/reportes/pages/ReportarProblema";
+import Soporte from "../features/soporte/pages/Soporte";
 
 export default function AppRoutes() {
   return (
@@ -59,6 +60,7 @@ export default function AppRoutes() {
               <Route path="/plataforma" element={<></>} />
               <Route path="/organizaciones" element={<></>} />
               <Route path="/planes" element={<></>} />
+              <Route path="/soporte" element={<Soporte/>} />
               <Route path="/auditoria" element={<></>} />
             </Route>
           </Route>
