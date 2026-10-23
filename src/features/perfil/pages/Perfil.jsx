@@ -229,7 +229,7 @@ export default function Perfil() {
               </Campo>
             </div>
 
-            <Campo etiqueta="Correo institucional" nota="Define tu institución — para cambiarlo escribí al administrador.">
+            <Campo etiqueta="Correo institucional" nota="Define tu institución">
               <input className={CAMPO_BLOQUEADO} value={perfil?.correo || ''} readOnly disabled />
             </Campo>
           </section>

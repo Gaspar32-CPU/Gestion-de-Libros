@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../../../context/useAuth'
+import Select from '../../../components/Select'
 import { normalizarTexto } from '../../../utils/normalizarTexto'
 
 const MESES = [
@@ -18,7 +19,7 @@ const MESES = [
 ]
 
 const FILTROS = [
-  { valor: 'TODOS', label: 'Todos' },
+  { valor: 'TODOS', label: 'Todos los estados' },
   { valor: 'ACTIVO', label: 'Activo' },
   { valor: 'PENDIENTE_RETIRO', label: 'Pendiente de retiro' },
   { valor: 'ATRASADO', label: 'Atrasado' },
@@ -173,21 +174,19 @@ export default function PrestamosPanel({
         <p className="text-sm text-[#1fa48a] font-medium mt-1">{subtitulo}</p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-6">
-        {FILTROS.map(({ valor, label }) => (
-          <button
-            key={valor}
-            type="button"
-            onClick={() => setFiltroEstado(valor)}
-            className={`px-4 py-2 rounded-full text-sm font-bold cursor-pointer transition-colors ${
-              filtroEstado === valor
-                ? 'bg-[#1fa48a] text-white'
-                : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
-            }`}
-          >
-            {label} {conteos[valor]}
-          </button>
-        ))}
+      <div className="mb-6">
+        <Select
+          aria-label="Estado"
+          value={filtroEstado}
+          onChange={(e) => setFiltroEstado(e.target.value)}
+          className="font-semibold"
+        >
+          {FILTROS.map(({ valor, label }) => (
+            <option key={valor} value={valor}>
+              {label} ({conteos[valor]})
+            </option>
+          ))}
+        </Select>
       </div>
 
       {error && <p className="mb-4 text-sm text-rose-600">{error}</p>}
