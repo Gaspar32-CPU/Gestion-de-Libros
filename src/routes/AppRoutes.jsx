@@ -22,6 +22,7 @@ import Perfil from '../features/perfil/pages/Perfil'
 import { Configuracion } from '../features/configuraciones/pages/Configuracion'
 import ReportarProblema from '../features/reportes/pages/ReportarProblema'
 import Soporte from '../features/soporte/pages/Soporte'
+import { Organizaciones } from '../features/organizaciones/pages/Organizaciones'
 
 export default function AppRoutes() {
   return (
@@ -70,7 +71,7 @@ export default function AppRoutes() {
           <Route element={<RutaPorRol rolesPermitidos={['super-admin']} />}>
             <Route element={<SuperAdminLayout />}>
               {/* <Route path="/plataforma" element={<></>} /> */}
-              <Route path="/organizaciones" element={<></>} />
+              <Route path="/organizaciones" element={<Organizaciones />} />
               {/* <Route path="/planes" element={<></>} /> */}
               <Route path="/soporte" element={<Soporte />} />
               {/* <Route path="/auditoria" element={<></>} /> */}
