@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { LogoutOutlined } from '@mui/icons-material'
 import UsuarioAvatar from './UsuarioAvatar'
 import { obtenerIniciales } from '../utils/obtenerIniciales'
 import { urlArchivo } from '../utils/urlArchivo'
@@ -39,7 +40,7 @@ export default function Sidebar({
         </div>
       </div>
       <div className="flex flex-col gap-2 p-3.5">
-        {opciones.map(({ label, icon: Icon, path }) => (
+        {opciones.map(({ label, icon: Icon, path, badge }) => (
           <NavLink
             key={path}
             to={path}
@@ -50,20 +51,40 @@ export default function Sidebar({
           >
             <Icon color="inherit" />
             <p className="font-bold text-sm cursor-pointer">{label}</p>
+            {badge > 0 && (
+              <span className="ml-auto rounded-full bg-[#86C440] px-[7px] py-px text-[11px] font-extrabold text-[#16324F]">
+                {badge}
+              </span>
+            )}
           </NavLink>
         ))}
       </div>
-      <div className="mt-auto border-t border-t-ink-2">
-        <button
-          onClick={logout}
-          className="flex gap-2 items-center rounded-xl py-2 cursor-pointer px-3"
+      <div className="mt-auto border-t border-t-ink-2 flex items-center">
+        <NavLink
+          to="/perfil"
+          aria-label="Mi perfil"
+          className={({ isActive }) =>
+            `flex-1 min-w-0 ${isActive ? '' : 'hover:bg-ink-2/20'}`
+          }
         >
           <UsuarioAvatar
             iniciales={obtenerIniciales(usuario.nombre)}
             nombre={usuario.nombre}
             rol={usuario.rol}
+            foto={usuario.foto}
           />
-        </button>
+        </NavLink>
+        <div className="flex items-center justify-center w-12 h-12 shrink-0">
+          <button
+            type="button"
+            onClick={logout}
+            aria-label="Cerrar sesión"
+            title="Cerrar sesión"
+            className="p-2 mx-auto rounded-lg hover:bg-ink-2/20 cursor-pointer shrink-0"
+          >
+            <LogoutOutlined fontSize="small" />
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -21,6 +21,7 @@ const OPCIONES = [
   { label: 'Préstamos', icon: Inventory2, path: '/allprestamos' },
   { label: 'Usuarios', icon: PersonOutlined, path: '/usuarios' },
   { label: 'Reportar problema', icon: ReportProblem, path: '/reportar' },
+  { label: 'Reportes', icon: Equalizer, path: '/reportes' },
   { label: 'Configuración', icon: Settings, path: '/configuracion' },
 ]
 
