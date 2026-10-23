@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Inventory2, MenuBook, ReportProblem } from '@mui/icons-material'
 import Sidebar from '../components/Sidebar'
 import DashboardHeader from '../components/DashboardHeader'
 import { useAuth } from '../context/useAuth'
 import { useOrganizacion } from '../hooks/useOrganizacion'
+import { useBusquedaPorRuta } from '../hooks/useBusquedaPorRuta'
 
 const OPCIONES = [
   { label: 'Catálogo', icon: MenuBook, path: '/catalogo' },
@@ -20,9 +21,9 @@ const PLACEHOLDERS_BUSQUEDA = {
 export default function UsuarioLayout() {
   const { usuario } = useAuth()
   const datosOrganizacion = useOrganizacion(usuario?.organizacionId)
-  const [busqueda, setBusqueda] = useState('')
-  const location = useLocation()
-  const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[location.pathname]
+  const { busqueda, buscar, ruta } = useBusquedaPorRuta()
+  const [menuAbierto, setMenuAbierto] = useState(false)
+  const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[ruta]
 
   return (
     <div className="flex">
@@ -31,10 +32,20 @@ export default function UsuarioLayout() {
         usuario={usuario}
         organizacion={datosOrganizacion?.organizacion}
         configuracion={datosOrganizacion?.configuracion}
+        abierto={menuAbierto}
+        onCerrar={() => setMenuAbierto(false)}
       />
+      {menuAbierto && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setMenuAbierto(false)}
+        />
+      )}
       <main className="flex-1 min-w-0">
         <DashboardHeader
-          onBuscar={setBusqueda}
+          key={ruta}
+          onBuscar={buscar}
+          onMenu={() => setMenuAbierto(true)}
           mostrarBusqueda={!!placeholderBusqueda}
           placeholder={placeholderBusqueda}
         />

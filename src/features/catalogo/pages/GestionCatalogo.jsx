@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import {
   AddRounded,
   EditOutlined,
@@ -6,6 +7,7 @@ import {
 } from '@mui/icons-material'
 import LibroFormModal from '../components/LibroFormModal'
 import { esColorPortada } from '../../../utils/portada'
+import { normalizarTexto } from '../../../utils/normalizarTexto'
 import {
   obtenerLibros,
   crearLibro,
@@ -20,6 +22,7 @@ function mensajeDeError(err, fallback) {
 }
 
 export default function GestionCatalogo() {
+  const { busqueda = '' } = useOutletContext() ?? {}
   const [libros, setLibros] = useState([])
   const [libroEnEdicion, setLibroEnEdicion] = useState(null) // null = cerrado, {} = crear, libro = editar
   const [libroAEliminar, setLibroAEliminar] = useState(null)
@@ -31,6 +34,15 @@ export default function GestionCatalogo() {
       .then(setLibros)
       .catch((err) => console.error('Error al traer el catálogo', err))
   }, [])
+
+  const terminoBusqueda = normalizarTexto(busqueda.trim())
+  const librosFiltrados = terminoBusqueda
+    ? libros.filter(
+        (libro) =>
+          normalizarTexto(libro.titulo).includes(terminoBusqueda) ||
+          normalizarTexto(libro.autor).includes(terminoBusqueda),
+      )
+    : libros
 
   const handleGuardar = async (datos) => {
     setErrorGuardado('')
@@ -91,10 +103,10 @@ export default function GestionCatalogo() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="md:bg-white md:rounded-xl md:border md:border-slate-200 md:shadow-sm md:overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
+          <table className="w-full text-sm block md:table">
+            <thead className="hidden md:table-header-group">
               <tr className="border-b border-slate-200 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
                 <th className="px-4 py-3">Libro</th>
                 <th className="px-4 py-3">Género</th>
@@ -103,13 +115,23 @@ export default function GestionCatalogo() {
                 <th className="px-4 py-3 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {libros.map((libro) => (
+            <tbody className="block md:table-row-group">
+              {terminoBusqueda && librosFiltrados.length === 0 && (
+                <tr className="block rounded-xl border border-slate-200 bg-white md:table-row md:rounded-none md:border-0 md:bg-transparent">
+                  <td
+                    colSpan={5}
+                    className="block px-4 py-8 text-center text-sm text-slate-500 md:table-cell"
+                  >
+                    No encontramos libros que coincidan con tu búsqueda.
+                  </td>
+                </tr>
+              )}
+              {librosFiltrados.map((libro) => (
                 <tr
                   key={libro.id}
-                  className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
+                  className="block mb-3 p-4 rounded-xl border border-slate-200 bg-white md:mb-0 md:p-0 md:table-row md:rounded-none md:border-0 md:border-b md:border-slate-100 md:last:border-0 md:bg-transparent hover:bg-slate-50"
                 >
-                  <td className="px-4 py-3">
+                  <td className="block px-0 mb-3 md:mb-0 md:table-cell md:px-4 md:py-3 before:content-none">
                     <div className="flex items-center gap-3">
                       {esColorPortada(libro.portadaUrl) || !libro.portadaUrl ? (
                         <div
@@ -137,21 +159,30 @@ export default function GestionCatalogo() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                  <td
+                    data-label="Género"
+                    className="flex justify-between gap-3 px-0 py-1.5 text-slate-600 whitespace-nowrap md:table-cell md:px-4 md:py-3 before:content-[attr(data-label)] before:text-xs before:font-semibold before:uppercase before:text-slate-400 md:before:content-none"
+                  >
                     {libro.genero}
                   </td>
-                  <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                  <td
+                    data-label="Ejemplares"
+                    className="flex justify-between gap-3 px-0 py-1.5 text-slate-600 whitespace-nowrap md:table-cell md:px-4 md:py-3 before:content-[attr(data-label)] before:text-xs before:font-semibold before:uppercase before:text-slate-400 md:before:content-none"
+                  >
                     {libro.ejemplaresLibres} / {libro.ejemplaresTotales}
                   </td>
-                  <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
+                  <td
+                    data-label="Puntuación"
+                    className="flex justify-between gap-3 px-0 py-1.5 text-slate-600 whitespace-nowrap md:table-cell md:px-4 md:py-3 before:content-[attr(data-label)] before:text-xs before:font-semibold before:uppercase before:text-slate-400 md:before:content-none"
+                  >
                     ★ {libro.puntuacion.toFixed(1)}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="block px-0 pt-2 md:table-cell md:px-4 md:py-3 before:content-none">
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => setLibroEnEdicion(libro)}
                         aria-label={`Editar ${libro.titulo}`}
-                        className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
+                        className="p-2.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
                       >
                         <EditOutlined fontSize="small" />
                       </button>
@@ -161,7 +192,7 @@ export default function GestionCatalogo() {
                           setLibroAEliminar(libro)
                         }}
                         aria-label={`Eliminar ${libro.titulo}`}
-                        className="p-2 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 cursor-pointer"
+                        className="p-2.5 rounded-lg text-slate-500 hover:bg-rose-50 hover:text-rose-600 cursor-pointer"
                       >
                         <DeleteOutlineOutlined fontSize="small" />
                       </button>
@@ -208,13 +239,13 @@ export default function GestionCatalogo() {
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={() => setLibroAEliminar(null)}
-                className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
+                className="px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleEliminar}
-                className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 cursor-pointer"
+                className="px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 cursor-pointer"
               >
                 Eliminar
               </button>

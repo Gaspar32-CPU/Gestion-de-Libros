@@ -35,3 +35,25 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Desplazamiento continuo (carrusel sin pausas). El contenido va duplicado:
+   al correrse la mitad, la segunda copia queda donde estaba la primera y el
+   loop no se nota. La duración se pone en cada uso (animation-duration). */
+@keyframes desplazar-mitad {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-desplazar-mitad {
+  animation: desplazar-mitad linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-desplazar-mitad {
+    animation: none;
+  }
+}

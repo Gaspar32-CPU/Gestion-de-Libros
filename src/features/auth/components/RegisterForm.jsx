@@ -74,7 +74,7 @@ export function RegisterForm() {
 
   return (
     <form className="space-y-4" onSubmit={handleRegister}>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label
             htmlFor="nombre"
@@ -112,7 +112,7 @@ export function RegisterForm() {
           />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label
             htmlFor="cedula"

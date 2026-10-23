@@ -127,7 +127,7 @@ export const LibroDetalle = () => {
   }
 
   return (
-    <div className="mx-auto font-sans antialiased text-slate-950 p-4 pb-12">
+    <div className="mx-auto max-w-5xl font-sans antialiased text-slate-950 p-4 pb-12">
       <Link
         to="/catalogo"
         className="inline-block no-underline text-[#092e40] font-semibold text-sm mb-6"
@@ -181,7 +181,7 @@ export const LibroDetalle = () => {
         </div>
 
         {/* Columna Derecha */}
-        <div className="grow">
+        <div className="grow min-w-0">
           <span className="text-[#1fa48a] text-[11px] font-bold tracking-[1px] uppercase">
             {libro.genero}
           </span>
@@ -209,7 +209,7 @@ export const LibroDetalle = () => {
               <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
                 IDIOMA
               </span>
-              <span className="text-sm font-semibold text-[#092e40]">
+              <span className="text-sm font-semibold text-[#092e40] break-words">
                 {libro.idioma}
               </span>
             </div>
@@ -217,7 +217,7 @@ export const LibroDetalle = () => {
               <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
                 SNI / ISBN
               </span>
-              <span className="text-sm font-semibold text-[#092e40]">
+              <span className="text-sm font-semibold text-[#092e40] break-words">
                 {libro.isbn}
               </span>
             </div>
@@ -225,7 +225,7 @@ export const LibroDetalle = () => {
               <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
                 EDITORIAL
               </span>
-              <span className="text-sm font-semibold text-[#092e40]">
+              <span className="text-sm font-semibold text-[#092e40] break-words">
                 {libro.editorial}
               </span>
             </div>
@@ -233,7 +233,7 @@ export const LibroDetalle = () => {
               <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
                 EDICIÓN
               </span>
-              <span className="text-sm font-semibold text-[#092e40]">
+              <span className="text-sm font-semibold text-[#092e40] break-words">
                 {libro.edicion}
               </span>
             </div>
@@ -283,13 +283,13 @@ export const LibroDetalle = () => {
               Leiste este libro. Contá qué te pareció.
             </p>
 
-            <div className="flex items-center gap-1.5 mb-4">
+            <div className="flex flex-wrap items-center gap-1.5 mb-4">
               {[1, 2, 3, 4, 5].map((num) => (
                 <button
                   key={num}
                   type="button"
                   onClick={() => setEstrellasSeleccionadas(num)}
-                  className={`text-2xl cursor-pointer transition-colors ${
+                  className={`p-1 text-2xl cursor-pointer transition-colors ${
                     num <= estrellasSeleccionadas
                       ? 'text-[#f59e0b]'
                       : 'text-slate-300'
@@ -319,7 +319,7 @@ export const LibroDetalle = () => {
                   estrellasSeleccionadas === 0 ||
                   enviando
                 }
-                className="px-5 py-2 bg-[#1fa48a] hover:bg-[#198771] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                className="min-h-10 px-5 py-2 bg-[#1fa48a] hover:bg-[#198771] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Enviar Reseña
               </button>
@@ -336,14 +336,14 @@ export const LibroDetalle = () => {
                 <div className="w-8.75 h-8.75 bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
                   {obtenerIniciales(resena.usuario)}
                 </div>
-                <div className="grow">
-                  <p className="text-sm font-semibold text-[#092e40] flex items-center gap-1.5">
+                <div className="grow min-w-0">
+                  <p className="text-sm font-semibold text-[#092e40] flex flex-wrap items-center gap-1.5 break-words">
                     {resena.usuario}
                     <span className="text-[#f59e0b] text-[10px] ml-1 tracking-[1px]">
                       {renderEstrellas(resena.calificacion)}
                     </span>
                   </p>
-                  <p className="text-sm text-[#64748b] mt-0.75">
+                  <p className="text-sm text-[#64748b] mt-0.75 break-words">
                     {resena.comentario}
                   </p>
                 </div>

@@ -7,9 +7,10 @@ import {
 } from '../usuariosService'
 import UsuarioIndividual from './UsuarioIndividual'
 import { useAuth } from '../../../context/useAuth'
+import Select from '../../../components/Select'
 
 const FILTROS = [
-  { valor: 'TODOS', label: 'Todos' },
+  { valor: 'TODOS', label: 'Todos los estados' },
   { valor: 'ACTIVO', label: 'Activo' },
   { valor: 'INACTIVO', label: 'Inactivo' },
 ]
@@ -95,21 +96,19 @@ export function Usuarios() {
             {usuariosFiltrados.length} personas registradas
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2 mb-6">
-          {FILTROS.map(({ valor, label }) => (
-            <button
-              key={valor}
-              type="button"
-              onClick={() => setFiltroEstado(valor)}
-              className={`px-4 py-2 rounded-full text-sm font-bold cursor-pointer transition-colors ${
-                filtroEstado === valor
-                  ? 'bg-[#1fa48a] text-white'
-                  : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300'
-              }`}
-            >
-              {label} {conteos[valor]}
-            </button>
-          ))}
+        <div className="mb-6">
+          <Select
+            aria-label="Estado"
+            value={filtroEstado}
+            onChange={(e) => setFiltroEstado(e.target.value)}
+            className="font-semibold"
+          >
+            {FILTROS.map(({ valor, label }) => (
+              <option key={valor} value={valor}>
+                {label} ({conteos[valor]})
+              </option>
+            ))}
+          </Select>
         </div>
       </div>
 
@@ -119,7 +118,7 @@ export function Usuarios() {
         </div>
       )}
 
-      <div className="mb-2 grid grid-cols-[2.5fr_2.5fr_1.5fr_1.5fr_50px] gap-4 px-6 py-3 text-xs font-bold tracking-wider text-gray-400">
+      <div className="mb-2 hidden gap-4 px-6 py-3 text-xs font-bold tracking-wider text-gray-400 md:grid md:grid-cols-[2.5fr_2.5fr_1.5fr_1.5fr_50px]">
         <span>NOMBRE</span>
         <span>CORREO</span>
         <span>ROL</span>

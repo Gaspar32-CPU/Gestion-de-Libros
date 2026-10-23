@@ -11,7 +11,7 @@ export default function Register() {
       <Sidebar />
 
       <div className="flex flex-1 items-center justify-center px-6 py-8 text-left md:p-8">
-        <div className="w-full max-w-90">
+        <div className="w-full max-w-md">
           <h2 className="mb-1 text-2xl font-bold text-[#10221f]">
             Creá tu cuenta
           </h2>

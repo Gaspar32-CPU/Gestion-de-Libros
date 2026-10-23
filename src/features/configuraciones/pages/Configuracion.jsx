@@ -149,14 +149,14 @@ export function Configuracion() {
               Se aplica en todo el sistema
             </p>
           </div>
-          <div className="flex items-start gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row">
             <LogoUploader
               configuracion={configuracion}
               value={configuracion.logo}
               onSelect={cambiarLogo}
               onRemove={() => cambiarLogo(null)}
             />
-            <div>
+            <div className="w-full sm:flex-1 min-w-0">
               <p className="text-sm font-semibold pb-2 text-slate-800">
                 Nombre de la app
               </p>
@@ -195,8 +195,8 @@ export function Configuracion() {
               onChange={(horarios) => cambiar('horarios', horarios)}
             />
             <div className="flex flex-col gap-3 mt-3">
-              <div className="flex gap-10">
-                <div className="flex-1">
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-10">
+                <div className="sm:flex-1">
                   <p className="text-ink-3 text-sm font-bold">
                     Lugar de retiro
                   </p>
@@ -209,7 +209,7 @@ export function Configuracion() {
                     className="mt-1 block w-full h-10 p-3 rounded-lg border border-gray-300 shadow-sm outline-gray-200 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                   />
                 </div>
-                <div className="flex-1">
+                <div className="sm:flex-1">
                   <p className="text-ink-3 text-sm font-bold">
                     Lugar de devolución
                   </p>
@@ -233,7 +233,8 @@ export function Configuracion() {
           <div>
             <p className="font-bold text-ink">Plantillas de notificación</p>
             <p className="mt-1 text-sm text-gray-500">
-              Cada aviso que reciben los lectores. Insertá datos que se completan solos con los botones debajo de cada mensaje.
+              Cada aviso que reciben los lectores. Insertá datos que se
+              completan solos con los botones debajo de cada mensaje.
             </p>
           </div>
           <div className="flex flex-col gap-4">
@@ -268,12 +269,12 @@ export function Configuracion() {
             <p className="text-gray-500">Tenés cambios sin guardar.</p>
           ) : null}
         </div>
-        <div className="flex gap-2">
+        <div className="flex w-full gap-2 sm:w-auto">
           <button
             type="button"
             onClick={descartar}
             disabled={!hayCambios || guardando}
-            className="cursor-pointer rounded-[10px] border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-10 flex-1 cursor-pointer rounded-[10px] border border-gray-300 bg-white px-5 py-2.5 text-sm sm:flex-none font-semibold text-slate-700 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Descartar
           </button>
@@ -283,7 +284,7 @@ export function Configuracion() {
             disabled={
               !hayCambios || faltanObligatorios || diaInvalido || guardando
             }
-            className="cursor-pointer rounded-[10px] border-none bg-[#14877a] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0f5c53] disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-10 flex-1 cursor-pointer rounded-[10px] border-none bg-[#14877a] px-5 py-2.5 text-sm sm:flex-none font-semibold text-white transition-colors hover:bg-[#0f5c53] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {guardando ? 'Guardando...' : 'Guardar cambios'}
           </button>
