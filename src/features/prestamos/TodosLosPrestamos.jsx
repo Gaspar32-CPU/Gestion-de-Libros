@@ -4,6 +4,7 @@ import {
   obtenerTodosLosPrestamos,
   marcarPrestamoRetirado,
   marcarPrestamoDevuelto,
+  cancelarPrestamo,
 } from './prestamosService'
 
 export default function TodosLosPrestamos() {
@@ -17,6 +18,7 @@ export default function TodosLosPrestamos() {
       onMarcarRetirado={marcarPrestamoRetirado}
       cargarPrestamos={obtenerTodosLosPrestamos}
       onMarcarDevuelto={marcarPrestamoDevuelto}
+      onCancelar={cancelarPrestamo}
     />
   )
 }

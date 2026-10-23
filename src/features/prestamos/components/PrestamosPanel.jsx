@@ -68,6 +68,7 @@ export default function PrestamosPanel({
   mostrarExtender = false,
   onMarcarRetirado,
   onMarcarDevuelto,
+  onCancelar,
   onExtender,
 }) {
   const [prestamos, setPrestamos] = useState([])
@@ -141,6 +142,24 @@ export default function PrestamosPanel({
       setError(
         err.response?.data?.mensaje ||
           'No se pudo marcar el libro como retirado.',
+      )
+    } finally {
+      setIdAccionEnCurso(null)
+    }
+  }
+
+  const handleCancelar = async (id) => {
+    setError('')
+    setIdAccionEnCurso(id)
+    try {
+      const prestamoActualizado = await onCancelar(id)
+      setPrestamos((prev) =>
+        prev.map((p) => (p.id === id ? prestamoActualizado : p)),
+      )
+    } catch (err) {
+      console.error('Error al cancelar el préstamo', err)
+      setError(
+        err.response?.data?.mensaje || 'No se pudo cancelar el préstamo.',
       )
     } finally {
       setIdAccionEnCurso(null)
@@ -273,7 +292,7 @@ export default function PrestamosPanel({
                         className="flex justify-between items-center gap-3 px-0 py-1.5 md:table-cell md:p-4 before:content-[attr(data-label)] before:text-xs before:font-semibold before:uppercase before:text-slate-400 md:before:content-none"
                       >
                         <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold border ${obtenerEstiloEstado(item.estado)}`}
+                          className={`inline-flex items-center truncate px-2.5 py-0.5 rounded-full text-xs font-bold border ${obtenerEstiloEstado(item.estado)}`}
                         >
                           {normalizarEstado(item.estado)}
                         </span>
@@ -326,7 +345,7 @@ export default function PrestamosPanel({
                             {cancelarPrestamo && (
                               <button
                                 type="button"
-                                onClick={() => handleMarcarDevuelto(item.id)}
+                                onClick={() => handleCancelar(item.id)}
                                 disabled={enCurso}
                                 className="px-3 py-2 rounded-lg text-xs font-semibold text-white bg-red-600 hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
                               >
