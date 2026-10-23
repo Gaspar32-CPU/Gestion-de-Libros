@@ -18,7 +18,7 @@ const OPCIONES = [
   // { label: 'Plataforma', icon: DashboardOutlined, path: '/plataforma' },
   { label: 'Organizaciones', icon: PeopleAlt, path: '/organizaciones' },
   { label: 'Usuarios', icon: PersonOutlined, path: '/usuarios' },
-  { label: 'Planes', icon: Assignment, path: '/planes' },
+  // { label: 'Planes', icon: Assignment, path: '/planes' },
   { label: 'Soporte', icon: ReportProblem, path: '/soporte' },
   // { label: 'Auditoría', icon: HistoryOutlined, path: '/auditoria' },
 ]

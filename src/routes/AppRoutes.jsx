@@ -57,7 +57,7 @@ export default function AppRoutes() {
               element={
                 <RutaPorRol
                   rolesPermitidos={['admin', 'lector']}
-                  redirectTo="/plataforma"
+                  redirectTo="/organizaciones"
                 />
               }
             >
@@ -71,7 +71,7 @@ export default function AppRoutes() {
             <Route element={<SuperAdminLayout />}>
               {/* <Route path="/plataforma" element={<></>} /> */}
               <Route path="/organizaciones" element={<></>} />
-              <Route path="/planes" element={<></>} />
+              {/* <Route path="/planes" element={<></>} /> */}
               <Route path="/soporte" element={<Soporte />} />
               {/* <Route path="/auditoria" element={<></>} /> */}
             </Route>
