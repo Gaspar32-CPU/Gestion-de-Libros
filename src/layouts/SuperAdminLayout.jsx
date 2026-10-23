@@ -15,7 +15,7 @@ import { useOrganizacion } from '../hooks/useOrganizacion'
 import { usePendientesSoporte } from '../features/soporte/usePendientesSoporte'
 
 const OPCIONES = [
-  { label: 'Plataforma', icon: DashboardOutlined, path: '/plataforma' },
+  // { label: 'Plataforma', icon: DashboardOutlined, path: '/plataforma' },
   { label: 'Organizaciones', icon: PeopleAlt, path: '/organizaciones' },
   { label: 'Usuarios', icon: PersonOutlined, path: '/usuarios' },
   { label: 'Planes', icon: Assignment, path: '/planes' },

@@ -69,7 +69,7 @@ export default function AppRoutes() {
 
           <Route element={<RutaPorRol rolesPermitidos={['super-admin']} />}>
             <Route element={<SuperAdminLayout />}>
-              <Route path="/plataforma" element={<></>} />
+              {/* <Route path="/plataforma" element={<></>} /> */}
               <Route path="/organizaciones" element={<></>} />
               <Route path="/planes" element={<></>} />
               <Route path="/soporte" element={<Soporte />} />
@@ -84,7 +84,7 @@ export default function AppRoutes() {
             <Route element={<LayoutSegunRol />}>
               // "Rutas solo admin" es un layout que contiene un sidebar con
               links a las rutas de admin
-              <Route path="/panel" element={<></>} />
+              {/* <Route path="/panel" element={<></>} /> */}
               <Route path="/allprestamos" element={<TodosLosPrestamos />} />
               <Route path="/gestion-catalogo" element={<GestionCatalogo />} />
               <Route path="/usuarios" element={<Usuarios />} />

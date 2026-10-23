@@ -15,7 +15,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { useOrganizacion } from '../hooks/useOrganizacion'
 
 const OPCIONES = [
-  { label: 'Panel', icon: DashboardOutlined, path: '/panel' },
+  // { label: 'Panel', icon: DashboardOutlined, path: '/panel' },
   { label: 'Catálogo', icon: MenuBook, path: '/catalogo' },
   { label: 'Gestión catálogo', icon: MenuBook, path: '/gestion-catalogo' },
   { label: 'Préstamos', icon: Inventory2, path: '/allprestamos' },
