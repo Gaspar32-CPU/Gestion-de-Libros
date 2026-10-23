@@ -23,15 +23,23 @@ export default function Sidebar({
               className="w-10 h-10 shrink-0 rounded-xl object-cover"
             />
           ) : (
-            <div className="flex w-10 h-10 shrink-0 items-center justify-center rounded-xl bg-[#1fa58a] text-sm font-bold text-white">
-              {obtenerIniciales(organizacion?.nombre) || 'B'}
-            </div>
+            usuario?.rol === 'super-admin' ? (
+              <img
+                src="/Bookly-Fondo-Blanco.png"
+                alt="Bookly"
+                className="w-10 h-10 object-contain"
+              />
+            ) : (
+              <div className="flex w-10 h-10 shrink-0 items-center justify-center rounded-xl bg-[#1fa58a] text-sm font-bold text-white">
+                {obtenerIniciales(organizacion?.nombre || 'B')}
+              </div>
+            )
           )}
           <div className="flex flex-col min-w-0">
             <p className="font-extrabold text-white leading-tight">
               {organizacion?.nombre || 'Bookly'}
             </p>
-            <p className="text-xs font-semibold">Biblioteca</p>
+            <p className="text-xs font-semibold">{usuario?.rol === 'super-admin' ? '' : 'Biblioteca'}</p>
           </div>
         </div>
       </div>
