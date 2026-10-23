@@ -256,7 +256,8 @@ export default function PrestamosPanel({
                   const enCurso = idAccionEnCurso === item.id
                   const marcarDevuelto = admin && (atrasado || activo)
                   const marcarRetiro = admin && pendienteRetiro
-                  const cancelarPrestamo = pendienteRetiro
+                  const cancelarPrestamo =
+                    pendienteRetiro && Boolean(onCancelar)
                   return (
                     <tr
                       key={item.id}
