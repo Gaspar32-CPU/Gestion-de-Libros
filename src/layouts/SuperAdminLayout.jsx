@@ -20,7 +20,7 @@ const OPCIONES = [
   { label: 'Usuarios', icon: PersonOutlined, path: '/usuarios' },
   { label: 'Planes', icon: Assignment, path: '/planes' },
   { label: 'Soporte', icon: ReportProblem, path: '/soporte' },
-  { label: 'Auditoría', icon: HistoryOutlined, path: '/auditoria' },
+  // { label: 'Auditoría', icon: HistoryOutlined, path: '/auditoria' },
 ]
 
 const PLACEHOLDERS_BUSQUEDA = {
