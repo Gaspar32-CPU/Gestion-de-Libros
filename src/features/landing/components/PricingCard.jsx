@@ -67,12 +67,6 @@ export function PricingCard({ plan, ciclo, onContratar }) {
       >
         Contratar {plan.nombre}
       </button>
-      <button
-        type="button"
-        className="mt-2 text-sm font-bold text-ink-2 hover:text-ink"
-      >
-        Ver detalle del plan
-      </button>
     </div>
   )
 }

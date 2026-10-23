@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Badge, IconButton } from '@mui/material'
-import { NotificationsNoneOutlined } from '@mui/icons-material'
+import { MenuOutlined, NotificationsNoneOutlined } from '@mui/icons-material'
 
 export default function DashboardHeader({
   onBuscar,
+  onMenu,
   notificaciones = 0,
   mostrarBusqueda = true,
   placeholder = 'Buscar...',
@@ -23,11 +24,21 @@ export default function DashboardHeader({
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-line px-4 md:px-8 py-3">
-      <div
-        className={`flex items-center gap-4 ${mostrarBusqueda ? 'justify-between' : 'justify-end'}`}
-      >
+      <div className="flex items-center justify-between gap-2 md:gap-4">
+        {onMenu && (
+          <IconButton
+            aria-label="Abrir menú"
+            onClick={onMenu}
+            className="md:hidden!"
+          >
+            <MenuOutlined className="text-ink-2" />
+          </IconButton>
+        )}
         {mostrarBusqueda && (
-          <form onSubmit={handleBusquedaSubmit} className="flex-1 max-w-md">
+          <form
+            onSubmit={handleBusquedaSubmit}
+            className="flex-1 min-w-0 max-w-md"
+          >
             <div className="relative w-full">
               <input
                 type="text"
@@ -50,7 +61,7 @@ export default function DashboardHeader({
           </form>
         )}
 
-        {/* <IconButton aria-label="Notificaciones">
+        {/* <IconButton aria-label="Notificaciones" className="ml-auto">
           <Badge badgeContent={notificaciones} color="error">
             <NotificationsNoneOutlined className="text-ink-2" />
           </Badge>

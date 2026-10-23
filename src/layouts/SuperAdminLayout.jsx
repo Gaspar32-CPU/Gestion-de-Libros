@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import DashboardHeader from '../components/DashboardHeader'
 import {
@@ -32,6 +33,7 @@ export default function SuperAdminLayout() {
   const { usuario } = useAuth()
   const datosOrganizacion = useOrganizacion(usuario?.organizacionId)
   const { busqueda, buscar, ruta } = useBusquedaPorRuta()
+  const [menuAbierto, setMenuAbierto] = useState(false)
   const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[ruta]
   const {
     pendientes: pendientesSoporte,
@@ -52,11 +54,20 @@ export default function SuperAdminLayout() {
         usuario={usuario}
         organizacion={datosOrganizacion?.organizacion}
         configuracion={datosOrganizacion?.configuracion}
+        abierto={menuAbierto}
+        onCerrar={() => setMenuAbierto(false)}
       />
+      {menuAbierto && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 md:hidden"
+          onClick={() => setMenuAbierto(false)}
+        />
+      )}
       <main className="flex-1 min-w-0">
         <DashboardHeader
           key={ruta}
           onBuscar={buscar}
+          onMenu={() => setMenuAbierto(true)}
           mostrarBusqueda={!!placeholderBusqueda}
           placeholder={placeholderBusqueda}
         />

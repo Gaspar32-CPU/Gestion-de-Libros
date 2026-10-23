@@ -118,7 +118,7 @@ export function Usuarios() {
         </div>
       )}
 
-      <div className="mb-2 grid grid-cols-[2.5fr_2.5fr_1.5fr_1.5fr_50px] gap-4 px-6 py-3 text-xs font-bold tracking-wider text-gray-400">
+      <div className="mb-2 hidden gap-4 px-6 py-3 text-xs font-bold tracking-wider text-gray-400 md:grid md:grid-cols-[2.5fr_2.5fr_1.5fr_1.5fr_50px]">
         <span>NOMBRE</span>
         <span>CORREO</span>
         <span>ROL</span>

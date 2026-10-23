@@ -61,7 +61,7 @@ export default function PortadaInput({ value, onChange, titulo }) {
         Portada
       </label>
 
-      <div className="flex items-start gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
         <div
           className="relative w-24 h-32 shrink-0 rounded-xl overflow-hidden shadow-sm bg-cover bg-center"
           style={
@@ -78,14 +78,14 @@ export default function PortadaInput({ value, onChange, titulo }) {
           </p>
         </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex gap-1 mb-2 bg-slate-100 rounded-lg p-1 w-fit">
+        <div className="flex-1 min-w-0 w-full">
+          <div className="flex flex-wrap gap-1 mb-2 bg-slate-100 rounded-lg p-1 w-fit max-w-full">
             {OPCIONES.map((opcion) => (
               <button
                 key={opcion.valor}
                 type="button"
                 onClick={() => handleModoChange(opcion.valor)}
-                className={`px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
+                className={`px-3 py-2 rounded-md text-xs font-semibold cursor-pointer transition-colors ${
                   modo === opcion.valor
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-500 hover:text-slate-700'
@@ -102,7 +102,7 @@ export default function PortadaInput({ value, onChange, titulo }) {
               value={esColorPortada(value) ? '' : (value ?? '')}
               onChange={(e) => onChange(e.target.value)}
               placeholder="https://..."
-              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
             />
           )}
 
@@ -122,14 +122,14 @@ export default function PortadaInput({ value, onChange, titulo }) {
 
           {modo === 'color' && (
             <div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {COLORES_PRESET.map((color) => (
                   <button
                     key={color}
                     type="button"
                     onClick={() => onChange(color)}
                     aria-label={`Color ${color}`}
-                    className={`w-8 h-8 rounded-md border-2 cursor-pointer transition-transform ${
+                    className={`w-9 h-9 sm:w-8 sm:h-8 rounded-md border-2 cursor-pointer transition-transform ${
                       value === color
                         ? 'border-slate-900 scale-105'
                         : 'border-transparent'

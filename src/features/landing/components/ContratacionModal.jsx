@@ -135,7 +135,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
         className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white px-8 pt-6 pb-4 border-b border-line">
+        <div className="sticky top-0 bg-white px-5 sm:px-8 pt-6 pb-4 border-b border-line">
           <div className="flex items-start justify-between">
             <div>
               <p className="text-xs font-bold text-brand tracking-wide">
@@ -152,7 +152,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-ink-2 hover:bg-bg"
+              className="w-10 h-10 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-ink-2 hover:bg-bg"
               aria-label="Cerrar"
             >
               ✕
@@ -188,14 +188,14 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
           </div>
         </div>
 
-        <div className="px-8 py-6">
+        <div className="px-5 sm:px-8 py-6">
           {paso === 1 && (
             <div className="space-y-4">
               <p className="text-sm text-ink-2">
                 Esta cuenta va a ser la administradora de la biblioteca: carga
                 el catálogo, gestiona préstamos y configura las reglas.
               </p>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Campo
                   label="Nombre"
                   placeholder="Tabaré"
@@ -209,7 +209,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                   onChange={set('apellido')}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Campo
                   label="Cédula"
                   placeholder="5.123.456-7"
@@ -308,7 +308,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                 value={datos.numeroTarjeta}
                 onChange={set('numeroTarjeta')}
               />
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Campo
                   label="Vencimiento"
                   placeholder="09/29"
@@ -446,14 +446,14 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
           {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
         </div>
 
-        <div className="sticky bottom-0 bg-white border-t border-line px-8 py-4 flex items-center justify-between">
+        <div className="sticky bottom-0 bg-white border-t border-line px-5 sm:px-8 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             {paso > 1 && paso < 5 && (
               <button
                 type="button"
                 onClick={atras}
                 disabled={cargando}
-                className="text-sm font-bold text-ink-2 hover:text-ink disabled:opacity-50"
+                className="py-2.5 text-sm font-bold text-ink-2 hover:text-ink disabled:opacity-50"
               >
                 Atrás
               </button>
@@ -470,7 +470,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
               type="button"
               onClick={siguiente}
               disabled={cargando}
-              className="bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors disabled:cursor-not-allowed disabled:opacity-70"
+              className="w-full sm:w-auto bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors disabled:cursor-not-allowed disabled:opacity-70"
             >
               {paso === 3
                 ? cargando
@@ -482,7 +482,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
             <button
               type="button"
               onClick={() => navigate('/login')}
-              className="bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors"
+              className="w-full sm:w-auto bg-brand text-white font-bold px-6 py-2.5 rounded-xl hover:bg-brand-d transition-colors"
             >
               Entrar a Bookly
             </button>

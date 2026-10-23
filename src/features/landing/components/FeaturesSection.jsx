@@ -21,11 +21,11 @@ const PROBLEMAS = [
 
 export function FeaturesSection() {
   return (
-    <section className="bg-ink px-30 py-20">
+    <section className="bg-ink px-4 md:px-12 lg:px-30 py-16 lg:py-20">
       <p className="text-sm font-bold text-brand-2 tracking-wide">
         EL PROBLEMA
       </p>
-      <h2 className="mt-3 text-4xl font-extrabold leading-tight text-white max-w-2xl">
+      <h2 className="mt-3 text-3xl md:text-4xl font-extrabold leading-tight text-white max-w-2xl">
         Una planilla de Excel no es un sistema de biblioteca.
       </h2>
       <p className="mt-4 text-ink-3 max-w-2xl">
@@ -34,7 +34,7 @@ export function FeaturesSection() {
         circulan.
       </p>
 
-      <div className="mt-10 grid grid-cols-3 gap-6">
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
         {PROBLEMAS.map((problema) => (
           <div
             key={problema.titulo}

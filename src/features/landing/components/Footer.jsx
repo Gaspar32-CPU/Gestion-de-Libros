@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="px-30 py-8 border-t border-line bg-bg">
+    <footer className="px-4 md:px-12 lg:px-30 py-8 border-t border-line bg-bg">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-2">
           <img src="/Bookly-png.png" alt="" className="w-8" />

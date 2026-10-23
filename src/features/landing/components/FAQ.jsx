@@ -12,11 +12,6 @@ const PREGUNTAS = [
       'Solo quienes tengan un correo del dominio que configures — por ejemplo @anima.edu.uy. Cada persona que se registra con ese dominio queda asociada a tu organización y suma al cupo de usuarios del plan. Los datos de una organización nunca son visibles para otra.',
   },
   {
-    pregunta: '¿Qué pasa con la planilla de Excel que usamos hoy?',
-    respuesta:
-      'La migramos sin costo en cualquiera de los tres planes. Nos pasás el archivo, lo importamos con títulos, autores, stock y préstamos abiertos, y lo revisamos con ustedes antes de salir en vivo.',
-  },
-  {
     pregunta: '¿Cómo se cuentan los usuarios de cada plan?',
     respuesta:
       'Un usuario es cada persona con cuenta activa que puede pedir libros: estudiantes, docentes y tutores. Los invitados que solo miran el catálogo no consumen cupo, y los administradores se cuentan aparte.',
@@ -47,12 +42,12 @@ export function FAQ() {
   const [abierta, setAbierta] = useState(0)
 
   return (
-    <section id="faq" className="px-30 py-20 bg-bg">
+    <section id="faq" className="px-4 md:px-12 lg:px-30 py-16 lg:py-20 bg-bg">
       <p className="text-sm font-bold text-brand tracking-wide">
         PREGUNTAS FRECUENTES
       </p>
       <div className="mt-3 flex justify-between gap-10 flex-wrap">
-        <h2 className="text-4xl font-extrabold text-ink max-w-md">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-ink max-w-md">
           Lo que suelen preguntarnos
         </h2>
         <p className="text-ink-2 max-w-sm self-end">

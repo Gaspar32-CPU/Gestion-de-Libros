@@ -93,7 +93,7 @@ export default function LibroFormModal({
         className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between px-6 py-4 border-b border-slate-200 sticky top-0 bg-white">
+        <div className="flex items-start justify-between px-4 py-4 sm:px-6 border-b border-slate-200 sticky top-0 bg-white">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
               {esEdicion ? 'Editar libro' : 'Alta de libro'}
@@ -115,7 +115,7 @@ export default function LibroFormModal({
         </div>
 
         {!esEdicion && (
-          <div className="grid grid-cols-2 gap-3 px-6 pt-4">
+          <div className="grid grid-cols-2 gap-3 px-4 pt-4 sm:px-6">
             <ModoCard
               titulo="Carga manual"
               descripcion="Completás todos los datos"
@@ -131,7 +131,7 @@ export default function LibroFormModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
           {!esEdicion && modo === 'isbn' && (
             <BusquedaIsbn onEncontrado={handleEncontradoPorIsbn} />
           )}
@@ -163,7 +163,7 @@ export default function LibroFormModal({
                 />
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <Campo
                   label="Género"
                   name="genero"
@@ -200,7 +200,7 @@ export default function LibroFormModal({
                       name="idioma"
                       value={form.idioma}
                       onChange={handleChange}
-                      className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+                      className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
                     >
                       <option value="" disabled>
                         Seleccioná un idioma
@@ -219,7 +219,7 @@ export default function LibroFormModal({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <Campo
                   label="Código interno"
                   name="codigoInterno"
@@ -275,18 +275,18 @@ export default function LibroFormModal({
             </>
           )}
 
-          <div className="flex items-center justify-end gap-3 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-2">
             <button
               type="button"
               onClick={onCerrar}
-              className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
             >
               Cancelar
             </button>
             {mostrarCampos && (
               <button
                 type="submit"
-                className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] cursor-pointer"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] cursor-pointer"
               >
                 {esEdicion ? 'Guardar cambios' : 'Agregar libro'}
               </button>
@@ -323,7 +323,7 @@ function Campo({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+        className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
       />
     </div>
   )

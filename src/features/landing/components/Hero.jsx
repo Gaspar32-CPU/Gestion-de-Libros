@@ -88,8 +88,8 @@ const COLUMNAS_EN_LOOP = [...COLUMNAS_PREVIEW, ...COLUMNAS_PREVIEW]
 
 export function Hero() {
   return (
-    <section className="flex w-full px-30 bg-bg">
-      <div className="flex flex-col gap-10 w-1/2 py-20">
+    <section className="flex flex-col lg:flex-row w-full px-4 md:px-12 lg:px-30 bg-bg">
+      <div className="flex flex-col gap-10 w-full lg:w-1/2 py-12 lg:py-20">
         <div className="w-fit text-xs font-bold text-ink-2 inline-flex items-center gap-2 bg-white border border-line rounded-full px-4 py-1 shadow-sm">
           <span className="w-2 h-2 rounded-full bg-brand-2"></span>
           <span className="text-sm font-medium text-ink-2">
@@ -97,13 +97,13 @@ export function Hero() {
           </span>
         </div>
         <div>
-          <h1 className="text-5xl font-extrabold leading-none text-ink">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-none text-ink">
             La biblioteca de
           </h1>
-          <h1 className="text-5xl font-extrabold leading-none text-ink">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-none text-ink">
             tu institución,
           </h1>
-          <h1 className="text-5xl font-extrabold leading-none text-brand-d">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-none text-brand-d">
             ordenada de verdad<span className="text-ink">.</span>
           </h1>
           <p className="mt-6 text-lg text-gray-500 max-w-md">
@@ -118,7 +118,7 @@ export function Hero() {
             Ver planes
           </a>
         </div>
-        <div className="flex items-center pt-8 border-t border-line gap-4">
+        <div className="flex flex-wrap items-center pt-8 border-t border-line gap-4">
           <div>
             <p className="text-2xl font-extrabold text-brand-d">2 → 18</p>
             <p className="text-sm text-gray-500">préstamos por semana</p>
@@ -133,7 +133,7 @@ export function Hero() {
           </div>
         </div>
       </div>
-      <div className="w-1/2 flex items-center">
+      <div className="w-full lg:w-1/2 flex items-center">
         <div className="w-full rounded-2xl border border-line bg-white shadow-xl overflow-hidden">
           <div className="flex items-center gap-2 bg-ink px-4 py-3">
             <span className="w-2.5 h-2.5 rounded-full bg-white/30"></span>

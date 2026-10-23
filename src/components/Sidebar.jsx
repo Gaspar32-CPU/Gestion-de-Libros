@@ -10,10 +10,14 @@ export default function Sidebar({
   usuario,
   organizacion,
   configuracion,
+  abierto = false,
+  onCerrar,
 }) {
   const { logout } = useAuth()
   return (
-    <div className="sticky top-0 flex flex-col h-screen w-60 bg-ink text-white/55">
+    <div
+      className={`fixed inset-y-0 left-0 z-50 flex flex-col h-screen w-60 bg-ink text-white/55 transition-transform duration-200 md:sticky md:top-0 md:z-auto md:translate-x-0 ${abierto ? 'translate-x-0' : '-translate-x-full'}`}
+    >
       <div className="border-b border-b-ink-2">
         <div className="flex gap-1.5 items-center px-4 py-4">
           {configuracion?.logo ? (
@@ -48,6 +52,7 @@ export default function Sidebar({
           <NavLink
             key={path}
             to={path}
+            onClick={onCerrar}
             className={({ isActive }) =>
               `flex gap-2 items-center rounded-xl py-2 px-3 ${isActive ? 'text-white bg-ink-2' : 'text-white/60 hover:bg-ink-2'}`
             }
