@@ -60,8 +60,8 @@ export const loginSchema = z.object({
 
 // ---- REGISTRO ----
 export const registerSchema = z.object({
-  nombre: z.string().min(1, 'El nombre es obligatorio').trim(),
-  apellido: z.string().min(1, 'El apellido es obligatorio').trim(),
+  nombre: z.string().trim().min(1, 'El nombre es obligatorio'),
+  apellido: z.string().trim().min(1, 'El apellido es obligatorio'),
   cedula: z
     .string()
     .regex(

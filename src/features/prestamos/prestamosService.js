@@ -2,23 +2,7 @@ import api from '../../services/api'
 
 // Mapeo según GET /api/prestamos/mis-prestamos en backend---gestor-de-libros/index.js:
 // devuelve las filas de "prestamos" con join a "libros" (sin anidar), en snake_case.
-function normalizarPrestamo(prestamo) {
-  return {
-    id: prestamo.id,
-    libro: {
-      titulo: prestamo.titulo,
-      autor: prestamo.autor,
-      portadaUrl: prestamo.portada ?? '',
-    },
-    usuario: prestamo?.nombre_usuario,
-    retiro: prestamo.lugar_retiro ?? '',
-    fechaMaxima: prestamo.fecha_devolucion_esperada ?? null,
-    fechaDevolucion: prestamo.fecha_devolucion_real ?? null,
-    extensionesRealizadas: prestamo.extensiones_realizadas ?? 0,
-    estado: (prestamo.estado ?? '').toUpperCase(),
-    maxExtensiones: prestamo.max_extensiones,
-  }
-}
+import { normalizarPrestamo } from './normalizarPrestamo.js'
 
 export async function obtenerMisPrestamos() {
   const { data } = await api.get('/prestamos/mis-prestamos')

@@ -30,8 +30,12 @@ function calcularProximoDiaRetiro(
   return null // no encontró día hábil en el rango de búsqueda
 }
 
+// Usa la fecha local: toISOString() la pasa a UTC y de noche da el día siguiente
 function formatearFecha(fecha) {
-  return fecha.toISOString().split('T')[0]
+  const anio = fecha.getFullYear()
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0')
+  const dia = String(fecha.getDate()).padStart(2, '0')
+  return `${anio}-${mes}-${dia}`
 }
 
 export const dias = [

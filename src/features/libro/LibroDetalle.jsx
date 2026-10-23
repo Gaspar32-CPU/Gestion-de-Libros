@@ -100,9 +100,8 @@ export const LibroDetalle = () => {
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
 
-  const comentarioValido =
-    nuevoComentario.trim().length >= 100 && nuevoComentario.trim().length <= 600
-  const esLector = usuario?.rol === 'lector'
+  const comentarioValido = nuevoComentario.trim().length >= 50 && nuevoComentario.trim().length <= 600;
+  const esLector = usuario?.rol === "lector";
 
   const handlePrestamo = async (e) => {
     e.preventDefault()
