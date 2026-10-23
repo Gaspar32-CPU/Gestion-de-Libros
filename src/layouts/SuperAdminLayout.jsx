@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import DashboardHeader from '../components/DashboardHeader'
 import {
@@ -10,8 +9,9 @@ import {
   ReportProblem,
 } from '@mui/icons-material'
 import { useAuth } from '../context/useAuth'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useOrganizacion } from '../hooks/useOrganizacion'
+import { useBusquedaPorRuta } from '../hooks/useBusquedaPorRuta'
 import { usePendientesSoporte } from '../features/soporte/usePendientesSoporte'
 
 const OPCIONES = [
@@ -31,9 +31,8 @@ const PLACEHOLDERS_BUSQUEDA = {
 export default function SuperAdminLayout() {
   const { usuario } = useAuth()
   const datosOrganizacion = useOrganizacion(usuario?.organizacionId)
-  const [busqueda, setBusqueda] = useState('')
-  const location = useLocation()
-  const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[location.pathname]
+  const { busqueda, buscar, ruta } = useBusquedaPorRuta()
+  const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[ruta]
   const {
     pendientes: pendientesSoporte,
     reportes: reportesSoporte,
@@ -56,7 +55,8 @@ export default function SuperAdminLayout() {
       />
       <main className="flex-1 min-w-0">
         <DashboardHeader
-          onBuscar={setBusqueda}
+          key={ruta}
+          onBuscar={buscar}
           mostrarBusqueda={!!placeholderBusqueda}
           placeholder={placeholderBusqueda}
         />

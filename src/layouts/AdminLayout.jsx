@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import DashboardHeader from '../components/DashboardHeader'
 import {
@@ -11,8 +10,9 @@ import {
   Settings,
 } from '@mui/icons-material'
 import { useAuth } from '../context/useAuth'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useOrganizacion } from '../hooks/useOrganizacion'
+import { useBusquedaPorRuta } from '../hooks/useBusquedaPorRuta'
 
 const OPCIONES = [
   // { label: 'Panel', icon: DashboardOutlined, path: '/panel' },
@@ -34,9 +34,8 @@ const PLACEHOLDERS_BUSQUEDA = {
 export default function AdminLayout() {
   const { usuario } = useAuth()
   const datosOrganizacion = useOrganizacion(usuario?.organizacionId)
-  const [busqueda, setBusqueda] = useState('')
-  const location = useLocation()
-  const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[location.pathname]
+  const { busqueda, buscar, ruta } = useBusquedaPorRuta()
+  const placeholderBusqueda = PLACEHOLDERS_BUSQUEDA[ruta]
 
   return (
     <div className="flex">
@@ -48,7 +47,8 @@ export default function AdminLayout() {
       />
       <main className="flex-1 min-w-0">
         <DashboardHeader
-          onBuscar={setBusqueda}
+          key={ruta}
+          onBuscar={buscar}
           mostrarBusqueda={!!placeholderBusqueda}
           placeholder={placeholderBusqueda}
         />
