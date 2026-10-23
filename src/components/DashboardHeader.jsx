@@ -50,11 +50,11 @@ export default function DashboardHeader({
           </form>
         )}
 
-        <IconButton aria-label="Notificaciones">
+        {/* <IconButton aria-label="Notificaciones">
           <Badge badgeContent={notificaciones} color="error">
             <NotificationsNoneOutlined className="text-ink-2" />
           </Badge>
-        </IconButton>
+        </IconButton> */}
       </div>
     </header>
   )
