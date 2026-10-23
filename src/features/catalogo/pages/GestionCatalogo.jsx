@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useOutletContext } from 'react-router-dom'
 import {
   AddRounded,
   EditOutlined,
@@ -6,6 +7,7 @@ import {
 } from '@mui/icons-material'
 import LibroFormModal from '../components/LibroFormModal'
 import { esColorPortada } from '../../../utils/portada'
+import { normalizarTexto } from '../../../utils/normalizarTexto'
 import {
   obtenerLibros,
   crearLibro,
@@ -20,6 +22,8 @@ function mensajeDeError(err, fallback) {
 }
 
 export default function GestionCatalogo() {
+
+  const { busqueda = '' } = useOutletContext() ?? {}
   const [libros, setLibros] = useState([])
   const [libroEnEdicion, setLibroEnEdicion] = useState(null) // null = cerrado, {} = crear, libro = editar
   const [libroAEliminar, setLibroAEliminar] = useState(null)
@@ -31,6 +35,15 @@ export default function GestionCatalogo() {
       .then(setLibros)
       .catch((err) => console.error('Error al traer el catálogo', err))
   }, [])
+
+  const terminoBusqueda = normalizarTexto(busqueda.trim())
+  const librosFiltrados = terminoBusqueda
+    ? libros.filter(
+        (libro) =>
+          normalizarTexto(libro.titulo).includes(terminoBusqueda) ||
+          normalizarTexto(libro.autor).includes(terminoBusqueda),
+      )
+    : libros
 
   const handleGuardar = async (datos) => {
     setErrorGuardado('')
@@ -104,7 +117,17 @@ export default function GestionCatalogo() {
               </tr>
             </thead>
             <tbody>
-              {libros.map((libro) => (
+              {terminoBusqueda && librosFiltrados.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-4 py-8 text-center text-sm text-slate-500"
+                  >
+                    No encontramos libros que coincidan con tu búsqueda.
+                  </td>
+                </tr>
+              )}
+              {librosFiltrados.map((libro) => (
                 <tr
                   key={libro.id}
                   className="border-b border-slate-100 last:border-0 hover:bg-slate-50"
