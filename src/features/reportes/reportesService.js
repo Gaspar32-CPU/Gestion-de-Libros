@@ -1,5 +1,9 @@
 import api from '../../services/api';
 
+// Largo máximo de la descripción de un reporte y del comentario de
+// resolución. Mismo límite que valida el backend (MAX_CARACTERES_REPORTE).
+export const MAX_CARACTERES_REPORTE = 500;
+
 // GET /api/secciones: devuelve [{ id, nombre }] ordenadas para el selector.
 export async function obtenerSecciones() {
   const { data } = await api.get('/secciones');

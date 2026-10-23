@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { obtenerSecciones, enviarReporte } from '../reportesService';
+import { obtenerSecciones, enviarReporte, MAX_CARACTERES_REPORTE } from '../reportesService';
 
 // Estilos tomados del prototipo (Bookly.html → "REPORT PROBLEM").
 const COLOR_BORDE = 'border-[#E7E2D7]';
@@ -117,12 +117,16 @@ export default function ReportarProblema() {
             setErrores((prev) => ({ ...prev, descripcion: '' }));
           }}
           placeholder="Describí el problema con el mayor detalle posible…"
+          maxLength={MAX_CARACTERES_REPORTE}
           aria-invalid={Boolean(errores.descripcion)}
           className={`${estiloCampo} min-h-[120px] resize-y p-3 ${errores.descripcion ? COLOR_BORDE_ERROR : COLOR_BORDE}`}
         />
-        {errores.descripcion && (
-          <p className="mt-1.5 text-[13px] font-semibold text-[#D9534F]">{errores.descripcion}</p>
-        )}
+        <div className="mt-1.5 flex justify-between gap-3">
+          <p className="text-[13px] font-semibold text-[#D9534F]">{errores.descripcion}</p>
+          <p className="shrink-0 text-xs text-[#8A9AAB]">
+            {descripcion.length}/{MAX_CARACTERES_REPORTE}
+          </p>
+        </div>
 
         {errorEnvio && <p className="mt-4 text-[13px] font-semibold text-[#D9534F]">{errorEnvio}</p>}
 

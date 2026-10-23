@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Select from '../../../components/Select';
 import { cambiarEstadoReporte } from '../soporteService';
-import { obtenerSecciones } from '../../reportes/reportesService';
+import { obtenerSecciones, MAX_CARACTERES_REPORTE } from '../../reportes/reportesService';
 import { avisarCambioSoporte } from '../usePendientesSoporte';
 
 // Estilos tomados del prototipo (Bookly.html → "SOPORTE").
@@ -13,15 +13,15 @@ const ESTADOS = {
 };
 
 const FILTROS_ESTADO = [
+  { id: 'todos', label: 'Todos los estados' },
   { id: 'abierto', label: 'Abiertos' },
   { id: 'en_revision', label: 'En curso' },
   { id: 'resuelto', label: 'Resueltos' },
-  { id: 'todos', label: 'Todos los estados' },
 ];
 
 const ROLES = {
   lector: 'Lector',
-  admin: 'Administrador',
+  admin: 'Admin',
 };
 
 const BOTON_BLANCO =
@@ -53,7 +53,7 @@ export default function Soporte() {
   const [cargandoSecciones, setCargandoSecciones] = useState(true);
   const [errorSecciones, setErrorSecciones] = useState('');
 
-  const [filtroEstado, setFiltroEstado] = useState('abierto');
+  const [filtroEstado, setFiltroEstado] = useState('todos');
   const [filtroVista, setFiltroVista] = useState('todas');
 
   // Ids con una petición en curso (puede haber más de una fila a la vez).
@@ -246,14 +246,18 @@ export default function Soporte() {
                       setErrorComentario('');
                     }}
                     placeholder="Contá qué cambios aplicaste o cómo se solucionó…"
+                    maxLength={MAX_CARACTERES_REPORTE}
                     aria-invalid={Boolean(errorComentario)}
                     className={`mt-[7px] block min-h-[90px] w-full resize-y rounded-[10px] border-[1.5px] bg-white p-3 text-sm text-[#16324F] outline-none focus:border-[#12A594] ${
                       errorComentario ? 'border-[#D9534F]' : 'border-[#E7E2D7]'
                     }`}
                   />
-                  {errorComentario && (
-                    <p className="mt-1.5 text-[13px] font-semibold text-[#D9534F]">{errorComentario}</p>
-                  )}
+                  <div className="mt-1.5 flex justify-between gap-3">
+                    <p className="text-[13px] font-semibold text-[#D9534F]">{errorComentario}</p>
+                    <p className="shrink-0 text-xs text-[#8A9AAB]">
+                      {comentario.length}/{MAX_CARACTERES_REPORTE}
+                    </p>
+                  </div>
                   <div className="mt-3 flex justify-end gap-2">
                     <button type="button" disabled={ocupado} onClick={cerrarResolucion} className={BOTON_BLANCO}>
                       Cancelar
