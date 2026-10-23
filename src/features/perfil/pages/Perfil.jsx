@@ -4,7 +4,7 @@ import { obtenerIniciales } from '../../../utils/obtenerIniciales';
 import { urlArchivo } from '../../../utils/urlArchivo';
 import { obtenerPerfil, actualizarPerfil, subirFoto, quitarFoto } from '../perfilService';
 
-const ETIQUETAS_ROL = { lector: 'Lector', admin: 'Administrador', 'super-admin': 'Super admin' };
+export const ETIQUETAS_ROL = { lector: 'Lector', admin: 'Administrador', 'super-admin': 'Super admin' };
 
 const TIPOS_FOTO_ACEPTADOS = ['image/png', 'image/jpeg', 'image/webp'];
 const MAX_SIZE_MB_FOTO = 2;

@@ -1,7 +1,10 @@
 import { KeyboardArrowRight } from '@mui/icons-material'
 import { urlArchivo } from '../utils/urlArchivo'
+import { ETIQUETAS_ROL } from '../features/perfil/pages/Perfil';
 
 export default function UsuarioAvatar({ iniciales, nombre, rol, foto }) {
+    const rolEtiqueta = ETIQUETAS_ROL[rol] ?? rol;
+  
   return (
     <div className="flex gap-2 items-center justify-between w-full min-w-0">
       <div className="flex gap-2 items-center px-2 py-3 min-w-0 flex-1">
@@ -12,7 +15,7 @@ export default function UsuarioAvatar({ iniciales, nombre, rol, foto }) {
           <p className="font-bold text-sm text-white truncate hover:underline">
             {nombre}
           </p>
-          <p className="text-xs font-semibold text-white/55 truncate">{rol}</p>
+          <p className="text-xs font-semibold text-white/55 truncate">{rolEtiqueta}</p>
         </div>
       </div>
       <KeyboardArrowRight fontSize="small" className="shrink-0" />
