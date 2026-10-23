@@ -22,13 +22,13 @@ export function PricingCard({ plan, ciclo, onContratar }) {
 
       <div className="mt-5 pt-5 border-t border-line">
         <p className="flex items-end gap-1">
-          <span className="text-sm font-bold text-ink-2">US$</span>
+          <span className="text-sm font-bold text-ink-2">$</span>
           <span className="text-4xl font-extrabold text-ink">{precio}</span>
           <span className="text-sm text-ink-3">/{esAnual ? 'año' : 'mes'}</span>
         </p>
         <p className="mt-1 text-xs text-ink-3">
           {esAnual
-            ? `Equivale a US$ ${equivalenteMensualAnual(plan)}/mes · 2 meses sin cargo`
+            ? `Equivale a $ ${equivalenteMensualAnual(plan)}/mes · 2 meses sin cargo`
             : 'Facturación mensual, sin contrato mínimo'}
         </p>
       </div>

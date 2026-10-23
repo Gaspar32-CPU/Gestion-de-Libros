@@ -291,7 +291,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                 </div>
                 <div className="text-right">
                   <p className="text-xl font-extrabold text-ink">
-                    US$ {precio}
+                    $ {precio}
                   </p>
                   <p className="text-xs text-ink-3">por {periodo}</p>
                 </div>
@@ -417,7 +417,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                 { titulo: 'Cuenta de administrador', detalle: datos.correo },
                 {
                   titulo: `Plan ${plan.nombre} activo`,
-                  detalle: `US$ ${precio} por ${periodo}`,
+                  detalle: `$ ${precio} por ${periodo}`,
                 },
                 {
                   titulo: 'Identidad configurada',

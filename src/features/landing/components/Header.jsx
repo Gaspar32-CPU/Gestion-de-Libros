@@ -29,9 +29,6 @@ export function Header() {
           <a href="#planes" className="hover:text-gray-800">
             Planes
           </a>
-          <a href="#comparativa" className="hover:text-gray-800">
-            Comparativa
-          </a>
           <a href="#faq" className="hover:text-gray-800">
             Preguntas
           </a>

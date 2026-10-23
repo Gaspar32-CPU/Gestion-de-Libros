@@ -79,7 +79,7 @@ export function PlanesSection() {
             ))}
           </div>
           <p className="mt-8 text-sm text-ink-3">
-            Precios en dólares, por organización. Al contratar se crea tu
+            Precios en pesos uruguayos, por organización. Al contratar se crea tu
             organización y su cuenta de administrador —{' '}
             <a href="#faq" className="underline hover:text-ink-2">
               cómo funciona
