@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 import { loginSchema } from '../../../../schemas/auth.schema'
 import { useAuth } from '../../../context/useAuth'
@@ -103,12 +103,12 @@ export function LoginForm() {
         autoComplete="current-password"
       />
 
-      <a
-        href="#"
+      <Link
+        to="/recuperar-contrasena"
         className="mb-5 mt-2.5 block text-right text-[0.8rem] text-[#14877a] no-underline hover:underline focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
       >
         ¿Olvidaste tu contraseña?
-      </a>
+      </Link>
 
       {error && (
         <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">{error}</p>

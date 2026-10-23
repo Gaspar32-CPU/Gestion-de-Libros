@@ -4,6 +4,8 @@ import { Routes, Route } from 'react-router-dom'
 import Login from '../features/auth/pages/login'
 import Register from '../features/auth/pages/register'
 import CrearContrasena from '../features/auth/pages/CrearContrasena'
+import RecuperarPasswordPage from '../features/auth/pages/RecuperarPasswordPage'
+import RestablecerContrasena from '../features/auth/pages/RestablecerContrasena'
 import { RutaProtegida } from '../components/RutaProtegida'
 import { RutaPublica } from '../components/RutaPublica'
 import LandingPage from '../features/landing/pages/LandingPage'
@@ -22,6 +24,7 @@ import Perfil from '../features/perfil/pages/Perfil'
 import { Configuracion } from '../features/configuraciones/pages/Configuracion'
 import ReportarProblema from '../features/reportes/pages/ReportarProblema'
 import Soporte from '../features/soporte/pages/Soporte'
+import { Organizaciones } from '../features/organizaciones/pages/Organizaciones'
 
 export default function AppRoutes() {
   return (
@@ -39,12 +42,20 @@ export default function AppRoutes() {
         <Route element={<RutaPublica />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/recuperar-contrasena"
+            element={<RecuperarPasswordPage />}
+          />
         </Route>
         <Route path="/libro/:id" element={<LibroDetalle />} />
         {/* Ruta suelta (no dentro de RutaPublica): un usuario invitado no
             tiene sesión, pero si un admin logueado abre el link no tiene
             sentido que RutaPublica lo mande a /catalogo antes de ver esto. */}
         <Route path="/crear-contrasena" element={<CrearContrasena />} />
+        <Route
+          path="/restablecer-contrasena"
+          element={<RestablecerContrasena />}
+        />
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
 
@@ -70,7 +81,7 @@ export default function AppRoutes() {
           <Route element={<RutaPorRol rolesPermitidos={['super-admin']} />}>
             <Route element={<SuperAdminLayout />}>
               {/* <Route path="/plataforma" element={<></>} /> */}
-              <Route path="/organizaciones" element={<></>} />
+              <Route path="/organizaciones" element={<Organizaciones />} />
               {/* <Route path="/planes" element={<></>} /> */}
               <Route path="/soporte" element={<Soporte />} />
               {/* <Route path="/auditoria" element={<></>} /> */}

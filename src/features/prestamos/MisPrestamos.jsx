@@ -2,8 +2,7 @@ import { useOutletContext } from 'react-router-dom'
 import PrestamosPanel from './components/PrestamosPanel'
 import {
   obtenerMisPrestamos,
-  marcarPrestamoDevuelto,
-  marcarPrestamoRetirado,
+  cancelarPrestamo,
   extenderPrestamo,
 } from './prestamosService'
 
@@ -17,8 +16,7 @@ export default function MisPrestamos() {
       busqueda={busqueda}
       cargarPrestamos={obtenerMisPrestamos}
       mostrarExtender
-      onMarcarRetirado={marcarPrestamoRetirado}
-      onMarcarDevuelto={marcarPrestamoDevuelto}
+      onCancelar={cancelarPrestamo}
       onExtender={extenderPrestamo}
     />
   )

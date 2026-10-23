@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { crearContrasenaSchema } from '../../../../schemas/auth.schema'
 
-export function CrearContrasenaForm() {
+export function CrearContrasenaForm({
+  endpoint = '/auth/crear-contrasena',
+  mensajeSinToken = 'Este link no es válido. Pedile al administrador que te reenvíe la invitación.',
+  textoBoton = 'Crear contraseña',
+  textoCargando = 'Creando...',
+}) {
   const [searchParams] = useSearchParams()
   const token = searchParams.get('token')
 
@@ -16,10 +21,7 @@ export function CrearContrasenaForm() {
 
   if (!token) {
     return (
-      <p className="text-[0.95rem] text-[#c0392b]">
-        Este link no es válido. Pedile al administrador que te reenvíe la
-        invitación.
-      </p>
+      <p className="text-[0.95rem] text-[#c0392b]">{mensajeSinToken}</p>
     )
   }
 
@@ -57,14 +59,11 @@ export function CrearContrasenaForm() {
     setLoading(true)
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/crear-contrasena`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token, ...result.data }),
-        },
-      )
+      const res = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, ...result.data }),
+      })
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
@@ -124,7 +123,7 @@ export function CrearContrasenaForm() {
         className="mt-5 w-full cursor-pointer rounded-[10px] border-none bg-[#14877a] py-3.5 text-[0.95rem] font-semibold text-white transition-colors hover:bg-[#0f5c53] disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#0f5c53]"
         disabled={loading}
       >
-        {loading ? 'Creando...' : 'Crear contraseña'}
+        {loading ? textoCargando : textoBoton}
       </button>
 
       <p className="mt-6 text-center text-[0.85rem] text-[#6b7770]">

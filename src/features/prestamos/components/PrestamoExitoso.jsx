@@ -1,41 +1,80 @@
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { puedeRetirarManana } from '../utils/horarios'
 
+const MESES = [
+  'ene',
+  'feb',
+  'mar',
+  'abr',
+  'may',
+  'jun',
+  'jul',
+  'ago',
+  'sep',
+  'oct',
+  'nov',
+  'dic',
+]
+
+// Horario que se muestra si la organización todavía no configuró el suyo
+// (configuraciones.horarios = NULL). 0 = domingo, 6 = sábado.
+const HORARIO_POR_DEFECTO = {
+  0: null,
+  1: { apertura: '08:00', cierre: '18:00' },
+  2: { apertura: '08:00', cierre: '18:00' },
+  3: { apertura: '08:00', cierre: '18:00' },
+  4: { apertura: '08:00', cierre: '18:00' },
+  5: { apertura: '08:00', cierre: '18:00' },
+  6: null,
+}
+
+function horariosPorDia(horarios) {
+  if (!Array.isArray(horarios)) return HORARIO_POR_DEFECTO
+  return Object.fromEntries(
+    horarios.map((h) => [
+      h.dia,
+      h.abierto ? { apertura: h.apertura, cierre: h.cierre } : null,
+    ]),
+  )
+}
+
+function formatearFecha(fechaStr) {
+  if (!fechaStr) return null
+  const fecha = new Date(fechaStr)
+  return `${fecha.getDate()} ${MESES[fecha.getMonth()]} ${fecha.getFullYear()}`
+}
+
 export default function PrestamoExitoso() {
   const { state } = useLocation()
   const navigate = useNavigate()
   const libro = state?.libro
+  const prestamo = state?.prestamo
 
   // Si alguien llega directo a esta URL (sin pasar por la solicitud de
   // préstamo) no hay datos del libro que mostrar: lo mandamos al catálogo.
-  if (!libro) {
+  if (!libro || !prestamo) {
     return <Navigate to="/catalogo" replace />
   }
 
-  const lugarRetiro = 'Sala de tutores'
-  const fechaDevolucion = '12 ago 2026'
-  const cantidadExtensiones = 2
-  const extensible = cantidadExtensiones > 1
+  const lugarRetiro = prestamo.lugar_retiro ?? 'A confirmar'
+  const lugarDevolucion = prestamo.lugar_devolucion ?? lugarRetiro
+  const fechaDevolucion = formatearFecha(prestamo.fecha_devolucion_esperada)
+  const horarioDevolucion = prestamo.horario_devolucion
+  const cantidadExtensiones = prestamo.permite_extension
+    ? prestamo.max_extensiones
+    : 0
+  const extensible = cantidadExtensiones > 0
 
-  // Horario de la institución, por día de la semana (0 = domingo, 6 = sábado)
-  const horarioInstitucion = {
-    0: null, // domingo cerrado
-    1: { apertura: '08:00', cierre: '18:00' }, // lunes
-    2: { apertura: '08:00', cierre: '18:00' },
-    3: { apertura: '08:00', cierre: '18:00' },
-    4: { apertura: '08:00', cierre: '18:00' },
-    5: { apertura: '08:00', cierre: '18:00' },
-    6: { apertura: '09:00', cierre: '13:00' }, // sábado medio día
-  }
-
-  // Excepciones puntuales (feriados, cierres especiales) como strings "YYYY-MM-DD"
-  const feriados = ['2026-09-18', '2026-12-25']
+  const horarioInstitucion = horariosPorDia(prestamo.horarios)
+  const feriados = []
 
   const resultado = puedeRetirarManana(horarioInstitucion, feriados)
 
   const mensaje = resultado.disponibleManana
     ? `Podés retirar tu préstamo mañana, ${resultado.dia} (${resultado.fecha}), en el horario de ${resultado.horario}.`
-    : `Mañana la institución no atiende. Tu próximo día disponible para retirar es el ${resultado.proximoDisponible.diaSemana} ${resultado.proximoDisponible.fecha}, de ${resultado.proximoDisponible.apertura} a ${resultado.proximoDisponible.cierre}.`
+    : resultado.proximoDisponible
+      ? `Mañana la institución no atiende. Tu próximo día disponible para retirar es el ${resultado.proximoDisponible.diaSemana} ${resultado.proximoDisponible.fecha}, de ${resultado.proximoDisponible.apertura} a ${resultado.proximoDisponible.cierre}.`
+      : 'Consultá con tu institución cuándo podés retirarlo.'
 
   return (
     <div className="flex flex-col items-center w-[calc(100%-2rem)] sm:w-3/5 p-6 sm:p-10 bg-white rounded-lg shadow-md mx-auto my-6 sm:my-10">
@@ -83,8 +122,13 @@ export default function PrestamoExitoso() {
             {fechaDevolucion}
           </div>
           <div className="text-[12.5px] text-ink-2 font-semibold mt-0.5">
-            30 días ·{' '}
-            {extensible && `Lo puedes extender ${cantidadExtensiones} veces`}
+            {horarioDevolucion && `Hasta las ${horarioDevolucion.cierre} · `}
+            {lugarDevolucion}
+          </div>
+          <div className="text-[12.5px] text-ink-2 font-semibold mt-0.5">
+            {prestamo.dias_prestamo} días
+            {extensible &&
+              ` · Lo podés extender ${cantidadExtensiones} ${cantidadExtensiones === 1 ? 'vez' : 'veces'}`}
           </div>
         </div>
       </div>

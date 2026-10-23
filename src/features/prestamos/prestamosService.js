@@ -26,6 +26,11 @@ export async function marcarPrestamoRetirado(id) {
   return normalizarPrestamo(data)
 }
 
+export async function cancelarPrestamo(id) {
+  const { data } = await api.patch(`/prestamos/${id}/cancelar`)
+  return normalizarPrestamo(data)
+}
+
 export async function extenderPrestamo(id) {
   const { data } = await api.patch(`/prestamos/mis-prestamos/${id}/extender`)
   return normalizarPrestamo(data)

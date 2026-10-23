@@ -58,6 +58,10 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
 })
 
+export const recuperarSchema = z.object({
+  correo: loginSchema.shape.email,
+})
+
 // ---- REGISTRO ----
 export const registerSchema = z.object({
   nombre: z.string().trim().min(1, 'El nombre es obligatorio'),
