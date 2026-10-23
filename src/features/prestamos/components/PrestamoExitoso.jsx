@@ -38,7 +38,7 @@ export default function PrestamoExitoso() {
     : `Mañana la institución no atiende. Tu próximo día disponible para retirar es el ${resultado.proximoDisponible.diaSemana} ${resultado.proximoDisponible.fecha}, de ${resultado.proximoDisponible.apertura} a ${resultado.proximoDisponible.cierre}.`
 
   return (
-    <div className="flex flex-col items-center w-3/5 p-10 bg-white rounded-lg shadow-md mx-auto my-10">
+    <div className="flex flex-col items-center w-[calc(100%-2rem)] sm:w-3/5 p-6 sm:p-10 bg-white rounded-lg shadow-md mx-auto my-6 sm:my-10">
       <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-50 mb-4">
         <svg
           className="w-12 h-12 text-green-600"
@@ -64,7 +64,7 @@ export default function PrestamoExitoso() {
         <span className="font-semibold text-gray-900">{libro.titulo}</span>.
         Aprobación automática, sin esperas.
       </p>
-      <div className="grid grid-cols-2 gap-3.5 my-7 text-left">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 my-7 w-full text-left">
         <div className="bg-bg rounded-[13px] p-4">
           <div className="text-[11.5px] font-bold text-ink-3 uppercase tracking-[0.04em]">
             Retiro en
@@ -89,17 +89,17 @@ export default function PrestamoExitoso() {
         </div>
       </div>
 
-      <div className="flex gap-3 justify-center">
+      <div className="flex flex-col sm:flex-row gap-3 justify-center w-full">
         <button
           onClick={() => navigate('/prestamos')}
-          className="px-6 py-3.5 rounded-xl bg-brand text-white text-[15px] font-extrabold cursor-pointer border-none shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)]"
+          className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-brand text-white text-[15px] font-extrabold cursor-pointer border-none shadow-[0_6px_18px_-8px_rgba(0,0,0,0.45)]"
         >
           Ver mis préstamos
         </button>
 
         <button
           onClick={() => navigate('/catalogo')}
-          className="px-6 py-3.5 rounded-xl bg-white text-ink text-[15px] font-bold cursor-pointer border border-line"
+          className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white text-ink text-[15px] font-bold cursor-pointer border border-line"
         >
           Seguir explorando
         </button>

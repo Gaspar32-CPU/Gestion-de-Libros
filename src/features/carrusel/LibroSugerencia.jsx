@@ -34,7 +34,7 @@ export const LibroSugerencia = ({
       <div className="absolute inset-0 bg-black/40 rounded-sm" />
       <div className="relative z-10 px-2 size-full flex flex-col items-start justify-between">
         <p className="text-gray-300 text-sm pl-2 pt-3">{genero}</p>
-        <div className="pl-2 pb-3 pr-12 text-start">
+        <div className="pl-2 pb-3 pr-4 lg:pr-12 text-start">
           <h3 className="mt-3 text-sm font-semibold text-white">{titulo}</h3>
           <p className="text-gray-400 text-xs">{autor}</p>
         </div>

@@ -48,7 +48,7 @@ export default function BusquedaIsbn({ onEncontrado }) {
 
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-      <div className="flex items-end gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-end gap-3">
         <div className="flex-1">
           <label
             htmlFor="busqueda-isbn"
@@ -62,14 +62,14 @@ export default function BusquedaIsbn({ onEncontrado }) {
             value={isbn}
             onChange={(e) => setIsbn(e.target.value)}
             placeholder="978-84-376-0494-7"
-            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
           />
         </div>
         <button
           type="button"
           onClick={handleBuscar}
           disabled={loading}
-          className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
         >
           {loading ? 'Buscando...' : 'Buscar'}
         </button>
