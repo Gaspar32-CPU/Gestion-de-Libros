@@ -23,7 +23,68 @@ const LIBROS_PREVIEW = [
     disponible: true,
     color: 'bg-purple-700',
   },
+  {
+    titulo: 'Rayuela',
+    autor: 'Julio Cortázar',
+    disponible: true,
+    color: 'bg-teal-700',
+  },
+  {
+    titulo: '1984',
+    autor: 'George Orwell',
+    disponible: false,
+    color: 'bg-slate-700',
+  },
+  {
+    titulo: 'La tregua',
+    autor: 'Mario Benedetti',
+    disponible: true,
+    color: 'bg-rose-700',
+  },
+  {
+    titulo: 'Don Quijote de la Mancha',
+    autor: 'Miguel de Cervantes',
+    disponible: true,
+    color: 'bg-yellow-700',
+  },
+  {
+    titulo: 'Cuentos de amor de locura y de muerte',
+    autor: 'Horacio Quiroga',
+    disponible: false,
+    color: 'bg-emerald-700',
+  },
+  {
+    titulo: 'Orgullo y prejuicio',
+    autor: 'Jane Austen',
+    disponible: true,
+    color: 'bg-pink-700',
+  },
+  {
+    titulo: 'El túnel',
+    autor: 'Ernesto Sabato',
+    disponible: true,
+    color: 'bg-indigo-700',
+  },
+  {
+    titulo: 'Crónica de una muerte anunciada',
+    autor: 'García Márquez',
+    disponible: false,
+    color: 'bg-red-800',
+  },
 ]
+
+// Columnas de 2 libros: el cuadro muestra 2 columnas a la vez.
+const COLUMNAS_PREVIEW = Array.from(
+  { length: Math.ceil(LIBROS_PREVIEW.length / 2) },
+  (_, i) => LIBROS_PREVIEW.slice(i * 2, i * 2 + 2),
+)
+
+// Cuánto tarda una columna en cruzar el cuadro. Más alto = más lento.
+const SEGUNDOS_POR_COLUMNA = 8
+
+// Las columnas van dos veces seguidas para que el desplazamiento continuo
+// (animate-desplazar-mitad en index.css) vuelva a empezar sin saltos.
+const COLUMNAS_EN_LOOP = [...COLUMNAS_PREVIEW, ...COLUMNAS_PREVIEW]
 
 export function Hero() {
   return (
@@ -86,32 +147,53 @@ export function Hero() {
             <div className="rounded-xl border border-line bg-bg px-4 py-2 text-sm text-ink-3">
               ⌕ Buscar por título, autor o género…
             </div>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {LIBROS_PREVIEW.map((libro) => (
-                <div
-                  key={libro.titulo}
-                  className="flex items-start gap-3 rounded-xl border border-line p-3"
-                >
+            <div className="mt-4 -mx-1.5 overflow-hidden">
+              {/* El cuadro muestra 2 columnas: la tira mide (columnas / 2)
+                  veces el ancho del cuadro. */}
+              <div
+                className="flex animate-desplazar-mitad"
+                style={{
+                  width: `${(COLUMNAS_EN_LOOP.length / 2) * 100}%`,
+                  animationDuration: `${COLUMNAS_PREVIEW.length * SEGUNDOS_POR_COLUMNA}s`,
+                }}
+              >
+                {COLUMNAS_EN_LOOP.map((columna, i) => (
                   <div
-                    className={`w-9 h-12 rounded ${libro.color} shrink-0`}
-                  ></div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-ink truncate">
-                      {libro.titulo}
-                    </p>
-                    <p className="text-xs text-ink-3 truncate">{libro.autor}</p>
-                    <span
-                      className={`mt-1 inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                        libro.disponible
-                          ? 'bg-brand-2/20 text-brand-d'
-                          : 'bg-red-100 text-red-600'
-                      }`}
-                    >
-                      {libro.disponible ? 'Disponible' : 'No disponible'}
-                    </span>
+                    key={i}
+                    aria-hidden={i >= COLUMNAS_PREVIEW.length}
+                    className="shrink-0 px-1.5 flex flex-col gap-3"
+                    style={{ width: `${100 / COLUMNAS_EN_LOOP.length}%` }}
+                  >
+                    {columna.map((libro) => (
+                      <div
+                        key={libro.titulo}
+                        className="flex items-start gap-3 rounded-xl border border-line p-3"
+                      >
+                        <div
+                          className={`w-9 h-12 rounded ${libro.color} shrink-0`}
+                        ></div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-ink truncate">
+                            {libro.titulo}
+                          </p>
+                          <p className="text-xs text-ink-3 truncate">
+                            {libro.autor}
+                          </p>
+                          <span
+                            className={`mt-1 inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                              libro.disponible
+                                ? 'bg-brand-2/20 text-brand-d'
+                                : 'bg-red-100 text-red-600'
+                            }`}
+                          >
+                            {libro.disponible ? 'Disponible' : 'No disponible'}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>

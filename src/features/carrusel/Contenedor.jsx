@@ -1,74 +1,56 @@
-import { useEffect, useRef, useCallback } from 'react'
-import { IconButton } from '@mui/material'
-import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded'
 import { Link } from 'react-router-dom'
 import { LibroSugerencia } from './LibroSugerencia'
 
-const INTERVALO_AUTOSCROLL_MS = 3000
+// Cuánto tarda un libro en cruzar su lugar en el carrusel. Más alto = más lento.
+const SEGUNDOS_POR_LIBRO = 5
+
+// Máximo de libros visibles a la vez (lg: 1/5 del ancho).
+const MAX_VISIBLES = 5
 
 const Contenedor = ({ libros = [] }) => {
-  const scrollRef = useRef(null)
+  if (libros.length === 0) return null
 
-  const desplazar = useCallback((direccion) => {
-    const contenedor = scrollRef.current
-    if (!contenedor) return
+  // Una "vuelta" tiene que llenar el ancho visible: con pocos libros se
+  // repiten hasta llegar a MAX_VISIBLES, así nunca queda un hueco vacío.
+  const vuelta = Array.from(
+    { length: Math.ceil(MAX_VISIBLES / libros.length) },
+    () => libros,
+  ).flat()
 
-    const primerItem = contenedor.firstElementChild
-    const anchoItem = primerItem
-      ? primerItem.getBoundingClientRect().width
-      : contenedor.clientWidth
-    const maxScroll = contenedor.scrollWidth - contenedor.clientWidth
-
-    if (direccion === 'derecha' && contenedor.scrollLeft >= maxScroll - 1) {
-      contenedor.scrollTo({ left: 0, behavior: 'smooth' })
-    } else if (direccion === 'izquierda' && contenedor.scrollLeft <= 0) {
-      contenedor.scrollTo({ left: maxScroll, behavior: 'smooth' })
-    } else {
-      contenedor.scrollBy({
-        left: direccion === 'derecha' ? anchoItem : -anchoItem,
-        behavior: 'smooth',
-      })
-    }
-  }, [])
-
-  // avance automatico del carrusel
-  useEffect(() => {
-    const intervalo = setInterval(
-      () => desplazar('derecha'),
-      INTERVALO_AUTOSCROLL_MS,
-    )
-    return () => clearInterval(intervalo)
-  }, [desplazar])
+  // La vuelta va dos veces seguidas para que el desplazamiento continuo
+  // (animate-desplazar-mitad en index.css) vuelva a empezar sin saltos.
+  const librosEnLoop = [...vuelta, ...vuelta]
 
   return (
-    <div className="flex items-center gap-2 w-full">
-      <IconButton onClick={() => desplazar('izquierda')} size="small">
-        <ArrowBackIosRoundedIcon />
-      </IconButton>
-
+    // @container: los anchos de los libros (cqw) son relativos al carrusel,
+    // no a la tira que se mueve, que es más ancha.
+    <div className="@container w-full overflow-hidden py-2">
       <div
-        ref={scrollRef}
-        className="flex flex-1 min-w-0 overflow-x-auto scrollbar-hide scroll-smooth py-2"
+        className="flex w-max animate-desplazar-mitad"
+        style={{ animationDuration: `${vuelta.length * SEGUNDOS_POR_LIBRO}s` }}
       >
-        {libros.map((libro) => (
-          <Link
-            key={libro.id}
-            to={`/libro/${libro.id}`}
-            className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 shrink-0 px-2 block no-underline"
-          >
-            <LibroSugerencia
-              portadaUrl={libro.portadaUrl}
-              titulo={libro.titulo}
-              genero={libro.genero}
-              autor={libro.autor}
-            />
-          </Link>
-        ))}
+        {librosEnLoop.map((libro, i) => {
+          // Solo la primera aparición de cada libro es navegable con teclado
+          // y lectores de pantalla; las repeticiones son decorativas.
+          const esRepeticion = i >= libros.length
+          return (
+            <Link
+              key={i}
+              to={`/libro/${libro.id}`}
+              aria-hidden={esRepeticion}
+              tabIndex={esRepeticion ? -1 : undefined}
+              className="w-[50cqw] sm:w-[33.333cqw] md:w-[25cqw] lg:w-[20cqw] shrink-0 px-2 block no-underline"
+            >
+              <LibroSugerencia
+                portadaUrl={libro.portadaUrl}
+                titulo={libro.titulo}
+                genero={libro.genero}
+                autor={libro.autor}
+              />
+            </Link>
+          )
+        })}
       </div>
-
-      <IconButton onClick={() => desplazar('derecha')} size="small">
-        <ArrowBackIosRoundedIcon style={{ transform: 'rotate(180deg)' }} />
-      </IconButton>
     </div>
   )
 }
