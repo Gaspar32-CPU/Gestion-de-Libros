@@ -1,4 +1,4 @@
-import { dias } from '../../prestamos/utils/horarios'
+import { dias } from '../../prestamos/utils/horarios.js'
 
 export function completarHorarios(horarios) {
   const lista = Array.isArray(horarios) ? horarios : []
