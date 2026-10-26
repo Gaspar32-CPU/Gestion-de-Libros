@@ -42,8 +42,8 @@ export function LoginForm() {
         const data = await res.json().catch(() => ({}))
         const mensajesPersonalizados = {
           CREDENCIALES_INVALIDAS: 'El correo o la contraseña son incorrectos.',
-          CUENTA_BLOQUEADA:
-            'Tu cuenta está bloqueada, contactá al administrador.',
+          CUENTA_BLOQUEADA: 'Tu cuenta está bloqueada, contactá al administrador.',
+          USUARIO_INACTIVO: 'El usuario no está activo.',
         }
 
         throw new Error(
