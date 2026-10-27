@@ -146,7 +146,7 @@ export default function LibroFormModal({
         className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-start justify-between px-4 py-4 sm:px-6 border-b border-slate-200 sticky top-0 bg-white">
+        <div className="flex items-start justify-between px-4 py-4 sm:px-6 border-b border-slate-200 sticky top-0 z-10 bg-white">
           <div>
             <h2 className="text-xl font-bold text-slate-900">
               {esEdicion ? 'Editar libro' : 'Alta de libro'}
