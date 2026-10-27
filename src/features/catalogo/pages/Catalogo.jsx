@@ -22,6 +22,7 @@ export default function Catalogo() {
   const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos')
   const [idiomaFilter, setIdiomaFilter] = useState('Todos')
   const [ordenarPor, setOrdenarPor] = useState('relevancia')
+  let mejorValorados = [];
 
   useEffect(() => {
     obtenerLibros()
@@ -33,6 +34,8 @@ export default function Catalogo() {
     () => ['Todos', ...new Set(libros.flatMap((libro) => libro.generos))],
     [libros],
   )
+
+  libros.map((libro) => libro.puntuacion > 3 && mejorValorados.push(libro))
 
   const idiomas = useMemo(
     () => [
@@ -103,12 +106,14 @@ export default function Catalogo() {
         </p>
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-base font-bold text-slate-900 mb-3">
-          Nuevos ingresos y más leídos
-        </h2>
-        <Contenedor libros={libros} />
-      </div>
+      {mejorValorados.length > 5 && (
+        <div className="mb-8">
+          <h2 className="text-base font-bold text-slate-900 mb-3">
+            Nuevos ingresos y más leídos
+          </h2>
+          <Contenedor libros={mejorValorados} />
+        </div>
+      )}
 
       <FiltrosBusqueda
         generos={generos}
