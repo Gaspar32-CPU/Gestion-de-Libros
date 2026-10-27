@@ -27,6 +27,7 @@ function normalizarLibro(libro) {
     ejemplaresTotales: libro.stock,
     idioma: libro.idioma || '',
     codigoInterno: libro.codigo_interno || '',
+    fechaCreacion: libro.fecha_creacion
   }
 }
 

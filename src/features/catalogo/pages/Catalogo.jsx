@@ -22,7 +22,7 @@ export default function Catalogo() {
   const [disponibilidadFilter, setDisponibilidadFilter] = useState('Todos')
   const [idiomaFilter, setIdiomaFilter] = useState('Todos')
   const [ordenarPor, setOrdenarPor] = useState('relevancia')
-  let mejorValorados = [];
+  const [ahora] = useState(() => Date.now())
 
   useEffect(() => {
     obtenerLibros()
@@ -35,7 +35,31 @@ export default function Catalogo() {
     [libros],
   )
 
-  libros.map((libro) => libro.puntuacion > 3 && mejorValorados.push(libro))
+  const mejorValorados = useMemo(
+    () => libros.filter((libro) => libro.puntuacion > 3),
+    [libros],
+  )
+
+  const DIAS_LIBRO_RECIENTE = 45
+  const librosRecientes = useMemo(() => {
+    const limite = ahora - DIAS_LIBRO_RECIENTE * 24 * 60 * 60 * 1000
+    return libros.filter(
+      (libro) =>
+        libro.fechaCreacion && new Date(libro.fechaCreacion).getTime() >= limite,
+    )
+  }, [libros, ahora])
+
+  // Un libro puede ser reciente y estar bien valorado a la vez: se combinan
+  // los dos arreglos y se descartan los ids repetidos antes de mostrarlos.
+  const nuevosYMejorValorados = useMemo(() => {
+    const combinados = [...librosRecientes, ...mejorValorados]
+    const idsVistos = new Set()
+    return combinados.filter((libro) => {
+      if (idsVistos.has(libro.id)) return false
+      idsVistos.add(libro.id)
+      return true
+    })
+  }, [librosRecientes, mejorValorados])
 
   const idiomas = useMemo(
     () => [
@@ -106,12 +130,12 @@ export default function Catalogo() {
         </p>
       </div>
 
-      {mejorValorados.length > 5 && (
+      {nuevosYMejorValorados.length > 7 && (
         <div className="mb-8">
           <h2 className="text-base font-bold text-slate-900 mb-3">
-            Nuevos ingresos y más leídos
+            Nuevos ingresos y mejor valorados
           </h2>
-          <Contenedor libros={mejorValorados} />
+          <Contenedor libros={nuevosYMejorValorados} />
         </div>
       )}
 
