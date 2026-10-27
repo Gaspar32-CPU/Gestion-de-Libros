@@ -11,6 +11,7 @@ export default function LibroCard({ libro }) {
     descripcion,
     ejemplaresLibres,
     puntuacion,
+    totalResenas,
   } = libro
 
   const disponible = ejemplaresLibres > 0
@@ -54,7 +55,7 @@ export default function LibroCard({ libro }) {
             {disponible ? 'Disponible' : 'No disponible'}
           </span>
           <span className="flex items-center gap-1 text-sm font-semibold text-slate-700">
-            {libro.resenas.length === 0 ? (
+            {totalResenas === 0 ? (
               <span className="text-xs font-semibold text-ink-3">Sin reseñas</span>
             ) : (
               <>

@@ -19,7 +19,9 @@ function normalizarLibro(libro) {
       ? Number(String(libro.fecha_pub).slice(0, 4))
       : undefined,
     descripcion: libro.resumen || '',
-    resenas: libro.resenas,
+    // El listado no trae las reseñas completas (eso vive en /libros/:id/resenas),
+    // solo el total para saber si hay que mostrar "Sin reseñas" o el puntaje.
+    totalResenas: Number(libro.total_resenas) || 0,
     puntuacion: Number(libro.promedio_estrellas) || 0,
     ejemplaresLibres: libro.disponibles,
     ejemplaresTotales: libro.stock,
