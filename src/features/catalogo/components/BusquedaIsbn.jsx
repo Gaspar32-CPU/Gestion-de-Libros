@@ -30,7 +30,7 @@ export default function BusquedaIsbn({ onEncontrado }) {
         titulo: data.libro.titulo ?? '',
         autor: data.libro.autor ?? '',
         anio: data.libro.anio ?? '',
-        genero: data.libro.genero ?? '',
+        generos: data.libro.genero ? [data.libro.genero] : [],
         editorial: data.libro.editorial ?? '',
         descripcion: data.libro.descripcion ?? '',
         portadaUrl: data.libro.portada ?? '',

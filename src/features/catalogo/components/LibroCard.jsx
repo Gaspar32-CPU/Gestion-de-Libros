@@ -24,7 +24,7 @@ export default function LibroCard({ libro }) {
         className="rounded-none"
         key={libro.id}
         portadaUrl={libro.portadaUrl}
-        genero={libro.genero}
+        genero={libro.generos.join(', ')}
       />
 
       <div className="p-4 flex flex-col grow">

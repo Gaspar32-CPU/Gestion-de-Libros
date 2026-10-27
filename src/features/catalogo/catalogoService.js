@@ -8,7 +8,7 @@ function normalizarLibro(libro) {
     portadaUrl: libro.portada || '',
     titulo: libro.titulo,
     autor: libro.autor,
-    genero: libro.genero,
+    generos: libro.generos ?? [],
     editorial: libro.editorial,
     isbn: libro.isbn,
     // Se saca el año del string en vez de usar Date().getFullYear(): fecha_pub
@@ -64,7 +64,7 @@ function aCuerpoLibro(datos) {
   return {
     titulo: datos.titulo,
     autor: datos.autor,
-    genero: datos.genero,
+    generos: datos.generos,
     editorial: datos.editorial || null,
     isbn: datos.isbn || null,
     fecha_pub: datos.anio ? `${datos.anio}-01-01` : null,

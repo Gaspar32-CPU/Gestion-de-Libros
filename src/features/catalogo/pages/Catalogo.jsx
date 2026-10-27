@@ -30,7 +30,7 @@ export default function Catalogo() {
   }, [])
 
   const generos = useMemo(
-    () => ['Todos', ...new Set(libros.map((libro) => libro.genero))],
+    () => ['Todos', ...new Set(libros.flatMap((libro) => libro.generos))],
     [libros],
   )
 
@@ -57,7 +57,7 @@ export default function Catalogo() {
           (libro.isbn || '').replace(/[\s-]/g, '').includes(terminoIsbn))
 
       const coincideGenero =
-        generoFilter === 'Todos' || libro.genero === generoFilter
+        generoFilter === 'Todos' || libro.generos.includes(generoFilter)
 
       const disponible = libro.ejemplaresLibres > 0
       const coincideDisponibilidad =

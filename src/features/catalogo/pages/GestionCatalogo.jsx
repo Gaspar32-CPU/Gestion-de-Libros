@@ -163,7 +163,7 @@ export default function GestionCatalogo() {
                     data-label="Género"
                     className="flex justify-between gap-3 px-0 py-1.5 text-slate-600 whitespace-nowrap md:table-cell md:px-4 md:py-3 before:content-[attr(data-label)] before:text-xs before:font-semibold before:uppercase before:text-slate-400 md:before:content-none"
                   >
-                    {libro.genero}
+                    {libro.generos.join(', ')}
                   </td>
                   <td
                     data-label="Ejemplares"

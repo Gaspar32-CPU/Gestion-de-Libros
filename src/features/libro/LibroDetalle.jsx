@@ -183,7 +183,7 @@ export const LibroDetalle = () => {
         {/* Columna Derecha */}
         <div className="grow min-w-0">
           <span className="text-[#1fa48a] text-[11px] font-bold tracking-[1px] uppercase">
-            {libro.genero}
+            {libro.generos.join(', ')}
           </span>
           <h1 className="text-[#092e40] text-3xl font-bold mt-1 mb-1.25 tracking-tight">
             {libro.titulo}

@@ -2,14 +2,59 @@ import { useState } from 'react'
 import { Close, KeyboardArrowDown } from '@mui/icons-material'
 import PortadaInput from './PortadaInput'
 import BusquedaIsbn from './BusquedaIsbn'
+import { useEffect } from 'react'
+import MultiSelect from './MultiSelect'
 
-const IDIOMAS = ['Español', 'Inglés', 'Portugués', 'Francés', 'Otro']
+const IDIOMAS = [
+  'Español',
+  'Inglés',
+  'Portugués',
+  'Francés',
+  'Italiano',
+  'Alemán',
+  'Gallego',
+  'Latín',
+  'Griego',
+  'Chino',
+  'Japonés',
+  'Coreano',
+  'Neerlandés',
+  'Sueco',
+  'Polaco',
+  'Turco',
+  'Guaraní',
+  'Otro',
+]
+// Se guarda el texto tal cual (como en la base), así que value y label son iguales.
+const GENEROS = [
+  'Ficción',
+  'Novela histórica',
+  'Fantasía',
+  'Ciencia ficción',
+  'Misterio',
+  'Thriller',
+  'Terror',
+  'Romance',
+  'Aventura',
+  'Humor',
+  'Poesía',
+  'Teatro',
+  'Biografía',
+  'Historia',
+  'Ciencia',
+  'Filosofía',
+  'Autoayuda',
+  'Negocios y economía',
+  'Infantil',
+  'Cocina',
+  'Otros',
+].map((genero) => ({ value: genero, label: genero }));
 
 const LIBRO_VACIO = {
   portadaUrl: '',
   titulo: '',
   autor: '',
-  genero: '',
+  generos: [],
   editorial: '',
   anio: '',
   idioma: '',
@@ -42,6 +87,14 @@ export default function LibroFormModal({
   // búsqueda encontró un libro (o siempre, si es edición o carga manual).
   const mostrarCampos = esEdicion || modo === 'manual' || isbnListo
 
+  useEffect(() => {
+    const overflowOriginal = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = overflowOriginal
+    }
+  }, [])
+
   const handleModoChange = (nuevoModo) => {
     setModo(nuevoModo)
     if (nuevoModo === 'isbn') setIsbnListo(false)
@@ -65,7 +118,7 @@ export default function LibroFormModal({
     e.preventDefault()
     setError('')
 
-    if (!form.titulo.trim() || !form.autor.trim() || !form.genero.trim()) {
+    if (!form.titulo.trim() || !form.autor.trim() || form.generos.length === 0) {
       setError('Título, autor y género son obligatorios.')
       return
     }
@@ -164,14 +217,28 @@ export default function LibroFormModal({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                <Campo
-                  label="Género"
-                  name="genero"
-                  value={form.genero}
-                  onChange={handleChange}
-                  placeholder="Ej. Novela"
-                  required
-                />
+                <div>
+                  <label
+                    htmlFor="generos"
+                    className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
+                  >
+                    Género
+                  </label>
+                  <div className="relative">
+                    <MultiSelect
+                      id="generos"
+                      options={GENEROS}
+                      value={form.generos}
+                      onChange={(generos) => setForm((prev) => ({ ...prev, generos }))}
+                      placeholder="Ej: Poesía"
+                      required
+                    />
+                    <KeyboardArrowDown
+                      fontSize="small"
+                      className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400"
+                    />
+                  </div>
+                </div>
                 <Campo
                   label="Editorial"
                   name="editorial"
@@ -203,7 +270,7 @@ export default function LibroFormModal({
                       className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
                     >
                       <option value="" disabled>
-                        Seleccioná un idioma
+                        Idioma
                       </option>
                       {IDIOMAS.map((idioma) => (
                         <option key={idioma} value={idioma}>
