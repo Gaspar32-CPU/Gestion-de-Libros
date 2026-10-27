@@ -54,8 +54,14 @@ export default function LibroCard({ libro }) {
             {disponible ? 'Disponible' : 'No disponible'}
           </span>
           <span className="flex items-center gap-1 text-sm font-semibold text-slate-700">
-            <span className="text-amber-400">★</span>
-            {puntuacion.toFixed(1)}
+            {libro.resenas.length === 0 ? (
+              <span className="text-xs font-semibold text-ink-3">Sin reseñas</span>
+            ) : (
+              <>
+                <span className="text-amber-400">★</span>
+                {puntuacion.toFixed(1)}
+              </>
+            )}
           </span>
         </div>
       </div>

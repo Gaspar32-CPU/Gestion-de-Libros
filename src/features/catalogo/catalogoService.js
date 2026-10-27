@@ -19,6 +19,7 @@ function normalizarLibro(libro) {
       ? Number(String(libro.fecha_pub).slice(0, 4))
       : undefined,
     descripcion: libro.resumen || '',
+    resenas: libro.resenas,
     puntuacion: Number(libro.promedio_estrellas) || 0,
     ejemplaresLibres: libro.disponibles,
     ejemplaresTotales: libro.stock,
