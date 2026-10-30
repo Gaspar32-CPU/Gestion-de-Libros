@@ -9,6 +9,7 @@ function normalizarPerfil(usuario) {
     cedula: usuario.CI ?? '',
     correo: usuario.correo ?? '',
     telefono: usuario.telefono ?? '',
+    notificaciones: usuario.notificacionesActivadas === 'TRUE',
   };
 }
 
@@ -25,6 +26,7 @@ export async function actualizarPerfil(id, datos) {
     apellido: datos.apellido,
     correo: datos.correo,
     telefono: datos.telefono,
+    notificacionesActivadas: datos.notificaciones ? 'TRUE' : 'FALSE',
   };
   if (datos.contrasena) cuerpo.contrasena = datos.contrasena;
 
