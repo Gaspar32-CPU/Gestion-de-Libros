@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../../services/api'
 import {
@@ -50,6 +50,14 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
   const [datos, setDatos] = useState(INICIAL)
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
+
+  useEffect(() => {
+    const overflowOriginal = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = overflowOriginal
+    }
+  }, [])
 
   const precio = precioDelPlan(plan, ciclo)
   const periodo = ciclo === 'anual' ? 'año' : 'mes'

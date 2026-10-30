@@ -8,7 +8,7 @@ function normalizarLibro(libro) {
     portadaUrl: libro.portada || '',
     titulo: libro.titulo,
     autor: libro.autor,
-    genero: libro.genero,
+    generos: libro.generos ?? [],
     editorial: libro.editorial,
     isbn: libro.isbn,
     // Se saca el año del string en vez de usar Date().getFullYear(): fecha_pub
@@ -19,11 +19,15 @@ function normalizarLibro(libro) {
       ? Number(String(libro.fecha_pub).slice(0, 4))
       : undefined,
     descripcion: libro.resumen || '',
+    // El listado no trae las reseñas completas (eso vive en /libros/:id/resenas),
+    // solo el total para saber si hay que mostrar "Sin reseñas" o el puntaje.
+    totalResenas: Number(libro.total_resenas) || 0,
     puntuacion: Number(libro.promedio_estrellas) || 0,
     ejemplaresLibres: libro.disponibles,
     ejemplaresTotales: libro.stock,
     idioma: libro.idioma || '',
     codigoInterno: libro.codigo_interno || '',
+    fechaCreacion: libro.fecha_creacion
   }
 }
 
@@ -64,7 +68,7 @@ function aCuerpoLibro(datos) {
   return {
     titulo: datos.titulo,
     autor: datos.autor,
-    genero: datos.genero,
+    generos: datos.generos,
     editorial: datos.editorial || null,
     isbn: datos.isbn || null,
     fecha_pub: datos.anio ? `${datos.anio}-01-01` : null,

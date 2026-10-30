@@ -44,7 +44,7 @@ const Contenedor = ({ libros = [] }) => {
               <LibroSugerencia
                 portadaUrl={libro.portadaUrl}
                 titulo={libro.titulo}
-                genero={libro.genero}
+                genero={libro.generos.join(', ')}
                 autor={libro.autor}
               />
             </Link>

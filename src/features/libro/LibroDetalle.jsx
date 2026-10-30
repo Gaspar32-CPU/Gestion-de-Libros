@@ -100,7 +100,7 @@ export const LibroDetalle = () => {
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
 
-  const comentarioValido = nuevoComentario.trim().length >= 50 && nuevoComentario.trim().length <= 600;
+  const comentarioValido = nuevoComentario.trim().length >= 10 && nuevoComentario.trim().length <= 600;
   const esLector = usuario?.rol === "lector";
 
   const handlePrestamo = async (e) => {
@@ -183,7 +183,7 @@ export const LibroDetalle = () => {
         {/* Columna Derecha */}
         <div className="grow min-w-0">
           <span className="text-[#1fa48a] text-[11px] font-bold tracking-[1px] uppercase">
-            {libro.genero}
+            {libro.generos.join(', ')}
           </span>
           <h1 className="text-[#092e40] text-3xl font-bold mt-1 mb-1.25 tracking-tight">
             {libro.titulo}
@@ -227,14 +227,6 @@ export const LibroDetalle = () => {
               </span>
               <span className="text-sm font-semibold text-[#092e40] break-words">
                 {libro.editorial}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
-                EDICIÓN
-              </span>
-              <span className="text-sm font-semibold text-[#092e40] break-words">
-                {libro.edicion}
               </span>
             </div>
           </div>
@@ -329,27 +321,31 @@ export const LibroDetalle = () => {
           {error && <p className="text-xs text-red-500">{error}</p>}
 
           {/* Listado de Reseñas */}
-          <h3 className="text-[#092e40] text-lg font-bold mb-5">Reseñas</h3>
-          <div className="space-y-5">
-            {resenas.map((resena) => (
-              <div key={resena.id} className="flex gap-3.75">
-                <div className="w-8.75 h-8.75 bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
-                  {obtenerIniciales(resena.usuario)}
-                </div>
-                <div className="grow min-w-0">
-                  <p className="text-sm font-semibold text-[#092e40] flex flex-wrap items-center gap-1.5 break-words">
-                    {resena.usuario}
-                    <span className="text-[#f59e0b] text-[10px] ml-1 tracking-[1px]">
-                      {renderEstrellas(resena.calificacion)}
-                    </span>
-                  </p>
-                  <p className="text-sm text-[#64748b] mt-0.75 break-words">
-                    {resena.comentario}
-                  </p>
-                </div>
+          {resenas.length !== 0 && (
+            <>
+              <h3 className="text-[#092e40] text-lg font-bold mb-5">Reseñas</h3>
+              <div className="space-y-5">
+                {resenas.map((resena) => (
+                  <div key={resena.id} className="flex gap-3.75">
+                    <div className="w-8.75 h-8.75 bg-[#84cc16] text-white rounded-full flex items-center justify-center text-xs font-bold shrink-0">
+                      {obtenerIniciales(resena.usuario)}
+                    </div>
+                    <div className="grow min-w-0">
+                      <p className="text-sm font-semibold text-[#092e40] flex flex-wrap items-center gap-1.5 break-words">
+                        {resena.usuario}
+                        <span className="text-[#f59e0b] text-[10px] ml-1 tracking-[1px]">
+                          {renderEstrellas(resena.calificacion)}
+                        </span>
+                      </p>
+                      <p className="text-sm text-[#64748b] mt-0.75 break-words">
+                        {resena.comentario}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
       </div>
     </div>

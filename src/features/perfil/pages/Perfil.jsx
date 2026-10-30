@@ -45,6 +45,7 @@ export default function Perfil() {
       .then((datos) => {
         setPerfil(datos);
         setForm({ ...FORM_VACIO, foto: datos.foto, nombre: datos.nombre, apellido: datos.apellido, telefono: datos.telefono });
+        setNotificarNovedades(datos.notificaciones);
       })
       .catch((err) => {
         console.error('Error al traer el perfil', err);
@@ -97,6 +98,7 @@ export default function Perfil() {
     if (form.foto?.startsWith('blob:')) URL.revokeObjectURL(form.foto);
     setArchivoFoto(null);
     setForm({ ...FORM_VACIO, foto: perfil.foto, nombre: perfil.nombre, apellido: perfil.apellido, telefono: perfil.telefono });
+    setNotificarNovedades(perfil.notificaciones);
     setCambiandoContrasena(false);
     setErrores({});
     setError('');
@@ -108,6 +110,7 @@ export default function Perfil() {
     form.nombre.trim() !== perfil.nombre ||
     form.apellido.trim() !== perfil.apellido ||
     form.telefono.trim() !== perfil.telefono ||
+    notificarNovedades !== perfil.notificaciones ||
     form.contrasena !== ''
   );
 
@@ -149,11 +152,13 @@ export default function Perfil() {
         correo: perfil.correo,
         telefono: form.telefono.trim(),
         contrasena: form.contrasena,
+        notificaciones: notificarNovedades,
       });
       if (form.foto?.startsWith('blob:')) URL.revokeObjectURL(form.foto);
       setArchivoFoto(null);
       setPerfil(actualizado);
       setForm((prev) => ({ ...prev, foto: actualizado.foto, nombre: actualizado.nombre, apellido: actualizado.apellido, telefono: actualizado.telefono, contrasena: '', confirmarContrasena: '' }));
+      setNotificarNovedades(actualizado.notificaciones);
       actualizarUsuario({ nombre: actualizado.nombre, apellido: actualizado.apellido, foto: actualizado.foto });
       setCambiandoContrasena(false);
       setExito('Todo guardado');

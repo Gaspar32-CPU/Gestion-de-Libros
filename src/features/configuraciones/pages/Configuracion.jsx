@@ -257,16 +257,16 @@ export function Configuracion() {
           {error ? (
             <p className="text-red-600">{error}</p>
           ) : hayCambios && faltanObligatorios ? (
-            <p className="text-gray-500">
+            <p className="text-red-500">
               El nombre de la app y el lugar de retiro son obligatorios.
             </p>
           ) : hayCambios && diaInvalido ? (
-            <p className="text-gray-500">
+            <p className="text-red-500">
               El {nombreDia(diaInvalido.dia).toLowerCase()} tiene que abrir
               antes de cerrar.
             </p>
           ) : hayCambios ? (
-            <p className="text-gray-500">Tenés cambios sin guardar.</p>
+            <p className="text-red-500">Tenés cambios sin guardar.</p>
           ) : null}
         </div>
         <div className="flex w-full gap-2 sm:w-auto">
