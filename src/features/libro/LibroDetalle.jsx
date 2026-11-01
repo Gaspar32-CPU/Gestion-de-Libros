@@ -97,6 +97,8 @@ export const LibroDetalle = () => {
   }
 
   const esDisponible = libro.ejemplaresLibres > 0
+  const yaLoTiene = libro.yaLoTiene
+
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
 
@@ -240,11 +242,11 @@ export const LibroDetalle = () => {
             {esLector && (
               <>
                 <button
-                  disabled={!esDisponible}
+                  disabled={!esDisponible || yaLoTiene}
                   onClick={handlePrestamo}
                   className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  {esDisponible ? (
+                  {esDisponible && !yaLoTiene ? (
                     <>
                       Solicitar Préstamo
                       <ArrowBack
@@ -263,7 +265,7 @@ export const LibroDetalle = () => {
                   )}
                 </button>
                 {error && (
-                  <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">
+                  <p className="mt-1 ml-1 mb-4 text-[0.85rem] text-[#c0392b]">
                     {error}
                   </p>
                 )}
