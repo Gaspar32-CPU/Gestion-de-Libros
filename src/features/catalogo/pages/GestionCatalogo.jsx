@@ -91,7 +91,11 @@ export default function GestionCatalogo() {
             Gestión de catálogo
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            {libros.length} libros en el catálogo
+            {libros.length !== 1 ? (
+              <span>{libros.length} libros en el catálogo</span>
+            ) : (
+              <span>{libros.length} libro en el catálogo</span>
+            )}
           </p>
         </div>
         <button
