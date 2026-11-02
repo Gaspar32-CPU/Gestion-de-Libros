@@ -99,7 +99,10 @@ export default function GestionCatalogo() {
           </p>
         </div>
         <button
-          onClick={() => setLibroEnEdicion({})}
+          onClick={() => {
+            setErrorGuardado('')
+            setLibroEnEdicion({})
+          }}
           className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] transition-colors cursor-pointer"
         >
           <AddRounded fontSize="small" />
@@ -184,7 +187,10 @@ export default function GestionCatalogo() {
                   <td className="block px-0 pt-2 md:table-cell md:px-4 md:py-3 before:content-none">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        onClick={() => setLibroEnEdicion(libro)}
+                        onClick={() => {
+                          setErrorGuardado('')
+                          setLibroEnEdicion(libro)
+                        }}
                         aria-label={`Editar ${libro.titulo}`}
                         className="p-2.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
                       >
@@ -213,7 +219,10 @@ export default function GestionCatalogo() {
         <LibroFormModal
           libro={libroEnEdicion}
           onGuardar={handleGuardar}
-          onCerrar={() => setLibroEnEdicion(null)}
+          onCerrar={() => {
+            setErrorGuardado('')
+            setLibroEnEdicion(null)
+          }}
           errorExterno={errorGuardado}
         />
       )}
