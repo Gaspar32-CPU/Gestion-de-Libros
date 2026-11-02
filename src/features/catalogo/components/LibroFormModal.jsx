@@ -219,6 +219,7 @@ export default function LibroFormModal({
                   value={form.titulo}
                   onChange={handleChange}
                   placeholder="Ej. Cien años de soledad"
+                  maxLength={255}
                   required
                 />
                 <Campo
@@ -392,6 +393,7 @@ function Campo({
   type = 'text',
   required = false,
   placeholder,
+  maxLength,
 }) {
   return (
     <div>
@@ -409,6 +411,7 @@ function Campo({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
+        maxLength={maxLength}
         className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
       />
     </div>
