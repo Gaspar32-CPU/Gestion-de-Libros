@@ -112,7 +112,7 @@ export default function GestionCatalogo() {
           <table className="w-full text-sm block md:table">
             <thead className="hidden md:table-header-group">
               <tr className="border-b border-slate-200 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                <th className="px-4 py-3">Libro</th>
+                <th className="px-4 py-3 md:w-92 md:max-w-92">Libro</th>
                 <th className="px-4 py-3">Género</th>
                 <th className="px-4 py-3">Ejemplares</th>
                 <th className="px-4 py-3">Puntuación</th>
@@ -135,7 +135,7 @@ export default function GestionCatalogo() {
                   key={libro.id}
                   className="block mb-3 p-4 rounded-xl border border-slate-200 bg-white md:mb-0 md:p-0 md:table-row md:rounded-none md:border-0 md:border-b md:border-slate-100 md:last:border-0 md:bg-transparent hover:bg-slate-50"
                 >
-                  <td className="block px-0 mb-3 md:mb-0 md:table-cell md:px-4 md:py-3 before:content-none">
+                  <td className="block px-0 mb-3 md:mb-0 md:table-cell md:w-92 md:max-w-92 md:px-4 md:py-3 before:content-none">
                     <div className="flex items-center gap-3">
                       {esColorPortada(libro.portadaUrl) || !libro.portadaUrl ? (
                         <div
@@ -154,7 +154,7 @@ export default function GestionCatalogo() {
                         />
                       )}
                       <div className="min-w-0">
-                        <p className="font-semibold text-slate-900 truncate">
+                        <p className="font-semibold text-slate-900 truncate" title={libro.titulo}>
                           {libro.titulo}
                         </p>
                         <p className="text-xs text-slate-500 truncate">
