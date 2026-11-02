@@ -118,8 +118,23 @@ export default function LibroFormModal({
     e.preventDefault()
     setError('')
 
-    if (!form.titulo.trim() || !form.autor.trim() || form.generos.length === 0) {
-      setError('Título, autor y género son obligatorios.')
+    const faltantes = [
+      !form.titulo.trim() && 'Título',
+      !form.autor.trim() && 'Autor',
+      form.generos.length === 0 && 'Género',
+      !String(form.editorial ?? '').trim() && 'Editorial',
+      !form.anio && 'Año de publicación',
+      !form.idioma && 'Idioma',
+      (form.stock === '' || form.stock == null) && 'Stock',
+    ].filter(Boolean)
+    if (faltantes.length > 0) {
+      setError(`Completá los campos obligatorios: ${faltantes.join(', ')}.`)
+      return
+    }
+
+    const anio = Number(form.anio)
+    if (!Number.isInteger(anio) || anio > new Date().getFullYear()) {
+      setError('El año de publicación no puede ser posterior al año actual.')
       return
     }
 
@@ -184,7 +199,7 @@ export default function LibroFormModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="p-4 sm:p-6 space-y-4">
           {!esEdicion && modo === 'isbn' && (
             <BusquedaIsbn onEncontrado={handleEncontradoPorIsbn} />
           )}
@@ -245,14 +260,17 @@ export default function LibroFormModal({
                   value={form.editorial}
                   onChange={handleChange}
                   placeholder="Ej. Sudamericana"
+                  required
                 />
                 <Campo
                   label="Año de publicación"
                   name="anio"
                   type="number"
+                  max={new Date().getFullYear()}
                   value={form.anio}
                   onChange={handleChange}
                   placeholder="Ej. 1967"
+                  required
                 />
                 <div>
                   <label
@@ -268,6 +286,7 @@ export default function LibroFormModal({
                       value={form.idioma}
                       onChange={handleChange}
                       className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
+                      required
                     >
                       <option value="" disabled>
                         Idioma
