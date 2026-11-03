@@ -2,7 +2,7 @@ import api from '../../services/api'
 
 // Traduce las columnas de la tabla `libros` (MySQL) a los nombres que ya
 // usan los componentes del catálogo, para no tener que tocarlos a todos.
-function normalizarLibro(libro) {
+export function normalizarLibro(libro) {
   return {
     id: libro.id,
     portadaUrl: libro.portada || '',

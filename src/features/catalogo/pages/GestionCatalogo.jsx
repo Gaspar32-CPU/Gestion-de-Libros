@@ -4,8 +4,11 @@ import {
   AddRounded,
   EditOutlined,
   DeleteOutlineOutlined,
+  UploadFileOutlined,
 } from '@mui/icons-material'
 import LibroFormModal from '../components/LibroFormModal'
+import ExcelsSelector from '../../excels/components/excelsSelector'
+import { importacionActiva } from '../../excels/excelsService'
 import { esColorPortada } from '../../../utils/portada'
 import { normalizarTexto } from '../../../utils/normalizarTexto'
 import {
@@ -28,11 +31,18 @@ export default function GestionCatalogo() {
   const [libroAEliminar, setLibroAEliminar] = useState(null)
   const [errorGuardado, setErrorGuardado] = useState('')
   const [errorEliminar, setErrorEliminar] = useState('')
+  // Abierto de entrada si quedó una importación en curso
+  const [mostrarImportar, setMostrarImportar] = useState(
+    () => importacionActiva() !== null,
+  )
 
-  useEffect(() => {
+  const cargarLibros = () =>
     obtenerLibros()
       .then(setLibros)
       .catch((err) => console.error('Error al traer el catálogo', err))
+
+  useEffect(() => {
+    cargarLibros()
   }, [])
 
   const terminoBusqueda = normalizarTexto(busqueda.trim())
@@ -98,17 +108,28 @@ export default function GestionCatalogo() {
             )}
           </p>
         </div>
-        <button
-          onClick={() => {
-            setErrorGuardado('')
-            setLibroEnEdicion({})
-          }}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] transition-colors cursor-pointer"
-        >
-          <AddRounded fontSize="small" />
-          Crear libro
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => setMostrarImportar((visible) => !visible)}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer"
+          >
+            <UploadFileOutlined fontSize="small" />
+            Importar Excel
+          </button>
+          <button
+            onClick={() => {
+              setErrorGuardado('')
+              setLibroEnEdicion({})
+            }}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] transition-colors cursor-pointer"
+          >
+            <AddRounded fontSize="small" />
+            Crear libro
+          </button>
+        </div>
       </div>
+
+      {mostrarImportar && <ExcelsSelector onImportado={cargarLibros} />}
 
       <div className="md:bg-white md:rounded-xl md:border md:border-slate-200 md:shadow-sm md:overflow-hidden">
         <div className="overflow-x-auto">
