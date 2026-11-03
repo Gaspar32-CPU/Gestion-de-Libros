@@ -123,8 +123,6 @@ export default function LibroFormModal({
       !form.autor.trim() && 'Autor',
       form.generos.length === 0 && 'Género',
       !String(form.editorial ?? '').trim() && 'Editorial',
-      !form.anio && 'Año de publicación',
-      !form.idioma && 'Idioma',
       (form.stock === '' || form.stock == null) && 'Stock',
     ].filter(Boolean)
     if (faltantes.length > 0) {
@@ -132,8 +130,9 @@ export default function LibroFormModal({
       return
     }
 
+    // El año es opcional: solo se valida si se completó
     const anio = Number(form.anio)
-    if (!Number.isInteger(anio) || anio > new Date().getFullYear()) {
+    if (form.anio && (!Number.isInteger(anio) || anio > new Date().getFullYear())) {
       setError('El año de publicación no puede ser posterior al año actual.')
       return
     }
@@ -270,15 +269,15 @@ export default function LibroFormModal({
                   max={new Date().getFullYear()}
                   value={form.anio}
                   onChange={handleChange}
-                  placeholder="Ej. 1967"
-                  required
+                  placeholder="Ej. 1967 (opcional)"
                 />
                 <div>
                   <label
                     htmlFor="idioma"
                     className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
                   >
-                    Idioma
+                    Idioma{}
+                    <span className="font-normal normal-case text-slate-400">(opcional)</span>
                   </label>
                   <div className="relative">
                     <select
@@ -287,11 +286,8 @@ export default function LibroFormModal({
                       value={form.idioma}
                       onChange={handleChange}
                       className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
-                      required
                     >
-                      <option value="" disabled>
-                        Idioma
-                      </option>
+                      <option value="">Sin especificar</option>
                       {IDIOMAS.map((idioma) => (
                         <option key={idioma} value={idioma}>
                           {idioma}

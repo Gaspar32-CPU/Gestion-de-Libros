@@ -17,6 +17,28 @@ import {
   actualizarLibro,
   eliminarLibro,
 } from '../catalogoService'
+import InformacionModal from '../../excels/components/informacionModal'
+
+// Heroicons "information-circle" (outline). Va inline para no sumar una dependencia.
+function InformationCircleIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+      />
+    </svg>
+  )
+}
 
 // El back manda un mensaje legible en la mayoría de los errores (400, 404, 409);
 // si no vino nada usable, mostramos algo genérico en vez de romper.
@@ -28,6 +50,7 @@ export default function GestionCatalogo() {
   const { busqueda = '' } = useOutletContext() ?? {}
   const [libros, setLibros] = useState([])
   const [libroEnEdicion, setLibroEnEdicion] = useState(null) // null = cerrado, {} = crear, libro = editar
+  const [informacionModalVisible, setInformacionModalVisible] = useState(false)
   const [libroAEliminar, setLibroAEliminar] = useState(null)
   const [errorGuardado, setErrorGuardado] = useState('')
   const [errorEliminar, setErrorEliminar] = useState('')
@@ -109,13 +132,20 @@ export default function GestionCatalogo() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => setMostrarImportar((visible) => !visible)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer"
-          >
-            <UploadFileOutlined fontSize="small" />
-            Importar Excel
-          </button>
+          <div className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer">
+            <button
+              onClick={() => setMostrarImportar((visible) => !visible)}
+              className="cursor-pointer"
+            >
+              Importar Excel
+            </button>
+            <button
+              onClick={() => setInformacionModalVisible((prev) => !prev)}
+              className="flex items-center justify-center w-6 h-6 rounded-full text-sky-600 hover:scale-105 transition-all duration-200 cursor-pointer"
+            >
+              <InformationCircleIcon className="w-5 h-5" />
+            </button>
+          </div>
           <button
             onClick={() => {
               setErrorGuardado('')
@@ -245,6 +275,14 @@ export default function GestionCatalogo() {
             setLibroEnEdicion(null)
           }}
           errorExterno={errorGuardado}
+        />
+      )}
+
+      {informacionModalVisible && (
+        <InformacionModal
+          onCerrar={() => {
+            setInformacionModalVisible(false)
+          }}
         />
       )}
 
