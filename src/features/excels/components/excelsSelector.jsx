@@ -172,20 +172,31 @@ export default function ExcelsSelector({ onImportado }) {
             >
               Excel de libros (.xlsx)
             </label>
-            <input
-              id="excel-libros"
-              ref={inputRef}
-              type="file"
-              accept=".xlsx"
-              onChange={(e) => setArchivo(e.target.files?.[0] ?? null)}
-              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700"
-            />
+            <div className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-1.5">
+              <label
+                htmlFor="excel-libros"
+                className={`text-sm truncate cursor-pointer ${
+                  archivo ? 'text-slate-800 font-medium' : 'text-slate-400 italic'
+                }`}
+              >
+                {archivo ? archivo.name : 'Ningún archivo seleccionado'}
+              </label>
+
+              <input
+                id="excel-libros"
+                ref={inputRef}
+                type="file"
+                accept=".xlsx"
+                onChange={(e) => setArchivo(e.target.files?.[0] ?? null)}
+                className="hidden"
+              />
+            </div>
           </div>
           <button
             type="button"
             onClick={handleSubir}
             disabled={!archivo || subiendo}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg text-xs font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
           >
             {subiendo ? 'Subiendo...' : 'Validar archivo'}
           </button>
