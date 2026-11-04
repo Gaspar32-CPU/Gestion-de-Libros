@@ -56,7 +56,9 @@ export default function LibroCard({ libro }) {
           </span>
           <span className="flex items-center gap-1 text-sm font-semibold text-slate-700">
             {totalResenas === 0 ? (
-              <span className="text-xs font-semibold text-ink-3">Sin reseñas</span>
+              <span className="text-xs font-semibold text-ink-3">
+                Sin reseñas
+              </span>
             ) : (
               <>
                 <span className="text-amber-400">★</span>

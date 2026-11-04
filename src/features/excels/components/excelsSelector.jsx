@@ -93,7 +93,10 @@ export default function ExcelsSelector({ onImportado }) {
         clearInterval(intervalo)
         olvidarImportacion()
         setError(
-          mensajeDeError(err, 'No se pudo consultar el avance. Intentá de nuevo.'),
+          mensajeDeError(
+            err,
+            'No se pudo consultar el avance. Intentá de nuevo.',
+          ),
         )
         setImportacion(null)
       }
@@ -118,7 +121,9 @@ export default function ExcelsSelector({ onImportado }) {
       recordarImportacion(id)
       setImportacion({ id, estado: 'procesando', procesados: 0, total })
     } catch (err) {
-      setError(mensajeDeError(err, 'No se pudo subir el archivo. Intentá de nuevo.'))
+      setError(
+        mensajeDeError(err, 'No se pudo subir el archivo. Intentá de nuevo.'),
+      )
     } finally {
       setSubiendo(false)
     }
@@ -132,7 +137,10 @@ export default function ExcelsSelector({ onImportado }) {
     } catch (err) {
       if (err.response?.status !== 404) {
         setError(
-          mensajeDeError(err, 'No se pudo cancelar la importación. Intentá de nuevo.'),
+          mensajeDeError(
+            err,
+            'No se pudo cancelar la importación. Intentá de nuevo.',
+          ),
         )
         return
       }
@@ -150,7 +158,10 @@ export default function ExcelsSelector({ onImportado }) {
       onImportado?.()
     } catch (err) {
       setError(
-        mensajeDeError(err, 'No se pudieron guardar los libros. Intentá de nuevo.'),
+        mensajeDeError(
+          err,
+          'No se pudieron guardar los libros. Intentá de nuevo.',
+        ),
       )
     } finally {
       setConfirmando(false)
@@ -176,7 +187,9 @@ export default function ExcelsSelector({ onImportado }) {
               <label
                 htmlFor="excel-libros"
                 className={`text-sm truncate cursor-pointer ${
-                  archivo ? 'text-slate-800 font-medium' : 'text-slate-400 italic'
+                  archivo
+                    ? 'text-slate-800 font-medium'
+                    : 'text-slate-400 italic'
                 }`}
               >
                 {archivo ? archivo.name : 'Ningún archivo seleccionado'}
@@ -225,7 +238,6 @@ export default function ExcelsSelector({ onImportado }) {
           >
             Cancelar importación
           </button>
-
         </div>
       )}
 
@@ -270,7 +282,9 @@ export default function ExcelsSelector({ onImportado }) {
                     </span>
                     <span className="block text-xs text-slate-500">
                       {libro.autor} · código {libro.codigoInterno}
-                      {libro.origen === 'isbn' ? ' · datos completados por ISBN' : ''}
+                      {libro.origen === 'isbn'
+                        ? ' · datos completados por ISBN'
+                        : ''}
                     </span>
                   </li>
                 ))}

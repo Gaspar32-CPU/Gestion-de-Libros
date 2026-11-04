@@ -20,7 +20,8 @@ export const TIPOS_MENSAJE = [
   {
     tipo: 'devolucion',
     titulo: 'Devolución registrada',
-    mensajePorDefecto: 'Hola {lector}, registramos la devolución de "{libro}". ¡Gracias!',
+    mensajePorDefecto:
+      'Hola {lector}, registramos la devolución de "{libro}". ¡Gracias!',
   },
 ]
 

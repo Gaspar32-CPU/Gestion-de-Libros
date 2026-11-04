@@ -102,8 +102,9 @@ export const LibroDetalle = () => {
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
 
-  const comentarioValido = nuevoComentario.trim().length >= 10 && nuevoComentario.trim().length <= 600;
-  const esLector = usuario?.rol === "lector";
+  const comentarioValido =
+    nuevoComentario.trim().length >= 10 && nuevoComentario.trim().length <= 600
+  const esLector = usuario?.rol === 'lector'
 
   const handlePrestamo = async (e) => {
     e.preventDefault()
@@ -276,7 +277,7 @@ export const LibroDetalle = () => {
             </p>
           </div>
         </div>
-        <div className='w-full'>
+        <div className="w-full">
           {/* Sección de entrada: Tu reseña (Colores idénticos a tu mockup) */}
           <div className="bg-[#f5f4ef] rounded-xl p-5 mb-8 border border-[#e8e7e1]">
             <h4 className="text-sm font-bold text-[#092e40] mb-1">Tu reseña</h4>
@@ -312,7 +313,7 @@ export const LibroDetalle = () => {
                 maxLength={600}
                 className="w-full p-3 border border-[#e2e8f0] rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1fa48a] bg-white min-h-22.5 resize-none"
               />
-             <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between">
                 <div>
                   <button
                     type="submit"
@@ -326,20 +327,22 @@ export const LibroDetalle = () => {
                   >
                     Enviar Reseña
                   </button>
-                  {nuevoComentario.trim().length > 0 && nuevoComentario.trim().length < 10 && (
-                    <span className="ml-10 text-xs text-red-400">
-                      El comentario debe tener al menos 10 caracteres
-                    </span>
-                  )}
-                  {nuevoComentario.trim().length >= 10 && estrellasSeleccionadas === 0 && (
-                    <span className="ml-10 text-xs text-red-400">
-                      Debes dejar una calificación y un comentario
-                    </span>
-                  )}
+                  {nuevoComentario.trim().length > 0 &&
+                    nuevoComentario.trim().length < 10 && (
+                      <span className="ml-10 text-xs text-red-400">
+                        El comentario debe tener al menos 10 caracteres
+                      </span>
+                    )}
+                  {nuevoComentario.trim().length >= 10 &&
+                    estrellasSeleccionadas === 0 && (
+                      <span className="ml-10 text-xs text-red-400">
+                        Debes dejar una calificación y un comentario
+                      </span>
+                    )}
                 </div>
                 <p className="text-xs text-slate-500 pr-1 flex-nowrap">
                   {nuevoComentario.trim().length} / 600 caracteres
-                </p> 
+                </p>
               </div>
             </form>
           </div>

@@ -20,9 +20,7 @@ export function CrearContrasenaForm({
   const navigate = useNavigate()
 
   if (!token) {
-    return (
-      <p className="text-[0.95rem] text-[#c0392b]">{mensajeSinToken}</p>
-    )
+    return <p className="text-[0.95rem] text-[#c0392b]">{mensajeSinToken}</p>
   }
 
   if (listo) {

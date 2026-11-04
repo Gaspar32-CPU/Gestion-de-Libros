@@ -52,7 +52,11 @@ export default function LogoUploader({
           style={{ background: '#1fa58a' }}
         >
           {value ? (
-            <img src={urlArchivo(value)} alt="Logo" className="h-full w-full object-cover" />
+            <img
+              src={urlArchivo(value)}
+              alt="Logo"
+              className="h-full w-full object-cover"
+            />
           ) : (
             obtenerIniciales(configuracion?.nombreApp || 'Biblioteca')
           )}

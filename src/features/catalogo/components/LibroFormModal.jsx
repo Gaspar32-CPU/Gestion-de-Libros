@@ -48,7 +48,7 @@ const GENEROS = [
   'Infantil',
   'Cocina',
   'Otros',
-].map((genero) => ({ value: genero, label: genero }));
+].map((genero) => ({ value: genero, label: genero }))
 
 const LIBRO_VACIO = {
   portadaUrl: '',
@@ -132,7 +132,10 @@ export default function LibroFormModal({
 
     // El año es opcional: solo se valida si se completó
     const anio = Number(form.anio)
-    if (form.anio && (!Number.isInteger(anio) || anio > new Date().getFullYear())) {
+    if (
+      form.anio &&
+      (!Number.isInteger(anio) || anio > new Date().getFullYear())
+    ) {
       setError('El año de publicación no puede ser posterior al año actual.')
       return
     }
@@ -198,7 +201,11 @@ export default function LibroFormModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate className="p-4 sm:p-6 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="p-4 sm:p-6 space-y-4"
+        >
           {!esEdicion && modo === 'isbn' && (
             <BusquedaIsbn onEncontrado={handleEncontradoPorIsbn} />
           )}
@@ -244,7 +251,9 @@ export default function LibroFormModal({
                       id="generos"
                       options={GENEROS}
                       value={form.generos}
-                      onChange={(generos) => setForm((prev) => ({ ...prev, generos }))}
+                      onChange={(generos) =>
+                        setForm((prev) => ({ ...prev, generos }))
+                      }
                       placeholder="Ej: Poesía"
                       required
                     />
@@ -277,7 +286,9 @@ export default function LibroFormModal({
                     className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
                   >
                     Idioma{}
-                    <span className="font-normal normal-case text-slate-400">(opcional)</span>
+                    <span className="font-normal normal-case text-slate-400">
+                      (opcional)
+                    </span>
                   </label>
                   <div className="relative">
                     <select

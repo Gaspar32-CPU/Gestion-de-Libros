@@ -208,7 +208,10 @@ export default function GestionCatalogo() {
                         />
                       )}
                       <div className="min-w-0">
-                        <p className="font-semibold text-slate-900 truncate" title={libro.titulo}>
+                        <p
+                          className="font-semibold text-slate-900 truncate"
+                          title={libro.titulo}
+                        >
                           {libro.titulo}
                         </p>
                         <p className="text-xs text-slate-500 truncate">

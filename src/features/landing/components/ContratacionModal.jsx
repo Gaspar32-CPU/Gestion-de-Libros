@@ -298,9 +298,7 @@ export function ContratacionModal({ plan, ciclo, onClose }) {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-extrabold text-ink">
-                    $ {precio}
-                  </p>
+                  <p className="text-xl font-extrabold text-ink">$ {precio}</p>
                   <p className="text-xs text-ink-3">por {periodo}</p>
                 </div>
               </div>

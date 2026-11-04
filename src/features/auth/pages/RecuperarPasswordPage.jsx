@@ -15,8 +15,8 @@ export default function RecuperarPasswordPage() {
             Recuperá tu contraseña
           </h2>
           <p className="mb-7 text-sm text-[#6b7770]">
-            Ingresá el correo de tu cuenta y te enviamos un link para elegir
-            una contraseña nueva.
+            Ingresá el correo de tu cuenta y te enviamos un link para elegir una
+            contraseña nueva.
           </p>
 
           <RecuperarPassword />

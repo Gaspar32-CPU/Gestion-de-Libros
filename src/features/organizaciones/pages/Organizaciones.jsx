@@ -80,7 +80,9 @@ export function Organizaciones() {
 
       {organizacionesFiltradas.length === 0 ? (
         <div className="rounded-2xl border border-[#EAEAEA] bg-white p-10 text-center">
-          <p className="text-sm text-gray-500">No hay organizaciones registradas.</p>
+          <p className="text-sm text-gray-500">
+            No hay organizaciones registradas.
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -102,7 +104,9 @@ export function Organizaciones() {
                 {organizacion.dominio || '—'}
               </div>
 
-              <div className="text-sm text-gray-500">{organizacion.plan || '—'}</div>
+              <div className="text-sm text-gray-500">
+                {organizacion.plan || '—'}
+              </div>
 
               <div className="text-sm text-gray-500">
                 {organizacion.cantidadUsuarios}
