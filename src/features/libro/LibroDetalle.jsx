@@ -97,6 +97,8 @@ export const LibroDetalle = () => {
   }
 
   const esDisponible = libro.ejemplaresLibres > 0
+  const yaLoTiene = libro.yaLoTiene
+
   // Solicitar un préstamo es una acción de lector: un admin/invitado puede
   // ver la ficha (esta ruta es pública), pero no debe poder pedirlo para sí.
 
@@ -138,30 +140,32 @@ export const LibroDetalle = () => {
         </div>
       </Link>
 
-      <div className="flex flex-col md:flex-row gap-7.5 md:gap-10">
-        {/* Columna Izquierda */}
-        <div className="w-full md:w-65 shrink-0">
-          {esColorPortada(libro.portadaUrl) ? (
-            <div
-              className="w-full h-60 md:h-95 rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
-              style={{ backgroundColor: libro.portadaUrl }}
-            />
-          ) : (
-            <img
-              src={libro.portadaUrl}
-              alt={`Portada de ${libro.titulo}`}
-              className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
-            />
-          )}
-          <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
-            <span
-              className={`text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3 ${esDisponible ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}
-            >
-              {esDisponible ? 'Disponible' : 'No disponible'}
-            </span>
-            <div className="flex flex-wrap gap-1 mb-2">
-              {Array.from({ length: libro.ejemplaresTotales || 0 }).map(
-                (_, idx) => (
+      <div className="flex flex-col items-end gap-10">
+        <div className="flex flex-col md:flex-row gap-7.5 md:gap-14 w-full md:justify-between">
+          {/* Columna Izquierda */}
+          <div className="w-full md:w-65 shrink-0">
+            {esColorPortada(libro.portadaUrl) ? (
+              <div
+                className="w-full h-60 md:h-95 rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+                style={{ backgroundColor: libro.portadaUrl }}
+              />
+            ) : (
+              <img
+                src={libro.portadaUrl}
+                alt={`Portada de ${libro.titulo}`}
+                className="w-full h-auto max-h-95 md:h-95 object-cover rounded-lg mb-3.75 shadow-[0_4px_6px_rgba(0,0,0,0.1)]"
+              />
+            )}
+            <div className="bg-white p-3.75 rounded-lg border border-[#e2e8f0]">
+              <span
+                className={`text-xs font-semibold px-2.5 py-1 rounded-full inline-block mb-3 ${esDisponible ? 'bg-success-bg text-success' : 'bg-danger-bg text-danger'}`}
+              >
+                {esDisponible ? 'Disponible' : 'No disponible'}
+              </span>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {Array.from({
+                  length: Math.min(libro.ejemplaresTotales || 0, 10),
+                }).map((_, idx) => (
                   <div
                     key={idx}
                     className={`w-4 h-5 rounded-xs ${
@@ -170,109 +174,114 @@ export const LibroDetalle = () => {
                         : 'bg-[#e2e8f0]'
                     }`}
                   />
-                ),
-              )}
+                ))}
+                {libro.ejemplaresTotales > 10 && (
+                  <span className="text-xs font-semibold text-[#64748b] leading-5">
+                    +
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[#64748b]">
+                {libro.ejemplaresLibres} de {libro.ejemplaresTotales} ejemplares
+                libres
+              </p>
             </div>
-            <p className="text-xs text-[#64748b]">
-              {libro.ejemplaresLibres} de {libro.ejemplaresTotales} ejemplares
-              libres
+          </div>
+
+          {/* Columna Derecha */}
+          <div className="grow min-w-0">
+            <span className="text-[#1fa48a] text-[11px] font-bold tracking-[1px] uppercase">
+              {libro.generos.join(', ')}
+            </span>
+            <h1 className="text-[#092e40] text-3xl font-bold mt-1 mb-1.25 tracking-tight">
+              {libro.titulo}
+            </h1>
+            <p className="text-[#64748b] text-sm mb-3.75">
+              {libro.autor} · {libro.anio} · {libro.editorial}
+            </p>
+            <div className="flex items-center gap-2 text-sm mb-6.25">
+              <span className="text-[#f59e0b] tracking-[2px]">
+                {renderEstrellas(libro.puntuacion)}
+              </span>
+              <span className="font-bold text-[#092e40]">
+                {libro.puntuacion.toFixed(1)}
+              </span>
+              <span className="text-[#64748b]">({resenas.length} reseñas)</span>
+            </div>
+            <p className="text-[#64748b] leading-relaxed text-[15px] max-w-150 mb-6.25">
+              {libro.descripcion}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 border border-[#e7e5d8] rounded-xl p-5 mb-6.25">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                  IDIOMA
+                </span>
+                <span className="text-sm font-semibold text-[#092e40] wrap-break-word">
+                  {libro.idioma.length === 0 ? '-' : libro.idioma}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                  SNI / ISBN
+                </span>
+                <span className="text-sm font-semibold text-[#092e40] wrap-break-word">
+                  {libro.isbn.length === 0 ? '-' : libro.isbn}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
+                  EDITORIAL
+                </span>
+                <span className="text-sm font-semibold text-[#092e40] wrap-break-word">
+                  {libro.editorial.length === 0 ? '-' : libro.editorial}
+                </span>
+              </div>
+            </div>
+
+            {esLector && (
+              <>
+                <button
+                  disabled={!esDisponible || yaLoTiene}
+                  onClick={handlePrestamo}
+                  className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  {esDisponible && !yaLoTiene ? (
+                    <>
+                      Solicitar Préstamo
+                      <ArrowBack
+                        sx={{
+                          fontSize: 16,
+                          transform: 'rotate(180deg)',
+                          marginLeft: '0.5rem',
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      No disponible
+                      <Block sx={{ fontSize: 18, marginLeft: '0.5rem' }} />
+                    </>
+                  )}
+                </button>
+                {error && (
+                  <p className="mt-1 ml-1 mb-4 text-[0.85rem] text-[#c0392b]">
+                    {error}
+                  </p>
+                )}
+              </>
+            )}
+            <p className="text-xs text-[#64748b] mb-7.5">
+              {libro.condicionesPrestamo}
             </p>
           </div>
         </div>
-
-        {/* Columna Derecha */}
-        <div className="grow min-w-0">
-          <span className="text-[#1fa48a] text-[11px] font-bold tracking-[1px] uppercase">
-            {libro.generos.join(', ')}
-          </span>
-          <h1 className="text-[#092e40] text-3xl font-bold mt-1 mb-1.25 tracking-tight">
-            {libro.titulo}
-          </h1>
-          <p className="text-[#64748b] text-sm mb-3.75">
-            {libro.autor} · {libro.anio} · {libro.editorial}
-          </p>
-          <div className="flex items-center gap-2 text-sm mb-6.25">
-            <span className="text-[#f59e0b] tracking-[2px]">
-              {renderEstrellas(libro.puntuacion)}
-            </span>
-            <span className="font-bold text-[#092e40]">
-              {libro.puntuacion.toFixed(1)}
-            </span>
-            <span className="text-[#64748b]">({resenas.length} reseñas)</span>
-          </div>
-          <p className="text-[#64748b] leading-relaxed text-[15px] max-w-150 mb-6.25">
-            {libro.descripcion}
-          </p>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-5 border border-[#e7e5d8] rounded-xl p-5 mb-6.25">
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
-                IDIOMA
-              </span>
-              <span className="text-sm font-semibold text-[#092e40] break-words">
-                {libro.idioma}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
-                SNI / ISBN
-              </span>
-              <span className="text-sm font-semibold text-[#092e40] break-words">
-                {libro.isbn}
-              </span>
-            </div>
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] font-bold text-[#64748b] tracking-[0.5px]">
-                EDITORIAL
-              </span>
-              <span className="text-sm font-semibold text-[#092e40] break-words">
-                {libro.editorial}
-              </span>
-            </div>
-          </div>
-
-          {esLector && (
-            <>
-              <button
-                disabled={!esDisponible}
-                onClick={handlePrestamo}
-                className="w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-semibold text-white transition-colors cursor-pointer mb-2 bg-[#1fa48a] hover:bg-[#198771] disabled:text-ink-3 disabled:bg-gray-300 disabled:hover:bg-gray-300 disabled:cursor-not-allowed"
-              >
-                {esDisponible ? (
-                  <>
-                    Solicitar Préstamo
-                    <ArrowBack
-                      sx={{
-                        fontSize: 16,
-                        transform: 'rotate(180deg)',
-                        marginLeft: '0.5rem',
-                      }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    No disponible
-                    <Block sx={{ fontSize: 18, marginLeft: '0.5rem' }} />
-                  </>
-                )}
-              </button>
-              {error && (
-                <p className="-mt-2 mb-4 text-[0.85rem] text-[#c0392b]">
-                  {error}
-                </p>
-              )}
-            </>
-          )}
-          <p className="text-xs text-[#64748b] mb-7.5">
-            {libro.condicionesPrestamo}
-          </p>
-          <hr className="border-0 border-t border-[#e7e5d8] mb-7.5" />
-
+        <div className='w-full'>
           {/* Sección de entrada: Tu reseña (Colores idénticos a tu mockup) */}
           <div className="bg-[#f5f4ef] rounded-xl p-5 mb-8 border border-[#e8e7e1]">
             <h4 className="text-sm font-bold text-[#092e40] mb-1">Tu reseña</h4>
             <p className="text-xs text-slate-500 mb-4">
-              Leiste este libro. Contá qué te pareció.
+              ¿Leiste este libro? Contá qué te pareció.
             </p>
 
             <div className="flex flex-wrap items-center gap-1.5 mb-4">
@@ -290,12 +299,12 @@ export const LibroDetalle = () => {
                   ★
                 </button>
               ))}
-              <span className="text-xs text-slate-500 ml-2 font-medium">
+              <span className="text-xs pt-1.5 text-slate-500 ml-2 font-medium">
                 Elegí una calificación
               </span>
             </div>
 
-            <form onSubmit={handleAgregarResena} className="space-y-4">
+            <form onSubmit={handleAgregarResena}>
               <textarea
                 value={nuevoComentario}
                 onChange={(e) => setNuevoComentario(e.target.value)}
@@ -303,18 +312,35 @@ export const LibroDetalle = () => {
                 maxLength={600}
                 className="w-full p-3 border border-[#e2e8f0] rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1fa48a] bg-white min-h-22.5 resize-none"
               />
-              <button
-                type="submit"
-                disabled={
-                  !comentarioValido ||
-                  !nuevoComentario.trim() ||
-                  estrellasSeleccionadas === 0 ||
-                  enviando
-                }
-                className="min-h-10 px-5 py-2 bg-[#1fa48a] hover:bg-[#198771] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                Enviar Reseña
-              </button>
+             <div className="flex items-center justify-between">
+                <div>
+                  <button
+                    type="submit"
+                    disabled={
+                      !comentarioValido ||
+                      !nuevoComentario.trim() ||
+                      estrellasSeleccionadas === 0 ||
+                      enviando
+                    }
+                    className="min-h-10 px-5 py-2 mt-2 bg-[#1fa48a] hover:bg-[#198771] text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Enviar Reseña
+                  </button>
+                  {nuevoComentario.trim().length > 0 && nuevoComentario.trim().length < 10 && (
+                    <span className="ml-10 text-xs text-red-400">
+                      El comentario debe tener al menos 10 caracteres
+                    </span>
+                  )}
+                  {nuevoComentario.trim().length >= 10 && estrellasSeleccionadas === 0 && (
+                    <span className="ml-10 text-xs text-red-400">
+                      Debes dejar una calificación y un comentario
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500 pr-1 flex-nowrap">
+                  {nuevoComentario.trim().length} / 600 caracteres
+                </p> 
+              </div>
             </form>
           </div>
 
@@ -331,13 +357,13 @@ export const LibroDetalle = () => {
                       {obtenerIniciales(resena.usuario)}
                     </div>
                     <div className="grow min-w-0">
-                      <p className="text-sm font-semibold text-[#092e40] flex flex-wrap items-center gap-1.5 break-words">
+                      <p className="text-sm font-semibold text-[#092e40] flex flex-wrap items-center gap-1.5 wrap-break-word">
                         {resena.usuario}
                         <span className="text-[#f59e0b] text-[10px] ml-1 tracking-[1px]">
                           {renderEstrellas(resena.calificacion)}
                         </span>
                       </p>
-                      <p className="text-sm text-[#64748b] mt-0.75 break-words">
+                      <p className="text-sm text-[#64748b] mt-0.75 wrap-break-word">
                         {resena.comentario}
                       </p>
                     </div>

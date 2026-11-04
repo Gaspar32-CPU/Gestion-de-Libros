@@ -72,7 +72,7 @@ export default function FiltrosBusqueda({
             value={ordenarPor}
             onChange={(e) => onOrdenarChange(e.target.value)}
           >
-            <option value="relevancia">Relevancia</option>
+            <option value="relevancia">Por defecto</option>
             <option value="titulo">Título (A-Z)</option>
             <option value="autor">Autor (A-Z)</option>
             <option value="puntuacion">Mejor puntuados</option>
