@@ -36,11 +36,11 @@ function formatearFecha(fechaStr) {
 function obtenerEstiloEstado(estado) {
   switch (estado) {
     case 'ACTIVO':
-      return 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      return 'bg-emerald-50 text-emerald-700'
     case 'ATRASADO':
-      return 'bg-rose-50 text-rose-700 border-rose-200'
+      return 'bg-rose-50 text-rose-700'
     default:
-      return 'bg-slate-100 text-slate-600 border-slate-200'
+      return 'bg-slate-100 text-slate-600'
   }
 }
 
@@ -293,7 +293,7 @@ export default function PrestamosPanel({
                         className="flex justify-between items-center gap-3 px-0 py-1.5 md:table-cell md:p-4 before:content-[attr(data-label)] before:text-xs before:font-semibold before:uppercase before:text-slate-400 md:before:content-none"
                       >
                         <span
-                          className={`inline-flex items-center truncate px-2.5 py-0.5 rounded-full text-xs font-bold border ${obtenerEstiloEstado(item.estado)}`}
+                          className={`inline-flex items-center truncate px-2.5 py-0.5 rounded-full text-xs font-bold ${obtenerEstiloEstado(item.estado)}`}
                         >
                           {normalizarEstado(item.estado)}
                         </span>

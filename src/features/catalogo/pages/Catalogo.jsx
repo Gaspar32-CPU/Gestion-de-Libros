@@ -45,7 +45,8 @@ export default function Catalogo() {
     const limite = ahora - DIAS_LIBRO_RECIENTE * 24 * 60 * 60 * 1000
     return libros.filter(
       (libro) =>
-        libro.fechaCreacion && new Date(libro.fechaCreacion).getTime() >= limite,
+        libro.fechaCreacion &&
+        new Date(libro.fechaCreacion).getTime() >= limite,
     )
   }, [libros, ahora])
 

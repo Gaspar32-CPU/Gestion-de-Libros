@@ -4,8 +4,11 @@ import {
   AddRounded,
   EditOutlined,
   DeleteOutlineOutlined,
+  UploadFileOutlined,
 } from '@mui/icons-material'
 import LibroFormModal from '../components/LibroFormModal'
+import ExcelsSelector from '../../excels/components/excelsSelector'
+import { importacionActiva } from '../../excels/excelsService'
 import { esColorPortada } from '../../../utils/portada'
 import { normalizarTexto } from '../../../utils/normalizarTexto'
 import {
@@ -14,6 +17,28 @@ import {
   actualizarLibro,
   eliminarLibro,
 } from '../catalogoService'
+import InformacionModal from '../../excels/components/informacionModal'
+
+// Heroicons "information-circle" (outline). Va inline para no sumar una dependencia.
+function InformationCircleIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+      stroke="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+      />
+    </svg>
+  )
+}
 
 // El back manda un mensaje legible en la mayoría de los errores (400, 404, 409);
 // si no vino nada usable, mostramos algo genérico en vez de romper.
@@ -25,14 +50,22 @@ export default function GestionCatalogo() {
   const { busqueda = '' } = useOutletContext() ?? {}
   const [libros, setLibros] = useState([])
   const [libroEnEdicion, setLibroEnEdicion] = useState(null) // null = cerrado, {} = crear, libro = editar
+  const [informacionModalVisible, setInformacionModalVisible] = useState(false)
   const [libroAEliminar, setLibroAEliminar] = useState(null)
   const [errorGuardado, setErrorGuardado] = useState('')
   const [errorEliminar, setErrorEliminar] = useState('')
+  // Abierto de entrada si quedó una importación en curso
+  const [mostrarImportar, setMostrarImportar] = useState(
+    () => importacionActiva() !== null,
+  )
 
-  useEffect(() => {
+  const cargarLibros = () =>
     obtenerLibros()
       .then(setLibros)
       .catch((err) => console.error('Error al traer el catálogo', err))
+
+  useEffect(() => {
+    cargarLibros()
   }, [])
 
   const terminoBusqueda = normalizarTexto(busqueda.trim())
@@ -91,24 +124,49 @@ export default function GestionCatalogo() {
             Gestión de catálogo
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            {libros.length} libros en el catálogo
+            {libros.length !== 1 ? (
+              <span>{libros.length} libros en el catálogo</span>
+            ) : (
+              <span>{libros.length} libro en el catálogo</span>
+            )}
           </p>
         </div>
-        <button
-          onClick={() => setLibroEnEdicion({})}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] transition-colors cursor-pointer"
-        >
-          <AddRounded fontSize="small" />
-          Crear libro
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <div className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-600 border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer">
+            <button
+              onClick={() => setMostrarImportar((visible) => !visible)}
+              className="cursor-pointer"
+            >
+              Importar Excel
+            </button>
+            <button
+              onClick={() => setInformacionModalVisible((prev) => !prev)}
+              className="flex items-center justify-center w-6 h-6 rounded-full text-sky-600 hover:scale-105 transition-all duration-200 cursor-pointer"
+            >
+              <InformationCircleIcon className="w-5 h-5" />
+            </button>
+          </div>
+          <button
+            onClick={() => {
+              setErrorGuardado('')
+              setLibroEnEdicion({})
+            }}
+            className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-[#1fa48a] hover:bg-[#198771] transition-colors cursor-pointer"
+          >
+            <AddRounded fontSize="small" />
+            Crear libro
+          </button>
+        </div>
       </div>
+
+      {mostrarImportar && <ExcelsSelector onImportado={cargarLibros} />}
 
       <div className="md:bg-white md:rounded-xl md:border md:border-slate-200 md:shadow-sm md:overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm block md:table">
             <thead className="hidden md:table-header-group">
               <tr className="border-b border-slate-200 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                <th className="px-4 py-3">Libro</th>
+                <th className="px-4 py-3 md:w-92 md:max-w-92">Libro</th>
                 <th className="px-4 py-3">Género</th>
                 <th className="px-4 py-3">Ejemplares</th>
                 <th className="px-4 py-3">Puntuación</th>
@@ -131,7 +189,7 @@ export default function GestionCatalogo() {
                   key={libro.id}
                   className="block mb-3 p-4 rounded-xl border border-slate-200 bg-white md:mb-0 md:p-0 md:table-row md:rounded-none md:border-0 md:border-b md:border-slate-100 md:last:border-0 md:bg-transparent hover:bg-slate-50"
                 >
-                  <td className="block px-0 mb-3 md:mb-0 md:table-cell md:px-4 md:py-3 before:content-none">
+                  <td className="block px-0 mb-3 md:mb-0 md:table-cell md:w-92 md:max-w-92 md:px-4 md:py-3 before:content-none">
                     <div className="flex items-center gap-3">
                       {esColorPortada(libro.portadaUrl) || !libro.portadaUrl ? (
                         <div
@@ -150,7 +208,10 @@ export default function GestionCatalogo() {
                         />
                       )}
                       <div className="min-w-0">
-                        <p className="font-semibold text-slate-900 truncate">
+                        <p
+                          className="font-semibold text-slate-900 truncate"
+                          title={libro.titulo}
+                        >
                           {libro.titulo}
                         </p>
                         <p className="text-xs text-slate-500 truncate">
@@ -180,7 +241,10 @@ export default function GestionCatalogo() {
                   <td className="block px-0 pt-2 md:table-cell md:px-4 md:py-3 before:content-none">
                     <div className="flex items-center justify-end gap-1">
                       <button
-                        onClick={() => setLibroEnEdicion(libro)}
+                        onClick={() => {
+                          setErrorGuardado('')
+                          setLibroEnEdicion(libro)
+                        }}
                         aria-label={`Editar ${libro.titulo}`}
                         className="p-2.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
                       >
@@ -209,8 +273,19 @@ export default function GestionCatalogo() {
         <LibroFormModal
           libro={libroEnEdicion}
           onGuardar={handleGuardar}
-          onCerrar={() => setLibroEnEdicion(null)}
+          onCerrar={() => {
+            setErrorGuardado('')
+            setLibroEnEdicion(null)
+          }}
           errorExterno={errorGuardado}
+        />
+      )}
+
+      {informacionModalVisible && (
+        <InformacionModal
+          onCerrar={() => {
+            setInformacionModalVisible(false)
+          }}
         />
       )}
 

@@ -48,7 +48,7 @@ const GENEROS = [
   'Infantil',
   'Cocina',
   'Otros',
-].map((genero) => ({ value: genero, label: genero }));
+].map((genero) => ({ value: genero, label: genero }))
 
 const LIBRO_VACIO = {
   portadaUrl: '',
@@ -118,8 +118,25 @@ export default function LibroFormModal({
     e.preventDefault()
     setError('')
 
-    if (!form.titulo.trim() || !form.autor.trim() || form.generos.length === 0) {
-      setError('Título, autor y género son obligatorios.')
+    const faltantes = [
+      !form.titulo.trim() && 'Título',
+      !form.autor.trim() && 'Autor',
+      form.generos.length === 0 && 'Género',
+      !String(form.editorial ?? '').trim() && 'Editorial',
+      (form.stock === '' || form.stock == null) && 'Stock',
+    ].filter(Boolean)
+    if (faltantes.length > 0) {
+      setError(`Completá los campos obligatorios: ${faltantes.join(', ')}.`)
+      return
+    }
+
+    // El año es opcional: solo se valida si se completó
+    const anio = Number(form.anio)
+    if (
+      form.anio &&
+      (!Number.isInteger(anio) || anio > new Date().getFullYear())
+    ) {
+      setError('El año de publicación no puede ser posterior al año actual.')
       return
     }
 
@@ -184,7 +201,11 @@ export default function LibroFormModal({
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="p-4 sm:p-6 space-y-4"
+        >
           {!esEdicion && modo === 'isbn' && (
             <BusquedaIsbn onEncontrado={handleEncontradoPorIsbn} />
           )}
@@ -204,6 +225,7 @@ export default function LibroFormModal({
                   value={form.titulo}
                   onChange={handleChange}
                   placeholder="Ej. Cien años de soledad"
+                  maxLength={255}
                   required
                 />
                 <Campo
@@ -229,7 +251,9 @@ export default function LibroFormModal({
                       id="generos"
                       options={GENEROS}
                       value={form.generos}
-                      onChange={(generos) => setForm((prev) => ({ ...prev, generos }))}
+                      onChange={(generos) =>
+                        setForm((prev) => ({ ...prev, generos }))
+                      }
                       placeholder="Ej: Poesía"
                       required
                     />
@@ -245,21 +269,26 @@ export default function LibroFormModal({
                   value={form.editorial}
                   onChange={handleChange}
                   placeholder="Ej. Sudamericana"
+                  required
                 />
                 <Campo
                   label="Año de publicación"
                   name="anio"
                   type="number"
+                  max={new Date().getFullYear()}
                   value={form.anio}
                   onChange={handleChange}
-                  placeholder="Ej. 1967"
+                  placeholder="Ej. 1967 (opcional)"
                 />
                 <div>
                   <label
                     htmlFor="idioma"
                     className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5"
                   >
-                    Idioma
+                    Idioma{}
+                    <span className="font-normal normal-case text-slate-400">
+                      (opcional)
+                    </span>
                   </label>
                   <div className="relative">
                     <select
@@ -269,9 +298,7 @@ export default function LibroFormModal({
                       onChange={handleChange}
                       className="w-full appearance-none rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
                     >
-                      <option value="" disabled>
-                        Idioma
-                      </option>
+                      <option value="">Sin especificar</option>
                       {IDIOMAS.map((idioma) => (
                         <option key={idioma} value={idioma}>
                           {idioma}
@@ -373,6 +400,7 @@ function Campo({
   type = 'text',
   required = false,
   placeholder,
+  maxLength,
 }) {
   return (
     <div>
@@ -390,6 +418,7 @@ function Campo({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
+        maxLength={maxLength}
         className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#1fa48a] focus:ring-1 focus:ring-[#1fa48a]"
       />
     </div>
