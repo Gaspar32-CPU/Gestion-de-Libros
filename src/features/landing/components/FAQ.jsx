@@ -52,8 +52,8 @@ export function FAQ() {
         </h2>
         <p className="text-ink-2 max-w-sm self-end">
           ¿Te queda algo sin responder? Escribinos a{' '}
-          <a href="mailto:hola@bookly.app" className="underline hover:text-ink">
-            hola@bookly.app
+          <a href="mailto:bookly.animabt@gmail.com" className="underline hover:text-ink">
+            bookly.animabt@gmail.com
           </a>{' '}
           y te contestamos el mismo día.
         </p>
@@ -70,7 +70,7 @@ export function FAQ() {
               <button
                 type="button"
                 onClick={() => setAbierta(estaAbierta ? null : i)}
-                className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left"
+                className="w-full flex items-center justify-between gap-4 px-6 py-4 text-left cursor-pointer"
               >
                 <span className="font-bold text-ink">{item.pregunta}</span>
                 <span className="shrink-0 w-7 h-7 rounded-full bg-bg border border-line flex items-center justify-center text-ink-2 font-bold">
