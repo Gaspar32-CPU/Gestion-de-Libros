@@ -40,13 +40,13 @@ export function FeaturesSection() {
             key={problema.titulo}
             className="rounded-2xl border border-white/10 bg-white/5 p-6"
           >
-            <p className="text-sm text-ink-3 line-through decoration-ink-3/60">
+            <p className="text-sm text-white/70 line-through decoration-white/50">
               {problema.tachado} <span className="no-underline">→</span>
             </p>
             <h3 className="mt-4 text-xl font-extrabold text-white">
               {problema.titulo}
             </h3>
-            <p className="mt-2 text-sm text-ink-3">{problema.descripcion}</p>
+            <p className="mt-2 text-sm text-white/85">{problema.descripcion}</p>
           </div>
         ))}
       </div>

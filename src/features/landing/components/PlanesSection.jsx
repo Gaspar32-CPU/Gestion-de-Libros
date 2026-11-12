@@ -23,12 +23,12 @@ export function PlanesSection() {
   return (
     <section
       id="planes"
-      className="px-4 md:px-12 lg:px-30 py-16 lg:py-20 bg-bg"
+      className="px-4 md:px-12 lg:px-30 pt-16 lg:pt-20 bg-bg"
     >
       <p className="text-sm font-bold text-brand tracking-wide">PLANES</p>
       <div className="mt-3">
         <h2 className="text-3xl md:text-4xl font-extrabold text-ink">
-          Un precio por el tamaño de tu institución
+          Un plan a la medida de tu biblioteca
         </h2>
         <p className="mt-3 text-ink-2 max-w-xl">
           Todos los planes incluyen el catálogo, préstamos automáticos,
@@ -57,11 +57,7 @@ export function PlanesSection() {
           </div>
           <p className="mt-8 text-sm text-ink-3">
             Precios en pesos uruguayos, por organización. Al contratar se crea
-            tu organización y su cuenta de administrador —{' '}
-            <a href="#faq" className="underline hover:text-ink-2">
-              cómo funciona
-            </a>
-            .
+            tu organización y su cuenta de administrador.
           </p>
         </>
       )}

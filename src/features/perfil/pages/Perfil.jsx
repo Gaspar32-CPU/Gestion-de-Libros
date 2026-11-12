@@ -52,12 +52,18 @@ export default function Perfil() {
   const [form, setForm] = useState(FORM_VACIO)
   const [archivoFoto, setArchivoFoto] = useState(null)
   const [cambiandoContrasena, setCambiandoContrasena] = useState(false)
-  const [notificarNovedades, setNotificarNovedades] = useState(false)
+  const [notificar, setNotificar] = useState(false)
   const [errores, setErrores] = useState({})
   const [error, setError] = useState('')
   const [exito, setExito] = useState('')
   const [cargando, setCargando] = useState(true)
   const [guardando, setGuardando] = useState(false)
+
+  const normalizarBolean = (valor) => {
+    if (valor === 'TRUE') return true
+    if (valor === 'FALSE') return false
+    return valor
+  }
 
   useEffect(() => {
     obtenerPerfil(usuario.id)
@@ -70,7 +76,7 @@ export default function Perfil() {
           apellido: datos.apellido,
           telefono: datos.telefono,
         })
-        setNotificarNovedades(datos.notificaciones)
+        setNotificar(normalizarBolean(datos.notificaciones))
       })
       .catch((err) => {
         console.error('Error al traer el perfil', err)
@@ -132,7 +138,7 @@ export default function Perfil() {
       apellido: perfil.apellido,
       telefono: perfil.telefono,
     })
-    setNotificarNovedades(perfil.notificaciones)
+    setNotificar(normalizarBolean(perfil.notificaciones))
     setCambiandoContrasena(false)
     setErrores({})
     setError('')
@@ -145,7 +151,7 @@ export default function Perfil() {
       form.nombre.trim() !== perfil.nombre ||
       form.apellido.trim() !== perfil.apellido ||
       form.telefono.trim() !== perfil.telefono ||
-      notificarNovedades !== perfil.notificaciones ||
+      notificar !== normalizarBolean(perfil.notificaciones) ||
       form.contrasena !== '')
 
   const validar = () => {
@@ -192,7 +198,7 @@ export default function Perfil() {
         correo: perfil.correo,
         telefono: form.telefono.trim(),
         contrasena: form.contrasena,
-        notificaciones: notificarNovedades,
+        notificaciones: notificar,
       })
       if (form.foto?.startsWith('blob:')) URL.revokeObjectURL(form.foto)
       setArchivoFoto(null)
@@ -206,11 +212,12 @@ export default function Perfil() {
         contrasena: '',
         confirmarContrasena: '',
       }))
-      setNotificarNovedades(actualizado.notificaciones)
+      setNotificar(actualizado.notificaciones)
       actualizarUsuario({
         nombre: actualizado.nombre,
         apellido: actualizado.apellido,
         foto: actualizado.foto,
+        notificacionesActivadas: actualizado.notificaciones,
       })
       setCambiandoContrasena(false)
       setExito('Todo guardado')
@@ -423,34 +430,41 @@ export default function Perfil() {
             )}
           </section>
 
-          <section className={`${CARD} flex flex-col gap-4`}>
-            <div>
-              <h2 className="font-bold text-slate-900">Notificaciones</h2>
-              <p className="text-sm text-slate-500">
-                Elegí qué avisos querés recibir por correo.
-              </p>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
+          <section className={`${CARD}`}>
+            <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="font-semibold text-slate-900">
-                  Novedades y recomendaciones
+                  Notificaciones
                 </p>
-                <p className="text-sm text-slate-500">
-                  Nuevos ingresos y libros sugeridos por docentes
-                </p>
+                {usuario.rol !== 'lector' ? (
+                  <p className="text-sm text-slate-500">
+                    Activá o desactivá las notificaciones de solicitudes de préstamos.
+                  </p>
+                ) : (
+                  <p className="text-sm text-slate-500"> 
+                    Activá o desactivá las notificaciones de estados de préstamos y devoluciones de libros.
+                  </p>
+                )}
               </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={notificarNovedades}
-                onClick={() => setNotificarNovedades((v) => !v)}
-                className={`relative w-12 h-7 rounded-full transition-colors cursor-pointer shrink-0 ${notificarNovedades ? 'bg-[#1fa48a]' : 'bg-slate-300'}`}
-              >
-                <span
-                  className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${notificarNovedades ? 'translate-x-5' : ''}`}
-                />
-              </button>
+              <div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={notificar}
+                  onClick={() => setNotificar((prev) => !prev)}
+                  className={`relative w-12 h-7 rounded-full transition-colors cursor-pointer shrink-0 ${notificar ? 'bg-[#1fa48a]' : 'bg-slate-300'}`}
+                >
+                  <span
+                    className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${notificar ? 'translate-x-5' : ''}`}
+                  />
+                </button>
+              </div>
             </div>
+            {usuario.rol !== 'lector' && notificar === false && (
+              <span className="text-sm text-danger">
+                No recibirás notificaciones de ningún tipo y no sabras cuando un lector pida un préstamo.
+              </span>
+            )}
           </section>
 
           {error && <p className="text-sm text-rose-600">{error}</p>}

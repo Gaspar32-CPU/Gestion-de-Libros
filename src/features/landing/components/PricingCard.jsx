@@ -49,11 +49,11 @@ export function PricingCard({ plan, onContratar }) {
           <p className="text-lg font-extrabold text-ink">
             {limiteDelPlan(plan, 'usuarios')}
           </p>
-          <p className="text-xs text-ink-3">usuarios</p>
+          <p className="text-xs text-ink-3">Usuarios</p>
         </div>
         <div>
           <p className="text-lg font-extrabold text-ink">Ilimitados</p>
-          <p className="text-xs text-ink-3">títulos</p>
+          <p className="text-xs text-ink-3">Libros</p>
         </div>
       </div>
 

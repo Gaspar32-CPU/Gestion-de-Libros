@@ -118,20 +118,6 @@ export function Hero() {
             Ver planes
           </a>
         </div>
-        <div className="flex flex-wrap items-center pt-8 border-t border-line gap-4">
-          <div>
-            <p className="text-2xl font-extrabold text-brand-d">2 → 18</p>
-            <p className="text-sm text-gray-500">préstamos por semana</p>
-          </div>
-          <div>
-            <p className="text-2xl font-extrabold text-brand-d">1 clic</p>
-            <p className="text-sm text-gray-500">préstamo automático</p>
-          </div>
-          <div>
-            <p className="text-2xl font-extrabold text-brand-d">1 semana</p>
-            <p className="text-sm text-gray-500">para estar en vivo</p>
-          </div>
-        </div>
       </div>
       <div className="w-full lg:w-1/2 flex items-center">
         <div className="w-full rounded-2xl border border-line bg-white shadow-xl overflow-hidden">

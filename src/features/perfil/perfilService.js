@@ -1,5 +1,11 @@
 import api from '../../services/api'
 
+function normalizarBoolean(valor) {
+  if (valor === undefined || valor === null) return true
+  if (typeof valor === 'string') return valor.toUpperCase() === 'TRUE'
+  return Boolean(valor)
+}
+
 function normalizarPerfil(usuario) {
   return {
     id: usuario.id,
@@ -9,7 +15,7 @@ function normalizarPerfil(usuario) {
     cedula: usuario.CI ?? '',
     correo: usuario.correo ?? '',
     telefono: usuario.telefono ?? '',
-    notificaciones: usuario.notificacionesActivadas === 'TRUE',
+    notificaciones: normalizarBoolean(usuario.notificacionesActivadas),
   }
 }
 
